@@ -1,0 +1,53 @@
+name: 夕刊を生成（毎営業日 16:00 JST）
+
+on:
+  schedule:
+    # 07:00 UTC (月-金) = 16:00 JST (月-金) — 東証の大引け(15:30)後
+    - cron: "0 7 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    outputs:
+      posted: ${{ steps.commit.outputs.posted }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: 記事を生成
+        run: node scripts/generate.mjs evening
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ARTICLE_MODEL: ${{ vars.ARTICLE_MODEL }}
+      - name: コミットしてプッシュ
+        id: commit
+        run: |
+          git config user.name "market-daily-bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add content/posts
+          if git diff --cached --quiet; then
+            echo "posted=false" >> "$GITHUB_OUTPUT"
+            echo "新しい記事はありません（休場などによるスキップ）"
+          else
+            git commit -m "post: 夕刊 $(TZ=Asia/Tokyo date +%Y-%m-%d)"
+            git push
+            echo "posted=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  deploy:
+    needs: generate
+    if: needs.generate.outputs.posted == 'true'
+    uses: ./.github/workflows/deploy.yml
+    permissions:
+      contents: read
+      pages: write
+      id-token: write

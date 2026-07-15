@@ -1,0 +1,38 @@
+---
+import { getCollection, render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Disclaimer from "../../components/Disclaimer.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts");
+  return posts.map((post) => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const fmt = new Intl.DateTimeFormat("ja-JP", {
+  dateStyle: "long",
+  timeStyle: "short",
+  timeZone: "Asia/Tokyo",
+});
+---
+
+<Base title={post.data.title} description={post.data.description}>
+  <article>
+    <h1>{post.data.title}</h1>
+    <p class="meta">
+      <time datetime={post.data.pubDate.toISOString()}>
+        {fmt.format(post.data.pubDate)} 公開
+      </time>
+    </p>
+    <Content />
+    <Disclaimer />
+  </article>
+</Base>
+
+<style>
+  .meta { font-size: 0.85rem; color: var(--muted); }
+</style>

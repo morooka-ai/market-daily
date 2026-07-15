@@ -1,0 +1,18 @@
+{
+  "name": "market-daily",
+  "version": "1.0.0",
+  "description": "AIが自動生成する投資情報ブログ（朝刊・夕刊）",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "generate:morning": "node scripts/generate.mjs morning",
+    "generate:evening": "node scripts/generate.mjs evening"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.111.0",
+    "@holiday-jp/holiday_jp": "^2.5.0",
+    "astro": "^7.0.0"
+  }
+}

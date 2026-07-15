@@ -1,0 +1,56 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+
+const posts = (await getCollection("posts")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const base = import.meta.env.BASE_URL;
+const fmt = new Intl.DateTimeFormat("ja-JP", {
+  dateStyle: "long",
+  timeZone: "Asia/Tokyo",
+});
+---
+
+<Base>
+  <h1>最新の記事</h1>
+  <ul class="post-list">
+    {
+      posts.map((post) => (
+        <li>
+          <span class={`badge ${post.data.edition}`}>
+            {post.data.edition === "morning" ? "朝刊" : "夕刊"}
+          </span>
+          <a href={`${base}posts/${post.id}/`}>{post.data.title}</a>
+          <time datetime={post.data.pubDate.toISOString()}>
+            {fmt.format(post.data.pubDate)}
+          </time>
+        </li>
+      ))
+    }
+  </ul>
+  {posts.length === 0 && <p>記事はまだありません。</p>}
+</Base>
+
+<style>
+  .post-list { list-style: none; padding: 0; }
+  .post-list li {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.7rem;
+  }
+  .post-list a { font-weight: 600; text-decoration: none; }
+  .post-list time { display: block; font-size: 0.8rem; color: var(--muted); }
+  .badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    margin-right: 0.5rem;
+    color: #fff;
+  }
+  .badge.morning { background: #d98123; }
+  .badge.evening { background: #33508a; }
+</style>
