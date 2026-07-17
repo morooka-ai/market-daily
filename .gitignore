@@ -3,3 +3,7 @@ node_modules/
 dist/
 .astro/
 .env
+
+# APIキーのメモ（絶対にコミットしない）
+market-dairy API.txt
+*API*.txt

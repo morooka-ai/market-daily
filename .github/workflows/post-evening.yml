@@ -24,7 +24,7 @@ jobs:
       - name: 記事を生成
         run: node scripts/generate.mjs evening
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ARTICLE_MODEL: ${{ vars.ARTICLE_MODEL }}
       - name: コミットしてプッシュ
         id: commit
