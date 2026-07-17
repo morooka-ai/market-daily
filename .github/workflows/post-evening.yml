@@ -8,8 +8,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
   generate:
@@ -47,7 +45,6 @@ jobs:
     needs: generate
     if: needs.generate.outputs.posted == 'true'
     uses: ./.github/workflows/deploy.yml
+    secrets: inherit # FIREBASE_SERVICE_ACCOUNT を渡す
     permissions:
       contents: read
-      pages: write
-      id-token: write

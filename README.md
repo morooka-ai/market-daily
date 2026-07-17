@@ -14,7 +14,7 @@ GitHub Actions（スケジュール実行）
   → 市場データ取得（Yahoo Finance / Alpha Vantage）
   → Claude API が記事を執筆（web検索で注目ニュースを確認）
   → Markdownをリポジトリにコミット
-  → Astroでビルドして GitHub Pages に自動公開
+  → Astroでビルドして Firebase Hosting（Google Cloud）に自動公開
 ```
 
 - 土日・日本の祝日・米国市場の休場日は自動でスキップします。
@@ -26,6 +26,7 @@ GitHub Actions（スケジュール実行）
 
 - **Git**（未インストールの場合: https://git-scm.com/download/win ）
 - **GitHubアカウント**
+- **Googleアカウント**（Firebase Hosting 用）
 - **Anthropic APIキー**: https://platform.claude.com/ で取得（クレジット購入が必要）
 - **Alpha Vantage APIキー**（無料）: https://www.alphavantage.co/support/#api-key
 
@@ -50,15 +51,20 @@ git push -u origin main
 | `ANTHROPIC_API_KEY` | Anthropic のAPIキー |
 | `ALPHAVANTAGE_API_KEY` | Alpha Vantage のAPIキー |
 
-### 3. GitHub Pages を有効化
+### 3. Firebase Hosting を設定
 
-**Settings → Pages → Build and deployment → Source** を **GitHub Actions** に変更。
+1. https://console.firebase.google.com/ で **プロジェクトを追加**（プロジェクトIDを控える。Google アナリティクスは不要）
+2. **プロジェクトの設定（歯車）→ サービス アカウント → 新しい秘密鍵の生成** で JSON キーをダウンロード
+3. リポジトリに登録:
+   - **Settings → Secrets and variables → Actions → New repository secret** で `FIREBASE_SERVICE_ACCOUNT` = ダウンロードした JSON の中身全体
+   - 同じ画面の **Variables** タブで `FIREBASE_PROJECT_ID` = FirebaseのプロジェクトID
+4. 登録後、JSON キーファイルはPCから削除しておくと安全です
 
 ### 4. 動作確認
 
 **Actions** タブから各ワークフローを手動実行（Run workflow）できます。
 
-1. 「サイトをビルドしてGitHub Pagesへ公開」を実行 → `https://<ユーザー名>.github.io/market-daily/` でサイト表示を確認
+1. 「サイトをビルドしてFirebase Hostingへ公開」を実行 → `https://<プロジェクトID>.web.app` でサイト表示を確認
 2. 「夕刊を生成」または「朝刊を生成」を実行 → 記事が生成・公開されるか確認
 
 以降は毎営業日、自動で投稿されます。
@@ -67,7 +73,7 @@ git push -u origin main
 
 - Claude API（Opus 4.8 + web検索）: 1記事あたりおよそ10〜40円。1日2記事 × 月22営業日で **月1,000〜2,000円程度**
 - コストを下げたい場合: **Settings → Secrets and variables → Actions → Variables** で `ARTICLE_MODEL` = `claude-sonnet-5` を設定（約1/2〜1/3になります）
-- GitHub Actions / Pages / Yahoo Finance / Alpha Vantage: 無料枠内
+- GitHub Actions / Firebase Hosting / Yahoo Finance / Alpha Vantage: 無料枠内（Firebase Hosting の無料枠はストレージ10GB・転送360MB/日で、テキスト中心のブログなら十分収まります）
 
 ## カスタマイズ
 

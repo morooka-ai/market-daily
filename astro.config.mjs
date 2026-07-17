@@ -1,8 +1,8 @@
 import { defineConfig } from "astro/config";
 
-// GitHub Pages（プロジェクトサイト）で公開する場合:
-//   SITE_URL  = https://<ユーザー名>.github.io
-//   BASE_PATH = /<リポジトリ名>
+// Firebase Hosting で公開する場合:
+//   SITE_URL  = https://<FirebaseプロジェクトID>.web.app
+//   BASE_PATH = /
 // を GitHub Actions の env で渡す（README参照）。
 export default defineConfig({
   site: process.env.SITE_URL || "https://example.com",

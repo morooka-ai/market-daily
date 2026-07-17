@@ -1,4 +1,4 @@
-name: サイトをビルドしてGitHub Pagesへ公開
+name: サイトをビルドしてFirebase Hostingへ公開
 
 on:
   push:
@@ -8,15 +8,13 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
+  group: deploy
   cancel-in-progress: false
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,19 +27,12 @@ jobs:
       - run: npm ci
       - name: ビルド
         run: |
-          export SITE_URL="https://${GITHUB_REPOSITORY_OWNER}.github.io"
-          export BASE_PATH="/${GITHUB_REPOSITORY#*/}"
+          export SITE_URL="https://${{ vars.FIREBASE_PROJECT_ID }}.web.app"
+          export BASE_PATH="/"
           npm run build
-      - uses: actions/upload-pages-artifact@v3
+      - name: Firebase Hostingへデプロイ
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: ${{ vars.FIREBASE_PROJECT_ID }}
+          channelId: live
