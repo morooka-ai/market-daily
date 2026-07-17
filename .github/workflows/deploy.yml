@@ -6,8 +6,11 @@ on:
   workflow_dispatch:
   workflow_call: # 記事生成ワークフローから呼び出される
 
+# 認証は Workload Identity Federation（鍵レス）。Secretは不要。
+# 設定手順は scripts/setup/firebase-deploy-auth.mjs を参照。
 permissions:
   contents: read
+  id-token: write # Google Cloud への OIDC 認証に必要
 
 concurrency:
   group: deploy
@@ -27,12 +30,13 @@ jobs:
       - run: npm ci
       - name: ビルド
         run: |
-          export SITE_URL="https://${{ vars.FIREBASE_PROJECT_ID }}.web.app"
+          export SITE_URL="https://market-daily-jimulabo.web.app"
           export BASE_PATH="/"
           npm run build
-      - name: Firebase Hostingへデプロイ
-        uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Google Cloudへ認証（Workload Identity Federation）
+        uses: google-github-actions/auth@v2
         with:
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          projectId: ${{ vars.FIREBASE_PROJECT_ID }}
-          channelId: live
+          workload_identity_provider: projects/749554763243/locations/global/workloadIdentityPools/github/providers/github-oidc
+          service_account: github-action-deploy@market-daily-jimulabo.iam.gserviceaccount.com
+      - name: Firebase Hostingへデプロイ
+        run: npx firebase-tools deploy --only hosting --project market-daily-jimulabo

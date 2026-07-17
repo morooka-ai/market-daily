@@ -53,18 +53,21 @@ git push -u origin main
 
 ### 3. Firebase Hosting を設定
 
-1. https://console.firebase.google.com/ で **プロジェクトを追加**（プロジェクトIDを控える。Google アナリティクスは不要）
-2. **プロジェクトの設定（歯車）→ サービス アカウント → 新しい秘密鍵の生成** で JSON キーをダウンロード
-3. リポジトリに登録:
-   - **Settings → Secrets and variables → Actions → New repository secret** で `FIREBASE_SERVICE_ACCOUNT` = ダウンロードした JSON の中身全体
-   - 同じ画面の **Variables** タブで `FIREBASE_PROJECT_ID` = FirebaseのプロジェクトID
-4. 登録後、JSON キーファイルはPCから削除しておくと安全です
+```sh
+npm install -g firebase-tools
+firebase login
+firebase projects:create <プロジェクトID> --display-name "Market Daily"  # 表示名は英数字のみ
+node scripts/setup/firebase-deploy-auth.mjs  # デプロイ用の鍵レス認証（WIF）を自動設定
+```
+
+- 認証は Workload Identity Federation（鍵レス）なので、**GitHub Secrets への鍵登録は不要**です
+- プロジェクトIDを変える場合は `scripts/setup/firebase-deploy-auth.mjs` 冒頭の定数と `.github/workflows/deploy.yml` 内のプロジェクトID・プロバイダ設定も合わせて変更してください
 
 ### 4. 動作確認
 
 **Actions** タブから各ワークフローを手動実行（Run workflow）できます。
 
-1. 「サイトをビルドしてFirebase Hostingへ公開」を実行 → `https://<プロジェクトID>.web.app` でサイト表示を確認
+1. 「サイトをビルドしてFirebase Hostingへ公開」を実行 → https://market-daily-jimulabo.web.app でサイト表示を確認
 2. 「夕刊を生成」または「朝刊を生成」を実行 → 記事が生成・公開されるか確認
 
 以降は毎営業日、自動で投稿されます。

@@ -46,6 +46,6 @@ jobs:
     needs: generate
     if: needs.generate.outputs.posted == 'true'
     uses: ./.github/workflows/deploy.yml
-    secrets: inherit # FIREBASE_SERVICE_ACCOUNT を渡す
     permissions:
       contents: read
+      id-token: write # Google Cloud への OIDC 認証に必要
