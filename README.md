@@ -14,7 +14,7 @@ GitHub Actions（スケジュール実行）
   → 市場データ取得（Yahoo Finance / Alpha Vantage）
   → Gemini API が記事を執筆（Google検索で注目ニュースを確認）
   → Markdownをリポジトリにコミット
-  → Astroでビルドして Firebase Hosting（Google Cloud）に自動公開
+  → Astroでビルドして Google Cloud Run に自動公開
 ```
 
 - 土日・日本の祝日・米国市場の休場日は自動でスキップします。
@@ -26,7 +26,7 @@ GitHub Actions（スケジュール実行）
 
 - **Git**（未インストールの場合: https://git-scm.com/download/win ）
 - **GitHubアカウント**
-- **Googleアカウント**（Firebase Hosting 用）
+- **Googleアカウント**（Google Cloud 用）
 - **Gemini APIキー**（無料・クレジットカード不要）: https://aistudio.google.com/apikey で取得
 - **Alpha Vantage APIキー**（無料）: https://www.alphavantage.co/support/#api-key
 
@@ -51,23 +51,28 @@ git push -u origin main
 | `GEMINI_API_KEY` | Gemini のAPIキー |
 | `ALPHAVANTAGE_API_KEY` | Alpha Vantage のAPIキー |
 
-### 3. Firebase Hosting を設定
+### 3. Google Cloud（Cloud Run）を設定
+
+1. https://console.cloud.google.com でGCPプロジェクトを作成
+2. Cloud Run API を有効化し、サービスアカウント `github-action-deploy` を作成
+3. 認証とArtifact Registryのセットアップ:
 
 ```sh
 npm install -g firebase-tools
-firebase login
-firebase projects:create <プロジェクトID> --display-name "Market Daily"  # 表示名は英数字のみ
-node scripts/setup/firebase-deploy-auth.mjs  # デプロイ用の鍵レス認証（WIF）を自動設定
+firebase login   # GCPプロジェクトにオーナー権限のあるGoogleアカウントで
+node scripts/setup/cloud-run-deploy-auth.mjs      # 鍵レス認証（WIF）を自動設定
+node scripts/setup/cloud-run-domain-mapping.mjs   # カスタムドメイン設定（任意）
 ```
 
 - 認証は Workload Identity Federation（鍵レス）なので、**GitHub Secrets への鍵登録は不要**です
-- プロジェクトIDを変える場合は `scripts/setup/firebase-deploy-auth.mjs` 冒頭の定数と `.github/workflows/deploy.yml` 内のプロジェクトID・プロバイダ設定も合わせて変更してください
+- プロジェクトIDを変える場合は `scripts/setup/cloud-run-deploy-auth.mjs` 冒頭の定数と `.github/workflows/deploy.yml` 内の `env` も合わせて変更してください
+- カスタムドメインを使う場合は、事前に Google Search Console でドメイン所有権を確認し、DNS に CNAME（`ghs.googlehosted.com.`）を追加してください
 
 ### 4. 動作確認
 
 **Actions** タブから各ワークフローを手動実行（Run workflow）できます。
 
-1. 「サイトをビルドしてFirebase Hostingへ公開」を実行 → https://market-daily-jimulabo.web.app でサイト表示を確認
+1. 「サイトをビルドしてCloud Runへ公開」を実行 → https://market-daily.jimulabo.com でサイト表示を確認
 2. 「夕刊を生成」または「朝刊を生成」を実行 → 記事が生成・公開されるか確認
 
 以降は毎営業日、自動で投稿されます。
@@ -78,7 +83,9 @@ node scripts/setup/firebase-deploy-auth.mjs  # デプロイ用の鍵レス認証
 - Gemini API（gemini-3.5-flash）: 無料枠は1日2記事なら十分。Google検索グラウンディングも月5,000回まで無料
   - 注意: 無料枠ではプロンプト等がGoogleのモデル改善に利用されることがあります（市況データのみのため実害なし）
   - モデルを変える場合: **Settings → Secrets and variables → Actions → Variables** で `ARTICLE_MODEL` を設定（Proモデルは無料枠対象外なので注意）
-- GitHub Actions / Firebase Hosting / Yahoo Finance / Alpha Vantage: 無料枠内（Firebase Hosting の無料枠はストレージ10GB・転送360MB/日で、テキスト中心のブログなら十分収まります）
+- GitHub Actions / Yahoo Finance / Alpha Vantage: 無料枠内
+- Cloud Run: 無料枠（月200万リクエスト・メモリ 360,000 GiB秒）内に収まる想定。最小インスタンス0（アクセスがない時間は課金なし）
+- Artifact Registry: 無料枠は0.5GBまで。イメージが溜まったら古いものを削除してください
 
 ## カスタマイズ
 
