@@ -1,0 +1,4 @@
+# dist/ と nginx.conf 以外はイメージに不要
+*
+!dist
+!nginx.conf

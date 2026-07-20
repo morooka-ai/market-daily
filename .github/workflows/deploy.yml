@@ -1,4 +1,4 @@
-name: サイトをビルドしてFirebase Hostingへ公開
+name: サイトをビルドしてCloud Runへ公開
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_call: # 記事生成ワークフローから呼び出される
 
 # 認証は Workload Identity Federation（鍵レス）。Secretは不要。
-# 設定手順は scripts/setup/firebase-deploy-auth.mjs を参照。
+# 設定手順は scripts/setup/cloud-run-deploy-auth.mjs を参照。
 permissions:
   contents: read
   id-token: write # Google Cloud への OIDC 認証に必要
@@ -15,6 +15,12 @@ permissions:
 concurrency:
   group: deploy
   cancel-in-progress: false
+
+env:
+  PROJECT_ID: market-daily-503003
+  REGION: asia-northeast1
+  SERVICE: market-daily
+  IMAGE: asia-northeast1-docker.pkg.dev/market-daily-503003/market-daily/site
 
 jobs:
   build-and-deploy:
@@ -30,13 +36,34 @@ jobs:
       - run: npm ci
       - name: ビルド
         run: |
-          export SITE_URL="https://market-daily-jimulabo.web.app"
+          export SITE_URL="https://market-daily.jimulabo.com"
           export BASE_PATH="/"
           npm run build
       - name: Google Cloudへ認証（Workload Identity Federation）
+        id: auth
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: projects/749554763243/locations/global/workloadIdentityPools/github/providers/github-oidc
-          service_account: github-action-deploy@market-daily-jimulabo.iam.gserviceaccount.com
-      - name: Firebase Hostingへデプロイ
-        run: npx firebase-tools deploy --only hosting --project market-daily-jimulabo
+          workload_identity_provider: projects/1058048954400/locations/global/workloadIdentityPools/github/providers/github-oidc
+          service_account: github-action-deploy@market-daily-503003.iam.gserviceaccount.com
+          token_format: access_token
+      - name: Artifact Registryへdockerログイン
+        run: |
+          echo "${{ steps.auth.outputs.access_token }}" | docker login -u oauth2accesstoken --password-stdin asia-northeast1-docker.pkg.dev
+      - name: コンテナイメージをビルドしてプッシュ
+        run: |
+          docker build -t "$IMAGE:${{ github.sha }}" -t "$IMAGE:latest" .
+          docker push --all-tags "$IMAGE"
+      - name: Cloud Runへデプロイ
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.SERVICE }}
+          region: ${{ env.REGION }}
+          project_id: ${{ env.PROJECT_ID }}
+          image: ${{ env.IMAGE }}:${{ github.sha }}
+          flags: >-
+            --allow-unauthenticated
+            --port=8080
+            --memory=128Mi
+            --cpu=1
+            --min-instances=0
+            --max-instances=2
