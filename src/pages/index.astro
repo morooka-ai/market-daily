@@ -19,7 +19,11 @@ const fmt = new Intl.DateTimeFormat("ja-JP", {
       posts.map((post) => (
         <li>
           <span class={`badge ${post.data.edition}`}>
-            {post.data.edition === "morning" ? "朝刊" : "夕刊"}
+            {post.data.edition === "morning"
+              ? "朝刊"
+              : post.data.edition === "evening"
+                ? "夕刊"
+                : "お知らせ"}
           </span>
           <a href={`${base}posts/${post.id}/`}>{post.data.title}</a>
           <time datetime={post.data.pubDate.toISOString()}>
@@ -53,4 +57,5 @@ const fmt = new Intl.DateTimeFormat("ja-JP", {
   }
   .badge.morning { background: #d98123; }
   .badge.evening { background: #33508a; }
+  .badge.notice { background: #6b7280; }
 </style>

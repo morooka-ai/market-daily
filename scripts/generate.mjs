@@ -27,21 +27,45 @@ const today = ymd(now);
 const postsDir = path.resolve("content/posts");
 fs.mkdirSync(postsDir, { recursive: true });
 
+const editionLabel = mode === "morning" ? "朝刊" : "夕刊";
+
 const outPath = path.join(postsDir, `${today}-${mode}.md`);
 if (fs.existsSync(outPath)) {
+  // 二重発火（Cloud Scheduler と GitHub cron）時の上書き防止。既存があれば何もしない
   console.log(`既に生成済みのためスキップ: ${outPath}`);
   process.exit(0);
 }
 
-// ---- 市場が休みの日はスキップ ---------------------------------------------
+// 記事を出せない日は、代わりに理由を明記した「お知らせ」を同じ枠に投稿する。
+// これにより記事が出ない日もサイトが更新され、理由がサイト上で分かる。
+function postNotice(reason) {
+  const title = `【お知らせ】${today} 本日の${editionLabel}はお休みです`;
+  const description = `本日は${reason}のため、${editionLabel}の配信はありません。`;
+  const body =
+    `本日（${today}）は**${reason}**のため、${editionLabel}の市況記事はお休みです。\n\n` +
+    `次回の配信をお待ちください。\n`;
+  const frontmatter = [
+    "---",
+    `title: ${JSON.stringify(title)}`,
+    `description: ${JSON.stringify(description)}`,
+    `pubDate: ${now.toISOString()}`,
+    "edition: notice",
+    "---",
+    "",
+  ].join("\n");
+  fs.writeFileSync(outPath, frontmatter + body, "utf8");
+  console.log(`お知らせを投稿しました（${reason}）: ${outPath}`);
+  process.exit(0);
+}
+
+// ---- 市場が休みの日はお知らせを投稿 ---------------------------------------
 if (mode === "evening") {
   // 東証: 土日・日本の祝日・年末年始(12/31-1/3)は休場
   const dow = now.getUTCDay();
   const md = today.slice(5);
   const isYearEnd = md === "12-31" || md === "01-01" || md === "01-02" || md === "01-03";
   if (dow === 0 || dow === 6 || isYearEnd || holidayJp.isHoliday(new Date(today))) {
-    console.log(`本日(${today})は東証休場のためスキップします`);
-    process.exit(0);
+    postNotice("東証休場");
   }
 }
 
@@ -65,8 +89,8 @@ async function main() {
     ]);
 
     if (isStale(actives.lastUpdated)) {
-      console.log(`米国市場のデータが古い（休場の可能性）ためスキップします: ${actives.lastUpdated}`);
-      process.exit(0);
+      console.log(`米国市場のデータが古い: ${actives.lastUpdated}`);
+      postNotice("米国市場が休場（データ未更新）の可能性");
     }
 
     const activesTable = table(
@@ -104,8 +128,8 @@ ${activesTable}
     ]);
 
     if (nikkei.date !== today) {
-      console.log(`日経平均の日付(${nikkei.date})が本日と一致しません（休場/未更新）。スキップします`);
-      process.exit(0);
+      console.log(`日経平均の日付(${nikkei.date})が本日と一致しません（休場/未更新）`);
+      postNotice("東証の相場データが未更新（休場の可能性）");
     }
 
     title = `【夕刊】${today} 東京市場まとめ｜日経平均・ドル円・金`;

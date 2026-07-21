@@ -7,7 +7,7 @@ const posts = defineCollection({
     title: z.string(),
     description: z.string(),
     pubDate: z.coerce.date(),
-    edition: z.enum(["morning", "evening"]),
+    edition: z.enum(["morning", "evening", "notice"]),
   }),
 });
 
