@@ -1,6 +1,9 @@
 name: 朝刊を生成（毎営業日 7:30 JST）
 
 on:
+  # 主トリガーは Cloud Scheduler（Asia/Tokyo で 7:30 発火 → workflow_dispatch API）。
+  # GitHub の schedule は発火が数時間遅延・脱落することがあるため、あくまでフォールバック。
+  # 両者が発火しても generate.mjs が「既に生成済み」でスキップするので二重投稿にはならない。
   schedule:
     # 22:30 UTC (月-金) = 翌朝 7:30 JST (火-土) — 米国市場・NYクローズ後
     - cron: "30 22 * * 1-5"
@@ -8,6 +11,11 @@ on:
 
 permissions:
   contents: write
+
+# Cloud Scheduler と schedule が近接発火してもプッシュが衝突しないよう直列化する
+concurrency:
+  group: generate-morning
+  cancel-in-progress: false
 
 jobs:
   generate:

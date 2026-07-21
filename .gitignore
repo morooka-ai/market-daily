@@ -7,3 +7,6 @@ dist/
 # APIキーのメモ（絶対にコミットしない）
 market-dairy API.txt
 *API*.txt
+
+# Cloud Scheduler セットアップ用の GitHub PAT（絶対にコミットしない）
+.gh-dispatch-token
