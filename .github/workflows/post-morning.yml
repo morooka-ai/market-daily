@@ -35,12 +35,19 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
           ARTICLE_MODEL: ${{ vars.ARTICLE_MODEL }}
+      - name: 米国株の解説を生成
+        # 記事本体の生成・デプロイを妨げないよう、失敗しても続行する。
+        continue-on-error: true
+        run: node scripts/generate-stocks.mjs
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ARTICLE_MODEL: ${{ vars.ARTICLE_MODEL }}
       - name: コミットしてプッシュ
         id: commit
         run: |
           git config user.name "market-daily-bot"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add content/posts
+          git add content/posts content/us-stocks.json
           if git diff --cached --quiet; then
             echo "posted=false" >> "$GITHUB_OUTPUT"
             echo "新しい記事はありません（休場などによるスキップ）"

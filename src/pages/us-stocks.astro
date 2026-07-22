@@ -1,0 +1,190 @@
+---
+import Base from "../layouts/Base.astro";
+import { US_STOCKS } from "../us-stocks-data.mjs";
+import notes from "../../content/us-stocks.json";
+
+// 銘柄メタ情報（US_STOCKS）に、自動生成された解説（content/us-stocks.json）を
+// ティッカーで突き合わせてマージする。解説が未生成の銘柄はチャートのみ表示。
+const stocks = US_STOCKS.map((s) => ({
+  ...s,
+  current: notes.stocks?.[s.ticker]?.current ?? "",
+  updates: notes.stocks?.[s.ticker]?.updates ?? "",
+}));
+
+// 解説の最終更新日（JST表記、YYYY-MM-DD）
+const updatedAt = notes.generatedAt
+  ? new Date(notes.generatedAt).toLocaleDateString("ja-JP", {
+      timeZone: "Asia/Tokyo",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    })
+  : null;
+
+const title = "米国株 注目6銘柄 チャート・株価・前日比一覧";
+const description =
+  "アルファベット・アマゾン・アップル・スペースX・ラスベガス・サンズ・フェラーリの株価、前日比、リアルタイムチャートと解説をまとめて確認できます。";
+---
+
+<Base title={title} description={description}>
+  <h1>米国株 注目6銘柄</h1>
+  <p>
+    注目の米国株6銘柄について、<strong
+      >①チャート・②現在の株価（ドル）・③前日比・④解説（現状と公表されている企業の動向）</strong
+    >をまとめました。株価はリアルタイム表示（遅延を含む場合があります）です。
+  </p>
+  {updatedAt && <p class="updated-at">解説の最終更新：{updatedAt}</p>}
+
+  {
+    stocks.map((s) => (
+      <section class="stock-block">
+        <h2>
+          {s.name}
+          <span class="ticker">{s.ticker}</span>
+        </h2>
+        <div class="tv-info" id={`info-${s.ticker}`}>
+          <div class="tradingview-widget-container__widget" />
+        </div>
+        <div class="tv-wrapper">
+          <div class="tradingview-widget-container" id={`chart-${s.ticker}`}>
+            <div class="tradingview-widget-container__widget" />
+          </div>
+        </div>
+        {s.current && (
+          <p class="stock-note">
+            <span class="note-label">現状</span>
+            {s.current}
+          </p>
+        )}
+        {s.updates && (
+          <p class="stock-note">
+            <span class="note-label">企業の動向</span>
+            {s.updates}
+          </p>
+        )}
+      </section>
+    ))
+  }
+
+  <p class="source-note">
+    株価・チャート提供：<a
+      href="https://jp.tradingview.com/"
+      target="_blank"
+      rel="noopener">TradingView</a
+    >。表示される株価には遅延が含まれる場合があります。本ページは情報提供のみを目的としたもので、特定の銘柄の売買を推奨するものではありません。投資の判断はご自身の責任で行ってください。詳しくは<a
+      href={`${import.meta.env.BASE_URL}disclaimer/`}>免責事項</a
+    >をご覧ください。
+  </p>
+</Base>
+
+<script
+  is:inline
+  define:vars={{ widgets: stocks.map((s) => ({ ticker: s.ticker, symbol: s.symbol })) }}
+  type="module"
+>
+  const theme = "light";
+  for (const s of widgets) {
+    // ②現在の株価・③前日比を表示するシンボル情報ウィジェット
+    const info = document.getElementById(`info-${s.ticker}`);
+    if (info) {
+      const si = document.createElement("script");
+      si.type = "text/javascript";
+      si.src =
+        "https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js";
+      si.async = true;
+      si.innerHTML = JSON.stringify({
+        symbol: s.symbol,
+        width: "100%",
+        locale: "ja",
+        colorTheme: theme,
+        isTransparent: true,
+      });
+      info.appendChild(si);
+    }
+
+    // ①チャート（アドバンストチャート）
+    const chart = document.getElementById(`chart-${s.ticker}`);
+    if (chart) {
+      const ch = document.createElement("script");
+      ch.type = "text/javascript";
+      ch.src =
+        "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+      ch.async = true;
+      ch.innerHTML = JSON.stringify({
+        autosize: true,
+        symbol: s.symbol,
+        interval: "D",
+        timezone: "Asia/Tokyo",
+        theme,
+        style: "1",
+        locale: "ja",
+        hide_side_toolbar: true,
+        allow_symbol_change: false,
+        calendar: false,
+        support_host: "https://www.tradingview.com",
+      });
+      chart.appendChild(ch);
+    }
+  }
+</script>
+
+<style>
+  .updated-at {
+    margin: 0.2rem 0 0;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .stock-block {
+    margin: 1.5rem 0 2.5rem;
+  }
+  .stock-block h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .ticker {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.05rem 0.4rem;
+  }
+  .tv-info {
+    margin-bottom: 0.6rem;
+  }
+  .tv-wrapper {
+    height: 380px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .tradingview-widget-container,
+  .tradingview-widget-container__widget {
+    height: 100%;
+    width: 100%;
+  }
+  .stock-note {
+    margin: 0.7rem 0 0;
+    font-size: 0.92rem;
+    line-height: 1.7;
+  }
+  .note-label {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 3px;
+    padding: 0 0.35rem;
+    margin-right: 0.4rem;
+    vertical-align: 0.08em;
+  }
+  .source-note {
+    margin-top: 2rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+</style>
