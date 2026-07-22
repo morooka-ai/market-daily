@@ -1,0 +1,118 @@
+---
+import Base from "../layouts/Base.astro";
+
+const charts = [
+  {
+    id: "chart-1m",
+    interval: "1",
+    heading: "ポンド円 1分足チャート",
+    note: "超短期のスキャルピング向け。直近の値動きをリアルタイムで確認できます。",
+  },
+  {
+    id: "chart-30m",
+    interval: "30",
+    heading: "ポンド円 30分足チャート",
+    note: "デイトレード向け。当日のトレンドや押し目・戻りの目安に。",
+  },
+  {
+    id: "chart-1d",
+    interval: "D",
+    heading: "ポンド円 日足チャート",
+    note: "スイング・中長期向け。大きな流れや節目の水準を把握できます。",
+  },
+];
+
+const title = "ポンド円（GBP/JPY）チャート";
+const description =
+  "ポンド円（GBP/JPY）のリアルタイムチャートを1分足・30分足・日足で表示。スキャルピングからスイングまで、時間軸ごとの値動きを無料で確認できます。";
+---
+
+<Base title={title} description={description}>
+  <h1>ポンド円（GBP/JPY）チャート</h1>
+  <p>
+    英ポンド／日本円（GBP/JPY）の為替レートを、<strong>1分足・30分足・日足</strong>の3つの時間軸でリアルタイム表示しています。チャートは操作でき、テクニカル指標の追加や期間の変更も可能です。
+  </p>
+
+  {
+    charts.map((c) => (
+      <section class="chart-block">
+        <h2>{c.heading}</h2>
+        <p class="chart-note">{c.note}</p>
+        <div class="tv-wrapper">
+          <div class="tradingview-widget-container" id={c.id}>
+            <div class="tradingview-widget-container__widget" />
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <p class="source-note">
+    チャート提供：<a
+      href="https://jp.tradingview.com/"
+      target="_blank"
+      rel="noopener">TradingView</a
+    >。表示レートには遅延が含まれる場合があります。取引の判断はご自身の責任で行ってください。詳しくは<a
+      href={`${import.meta.env.BASE_URL}disclaimer/`}>免責事項</a
+    >をご覧ください。
+  </p>
+</Base>
+
+<script
+  is:inline
+  define:vars={{ charts }}
+  type="module"
+>
+  const theme = "light";
+  for (const c of charts) {
+    const container = document.getElementById(c.id);
+    if (!container) continue;
+    const s = document.createElement("script");
+    s.type = "text/javascript";
+    s.src =
+      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+    s.async = true;
+    s.innerHTML = JSON.stringify({
+      autosize: true,
+      symbol: "FX:GBPJPY",
+      interval: c.interval,
+      timezone: "Asia/Tokyo",
+      theme,
+      style: "1",
+      locale: "ja",
+      hide_side_toolbar: false,
+      allow_symbol_change: false,
+      calendar: false,
+      support_host: "https://www.tradingview.com",
+    });
+    container.appendChild(s);
+  }
+</script>
+
+<style>
+  .chart-block {
+    margin: 1.5rem 0 2rem;
+  }
+  .chart-note {
+    margin: 0.2rem 0 0.8rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .tv-wrapper {
+    height: 420px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .tradingview-widget-container,
+  .tradingview-widget-container__widget {
+    height: 100%;
+    width: 100%;
+  }
+  .source-note {
+    margin-top: 2rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+</style>
