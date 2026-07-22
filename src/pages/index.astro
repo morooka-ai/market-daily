@@ -14,6 +14,22 @@ const fmt = new Intl.DateTimeFormat("ja-JP", {
 
 <Base>
   <h1>最新の記事</h1>
+  <div class="schedule-note">
+    <p class="schedule-title">更新時間の目安（毎営業日）</p>
+    <ul class="schedule-list">
+      <li>
+        <span class="badge morning">朝刊</span>
+        <strong>7:30 ごろ</strong>（前夜の米国市場・NYクローズ後）
+      </li>
+      <li>
+        <span class="badge evening">夕刊</span>
+        <strong>16:00 ごろ</strong>（東証の大引け後）
+      </li>
+    </ul>
+    <p class="schedule-caption">
+      時刻はいずれも日本時間の目安です。市場の休場日や配信状況により、時間が前後したり配信をお休みする場合があります。
+    </p>
+  </div>
   <ul class="post-list">
     {
       posts.map((post) => (
@@ -37,6 +53,33 @@ const fmt = new Intl.DateTimeFormat("ja-JP", {
 </Base>
 
 <style>
+  .schedule-note {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.9rem 1rem;
+    margin-bottom: 1.4rem;
+  }
+  .schedule-title {
+    margin: 0 0 0.6rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+  .schedule-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .schedule-list li { font-size: 0.9rem; }
+  .schedule-caption {
+    margin: 0.7rem 0 0;
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
   .post-list { list-style: none; padding: 0; }
   .post-list li {
     background: var(--card);
