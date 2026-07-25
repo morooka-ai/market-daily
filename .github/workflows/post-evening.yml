@@ -56,3 +56,24 @@ jobs:
     permissions:
       contents: read
       id-token: write # Google Cloud への OIDC 認証に必要
+
+  announce:
+    # サイト公開後にXへ告知（リンク先が生きている状態でポストする）。
+    # 告知の失敗で記事生成ワークフローを失敗扱いにしない。
+    needs: [generate, deploy]
+    if: needs.generate.outputs.posted == 'true'
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main # generate ジョブが push した最新コミット（新記事入り）を取得する
+      - name: Xへ告知ポスト
+        run: node scripts/post-to-x.mjs evening
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
