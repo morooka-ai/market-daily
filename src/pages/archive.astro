@@ -1,0 +1,85 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+
+const posts = (await getCollection("posts")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const base = import.meta.env.BASE_URL;
+const fmt = new Intl.DateTimeFormat("ja-JP", {
+  dateStyle: "long",
+  timeZone: "Asia/Tokyo",
+});
+const monthFmt = new Intl.DateTimeFormat("ja-JP", {
+  year: "numeric",
+  month: "long",
+  timeZone: "Asia/Tokyo",
+});
+
+// 月ごとにグループ化（新しい月が先頭）
+const byMonth = new Map<string, typeof posts>();
+for (const post of posts) {
+  const key = monthFmt.format(post.data.pubDate);
+  if (!byMonth.has(key)) byMonth.set(key, []);
+  byMonth.get(key)!.push(post);
+}
+
+const title = "記事アーカイブ";
+const description =
+  "朝刊・夕刊の市況解説記事のアーカイブです。過去の記事を月別に一覧できます。";
+---
+
+<Base title={title} description={description}>
+  <h1>記事アーカイブ</h1>
+  <p>これまでに配信した朝刊・夕刊の記事を月別にまとめています。</p>
+
+  {
+    [...byMonth.entries()].map(([month, monthPosts]) => (
+      <section>
+        <h2>{month}</h2>
+        <ul class="post-list">
+          {monthPosts.map((post) => (
+            <li>
+              <span class={`badge ${post.data.edition}`}>
+                {post.data.edition === "morning"
+                  ? "朝刊"
+                  : post.data.edition === "evening"
+                    ? "夕刊"
+                    : "お知らせ"}
+              </span>
+              <a href={`${base}posts/${post.id}/`}>{post.data.title}</a>
+              <time datetime={post.data.pubDate.toISOString()}>
+                {fmt.format(post.data.pubDate)}
+              </time>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+  {posts.length === 0 && <p>記事はまだありません。</p>}
+</Base>
+
+<style>
+  .post-list { list-style: none; padding: 0; }
+  .post-list li {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.7rem;
+  }
+  .post-list a { font-weight: 600; text-decoration: none; }
+  .post-list time { display: block; font-size: 0.8rem; color: var(--muted); }
+  .badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    margin-right: 0.5rem;
+    color: #fff;
+  }
+  .badge.morning { background: #d98123; }
+  .badge.evening { background: #33508a; }
+  .badge.notice { background: #6b7280; }
+</style>

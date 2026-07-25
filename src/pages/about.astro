@@ -1,0 +1,45 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE_TITLE } from "../consts.mjs";
+
+const title = "運営者情報";
+const description = `${SITE_TITLE}の運営者情報とお問い合わせ先のご案内です。`;
+---
+
+<Base title={title} description={description}>
+  <h1>運営者情報</h1>
+
+  <table>
+    <tbody>
+      <tr>
+        <th>サイト名</th>
+        <td>{SITE_TITLE}</td>
+      </tr>
+      <tr>
+        <th>運営者</th>
+        <td>JOPEFIC合同会社</td>
+      </tr>
+      <tr>
+        <th>お問い合わせ</th>
+        <td><a href="mailto:inquiry@jimulabo.com">inquiry@jimulabo.com</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>当サイトについて</h2>
+  <p>
+    「{SITE_TITLE}」は、毎営業日の朝と夕方に為替・株式市況の解説記事を配信するマーケット情報サイトです。記事はAI（人工知能）が公開されている市場データおよびニュースをもとに自動生成しています。あわせて、FX主要通貨ペアのリアルタイムチャートや米国株の注目銘柄の株価・解説を掲載しています。
+  </p>
+  <p>
+    掲載情報の取り扱いについては<a
+      href={`${import.meta.env.BASE_URL}disclaimer/`}>免責事項</a
+    >および<a href={`${import.meta.env.BASE_URL}privacy/`}
+      >プライバシーポリシー</a
+    >をご覧ください。
+  </p>
+
+  <h2>お問い合わせ</h2>
+  <p>
+    当サイトに関するお問い合わせは、上記メールアドレスまでお願いいたします。内容によっては回答までお時間をいただく場合、または回答いたしかねる場合があります。
+  </p>
+</Base>

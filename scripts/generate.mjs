@@ -27,23 +27,8 @@ const today = ymd(now);
 const postsDir = path.resolve("content/posts");
 fs.mkdirSync(postsDir, { recursive: true });
 
-// ---- 7日経過した記事は自動削除 --------------------------------------------
-// content/posts 内の YYYY-MM-DD-*.md（記事・お知らせ問わず）を対象に、
-// 投稿日から7日以上経過したものを削除する。削除は git diff に含まれるので、
-// 既存のコミット/デプロイ工程でサイトからも消える。generate.mjs は取引日/
-// 祝日ともほぼ毎日走るため、これで日次のクリーンアップになる。
-function cleanupOldPosts() {
-  // 本日を含め直近7日分（today 〜 today-6）を残し、それより前は削除
-  const cutoff = ymd(new Date(now.getTime() - 6 * 24 * 3600 * 1000));
-  for (const f of fs.readdirSync(postsDir)) {
-    const m = f.match(/^(\d{4}-\d{2}-\d{2})-.*\.md$/);
-    if (m && m[1] < cutoff) {
-      fs.rmSync(path.join(postsDir, f));
-      console.log(`7日経過のため削除: ${f}`);
-    }
-  }
-}
-cleanupOldPosts();
+// 記事は削除せず蓄積する（SEO資産化のため、2026-07-25に7日自動削除を廃止）。
+// 過去記事はトップの「アーカイブ」ページ（月別一覧）から辿れる。
 
 const editionLabel = mode === "morning" ? "朝刊" : "夕刊";
 

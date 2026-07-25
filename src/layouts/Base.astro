@@ -38,7 +38,9 @@ const base = import.meta.env.BASE_URL;
       <slot />
     </main>
     <footer>
-      <p>
+      <p class="footer-links">
+        <a href={`${base}about/`}>運営者情報</a>
+        <a href={`${base}privacy/`}>プライバシーポリシー</a>
         <a href={`${base}disclaimer/`}>免責事項</a>
       </p>
       <p>© {new Date().getFullYear()} {SITE_TITLE}</p>
@@ -94,6 +96,12 @@ const base = import.meta.env.BASE_URL;
     color: var(--muted);
   }
   footer a { color: var(--accent); }
+  .footer-links {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
   h1 { font-size: 1.45rem; line-height: 1.5; }
   h2 {
     font-size: 1.15rem;

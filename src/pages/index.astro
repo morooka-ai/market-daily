@@ -2,9 +2,12 @@
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 
-const posts = (await getCollection("posts")).sort(
+const allPosts = (await getCollection("posts")).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+// トップは直近14件（約1週間分）のみ。それ以前はアーカイブページへ
+const posts = allPosts.slice(0, 14);
+const hasMore = allPosts.length > posts.length;
 const base = import.meta.env.BASE_URL;
 const fmt = new Intl.DateTimeFormat("ja-JP", {
   dateStyle: "long",
@@ -50,6 +53,13 @@ const fmt = new Intl.DateTimeFormat("ja-JP", {
     }
   </ul>
   {posts.length === 0 && <p>記事はまだありません。</p>}
+  {
+    hasMore && (
+      <p class="archive-link">
+        <a href={`${base}archive/`}>過去の記事一覧（アーカイブ）→</a>
+      </p>
+    )
+  }
 </Base>
 
 <style>
@@ -101,4 +111,5 @@ const fmt = new Intl.DateTimeFormat("ja-JP", {
   .badge.morning { background: #d98123; }
   .badge.evening { background: #33508a; }
   .badge.notice { background: #6b7280; }
+  .archive-link { text-align: center; margin-top: 1.5rem; }
 </style>
