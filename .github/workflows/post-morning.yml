@@ -68,8 +68,10 @@ jobs:
   announce:
     # サイト公開後にXへ告知（リンク先が生きている状態でポストする）。
     # 告知の失敗で記事生成ワークフローを失敗扱いにしない。
+    # X APIはクレジット制（有料）のため既定では無効。IFTTT（RSS→X）で代替中。
+    # 有効化するにはリポジトリ変数 X_ANNOUNCE_ENABLED=true を設定（IFTTT側は停止すること）。
     needs: [generate, deploy]
-    if: needs.generate.outputs.posted == 'true'
+    if: needs.generate.outputs.posted == 'true' && vars.X_ANNOUNCE_ENABLED == 'true'
     continue-on-error: true
     runs-on: ubuntu-latest
     permissions:
