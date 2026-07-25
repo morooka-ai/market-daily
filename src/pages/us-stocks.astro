@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import AffiliateSlot from "../components/AffiliateSlot.astro";
 import { US_STOCKS } from "../us-stocks-data.mjs";
 import notes from "../../content/us-stocks.json";
 
@@ -65,6 +66,8 @@ const description =
       </section>
     ))
   }
+
+  <AffiliateSlot name="us-stocks" />
 
   <p class="source-note">
     株価・チャート提供：<a

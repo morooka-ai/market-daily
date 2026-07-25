@@ -1,0 +1,44 @@
+---
+// src/data/affiliates/<name>.html にASPの広告コードを置くと、その内容をこの枠に表示する。
+// ファイルが無いスロットは何も出力しない（枠ごと非表示）。
+// 景品表示法のステマ規制対応として「PR」表記を必ず付ける。
+const snippets: Record<string, string> = import.meta.glob(
+  "../data/affiliates/*.html",
+  { query: "?raw", import: "default", eager: true },
+);
+const { name } = Astro.props;
+const html = snippets[`../data/affiliates/${name}.html`];
+---
+
+{
+  html && (
+    <aside class="affiliate-slot">
+      <span class="pr-label">PR</span>
+      <div class="affiliate-body" set:html={html} />
+    </aside>
+  )
+}
+
+<style>
+  .affiliate-slot {
+    margin: 1.5rem 0;
+    padding: 0.8rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    text-align: center;
+  }
+  .pr-label {
+    display: inline-block;
+    margin-bottom: 0.4rem;
+    padding: 0 0.4rem;
+    font-size: 0.7rem;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+  }
+  .affiliate-body :global(img) {
+    max-width: 100%;
+    height: auto;
+  }
+</style>
