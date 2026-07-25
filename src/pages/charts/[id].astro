@@ -1,0 +1,147 @@
+---
+import Base from "../../layouts/Base.astro";
+import AffiliateSlot from "../../components/AffiliateSlot.astro";
+import { CHART_PAIRS } from "../../chart-pairs.mjs";
+
+export function getStaticPaths() {
+  return CHART_PAIRS.map((p) => ({ params: { id: p.id }, props: { pair: p } }));
+}
+
+const { pair } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+const charts = [
+  {
+    id: "chart-1m",
+    interval: "1",
+    heading: `${pair.name} 1分足チャート`,
+    note: "超短期のスキャルピング向け。直近の値動きをリアルタイムで確認できます。",
+  },
+  {
+    id: "chart-30m",
+    interval: "30",
+    heading: `${pair.name} 30分足チャート`,
+    note: "デイトレード向け。当日のトレンドや押し目・戻りの目安に。",
+  },
+  {
+    id: "chart-1d",
+    interval: "D",
+    heading: `${pair.name} 日足チャート`,
+    note: "スイング・中長期向け。大きな流れや節目の水準を把握できます。",
+  },
+];
+
+const others = CHART_PAIRS.filter((p) => p.id !== pair.id);
+const title = `${pair.name}（${pair.pair}）チャート`;
+const description = `${pair.name}（${pair.pair}）のリアルタイムチャートを1分足・30分足・日足で表示。スキャルピングからスイングまで、時間軸ごとの値動きを無料で確認できます。`;
+---
+
+<Base title={title} description={description}>
+  <h1>{pair.name}（{pair.pair}）チャート</h1>
+  <p>{pair.lead}チャートは操作でき、テクニカル指標の追加や期間の変更も可能です。</p>
+
+  {
+    charts.map((c) => (
+      <section class="chart-block">
+        <h2>{c.heading}</h2>
+        <p class="chart-note">{c.note}</p>
+        <div class="tv-wrapper">
+          <div class="tradingview-widget-container" id={c.id}>
+            <div class="tradingview-widget-container__widget" />
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <AffiliateSlot name="fx-page" />
+
+  <section class="related">
+    <h2>その他のチャート</h2>
+    <ul>
+      {
+        others.map((p) => (
+          <li>
+            <a href={`${base}charts/${p.id}/`}>
+              {p.name}（{p.pair}）チャート
+            </a>
+          </li>
+        ))
+      }
+      <li><a href={`${base}fx/`}>ポンド円（GBP/JPY）チャート</a></li>
+      <li><a href={`${base}us-stocks/`}>米国株 注目銘柄チャート</a></li>
+    </ul>
+  </section>
+
+  <p class="source-note">
+    チャート提供：<a
+      href="https://jp.tradingview.com/"
+      target="_blank"
+      rel="noopener">TradingView</a
+    >。表示レートには遅延が含まれる場合があります。取引の判断はご自身の責任で行ってください。詳しくは<a
+      href={`${base}disclaimer/`}>免責事項</a
+    >をご覧ください。
+  </p>
+</Base>
+
+<script
+  is:inline
+  define:vars={{ charts, symbol: pair.symbol }}
+  type="module"
+>
+  const theme = "light";
+  for (const c of charts) {
+    const container = document.getElementById(c.id);
+    if (!container) continue;
+    const s = document.createElement("script");
+    s.type = "text/javascript";
+    s.src =
+      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+    s.async = true;
+    s.innerHTML = JSON.stringify({
+      autosize: true,
+      symbol,
+      interval: c.interval,
+      timezone: "Asia/Tokyo",
+      theme,
+      style: "1",
+      locale: "ja",
+      hide_side_toolbar: false,
+      allow_symbol_change: false,
+      calendar: false,
+      support_host: "https://www.tradingview.com",
+    });
+    container.appendChild(s);
+  }
+</script>
+
+<style>
+  .chart-block {
+    margin: 1.5rem 0 2rem;
+  }
+  .chart-note {
+    margin: 0.2rem 0 0.8rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .tv-wrapper {
+    height: 420px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .tradingview-widget-container,
+  .tradingview-widget-container__widget {
+    height: 100%;
+    width: 100%;
+  }
+  .related ul {
+    padding-left: 1.2rem;
+  }
+  .source-note {
+    margin-top: 2rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+</style>

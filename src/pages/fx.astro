@@ -101,6 +101,17 @@ const description =
 
   <AffiliateSlot name="fx-page" />
 
+  <section class="related">
+    <h2>その他のチャート</h2>
+    <ul>
+      <li><a href={`${import.meta.env.BASE_URL}charts/usdjpy/`}>ドル円（USD/JPY）チャート</a></li>
+      <li><a href={`${import.meta.env.BASE_URL}charts/eurjpy/`}>ユーロ円（EUR/JPY）チャート</a></li>
+      <li><a href={`${import.meta.env.BASE_URL}charts/gold/`}>ゴールド（XAU/USD）チャート</a></li>
+      <li><a href={`${import.meta.env.BASE_URL}charts/btcjpy/`}>ビットコイン円（BTC/JPY）チャート</a></li>
+      <li><a href={`${import.meta.env.BASE_URL}us-stocks/`}>米国株 注目銘柄チャート</a></li>
+    </ul>
+  </section>
+
   <p class="source-note">
     チャート提供：<a
       href="https://jp.tradingview.com/"
@@ -185,6 +196,9 @@ const description =
   .tradingview-widget-container__widget {
     height: 100%;
     width: 100%;
+  }
+  .related ul {
+    padding-left: 1.2rem;
   }
   .source-note {
     margin-top: 2rem;

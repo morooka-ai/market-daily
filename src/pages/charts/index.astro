@@ -1,0 +1,59 @@
+---
+import Base from "../../layouts/Base.astro";
+import { CHART_PAIRS } from "../../chart-pairs.mjs";
+
+const base = import.meta.env.BASE_URL;
+const title = "チャート一覧";
+const description =
+  "ドル円・ユーロ円・ポンド円・ゴールド・ビットコイン円のリアルタイムチャートと米国株の注目銘柄チャートを無料で確認できます。";
+---
+
+<Base title={title} description={description}>
+  <h1>チャート一覧</h1>
+  <p>
+    各銘柄のリアルタイムチャートを<strong>1分足・30分足・日足</strong>で表示しています。見たい銘柄を選んでください。
+  </p>
+
+  <ul class="chart-list">
+    {
+      CHART_PAIRS.map((p) => (
+        <li>
+          <a href={`${base}charts/${p.id}/`}>
+            {p.name}（{p.pair}）チャート
+          </a>
+        </li>
+      ))
+    }
+    <li>
+      <a href={`${base}fx/`}>ポンド円（GBP/JPY）チャート</a>
+      <span class="sub">CHF円・AUD円・NZD円の30分足も掲載</span>
+    </li>
+    <li>
+      <a href={`${base}us-stocks/`}>米国株 注目6銘柄</a>
+      <span class="sub">株価・前日比・チャート・解説</span>
+    </li>
+  </ul>
+</Base>
+
+<style>
+  .chart-list {
+    list-style: none;
+    padding: 0;
+  }
+  .chart-list li {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.7rem;
+  }
+  .chart-list a {
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .sub {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+</style>
