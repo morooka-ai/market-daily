@@ -34,9 +34,13 @@ const charts = [
 const siblings = CHART_PAIRS.filter(
   (p) => p.category === pair.category && p.id !== pair.id,
 );
-const categoryLabel = pair.category === "fx" ? "FX" : "暗号資産";
-const categoryHref = pair.category === "fx" ? `${base}fx/` : `${base}crypto/`;
-const slotName = pair.category === "fx" ? "fx-page" : "crypto-page";
+const CATEGORY = {
+  fx: { label: "FX", href: `${base}fx/`, slot: "fx-page" },
+  metal: { label: "貴金属", href: `${base}metals/`, slot: "metals-page" },
+  crypto: { label: "暗号資産", href: `${base}crypto/`, slot: "crypto-page" },
+};
+const { label: categoryLabel, href: categoryHref, slot: slotName } =
+  CATEGORY[pair.category];
 
 const title = `${pair.name}（${pair.pair}）チャート`;
 const description = `${pair.name}（${pair.pair}）のリアルタイムチャートを1分足・30分足・日足で表示。スキャルピングからスイングまで、時間軸ごとの値動きを無料で確認できます。`;

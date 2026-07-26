@@ -1,5 +1,5 @@
 // チャートページの銘柄定義。
-// category: "fx" | "crypto"。symbol は TradingView のシンボル。lead は詳細ページ冒頭の説明文。
+// category: "fx" | "metal" | "crypto"。symbol は TradingView のシンボル。lead は詳細ページ冒頭の説明文。
 export const CHART_PAIRS = [
   {
     id: "usdjpy",
@@ -51,11 +51,27 @@ export const CHART_PAIRS = [
   },
   {
     id: "gold",
-    category: "fx",
+    category: "metal",
     symbol: "OANDA:XAUUSD",
-    name: "ゴールド（金）",
+    name: "金（ゴールド）",
     pair: "XAU/USD",
     lead: "金（ゴールド）のドル建て価格（XAU/USD）を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。インフレや地政学リスクの局面で買われやすい、代表的な安全資産です。",
+  },
+  {
+    id: "platinum",
+    category: "metal",
+    symbol: "OANDA:XPTUSD",
+    name: "プラチナ（白金）",
+    pair: "XPT/USD",
+    lead: "プラチナ（白金）のドル建て価格（XPT/USD）を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。自動車の排ガス触媒など産業需要の比重が大きく、景気動向や南アフリカの供給情勢の影響を受けやすい貴金属です。",
+  },
+  {
+    id: "silver",
+    category: "metal",
+    symbol: "OANDA:XAGUSD",
+    name: "銀（シルバー）",
+    pair: "XAG/USD",
+    lead: "銀（シルバー）のドル建て価格（XAG/USD）を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。投資需要と太陽光パネルなどの工業需要をあわせ持ち、金より値動きが大きくなりやすい貴金属です。",
   },
   {
     id: "btcjpy",
@@ -84,4 +100,5 @@ export const CHART_PAIRS = [
 ];
 
 export const FX_PAIRS = CHART_PAIRS.filter((p) => p.category === "fx");
+export const METAL_PAIRS = CHART_PAIRS.filter((p) => p.category === "metal");
 export const CRYPTO_PAIRS = CHART_PAIRS.filter((p) => p.category === "crypto");

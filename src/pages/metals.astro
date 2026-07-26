@@ -1,0 +1,39 @@
+---
+import Base from "../layouts/Base.astro";
+import AffiliateSlot from "../components/AffiliateSlot.astro";
+import ChartGrid from "../components/ChartGrid.astro";
+import { METAL_PAIRS } from "../chart-pairs.mjs";
+
+const title = "貴金属チャート一覧（金・プラチナ・銀）";
+const description =
+  "金（ゴールド）・プラチナ・銀（シルバー）のリアルタイム30分足チャートを一覧表示。各銘柄の1分足・日足チャートも無料で確認できます。";
+---
+
+<Base title={title} description={description}>
+  <h1>貴金属チャート一覧</h1>
+  <p>
+    金・プラチナ・銀のドル建て価格の<strong>リアルタイム30分足チャート</strong>を一覧表示しています。銘柄名をクリックすると、1分足・30分足・日足を掲載した各銘柄の詳細ページを開けます。
+  </p>
+
+  <ChartGrid pairs={METAL_PAIRS} />
+
+  <AffiliateSlot name="metals-page" />
+
+  <p class="source-note">
+    チャート提供：<a
+      href="https://jp.tradingview.com/"
+      target="_blank"
+      rel="noopener">TradingView</a
+    >。表示価格には遅延が含まれる場合があります。取引の判断はご自身の責任で行ってください。詳しくは<a
+      href={`${import.meta.env.BASE_URL}disclaimer/`}>免責事項</a
+    >をご覧ください。
+  </p>
+</Base>
+
+<style>
+  .source-note {
+    margin-top: 2rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+</style>

@@ -1,6 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
-import { FX_PAIRS, CRYPTO_PAIRS } from "../../chart-pairs.mjs";
+import { FX_PAIRS, METAL_PAIRS, CRYPTO_PAIRS } from "../../chart-pairs.mjs";
 
 const base = import.meta.env.BASE_URL;
 const title = "チャート一覧";
@@ -8,7 +8,8 @@ const description =
   "FX主要通貨ペア・ゴールド・暗号資産・米国株のリアルタイムチャートを無料で確認できます。";
 
 const groups = [
-  { label: "FX・貴金属", href: `${base}fx/`, pairs: FX_PAIRS },
+  { label: "FX", href: `${base}fx/`, pairs: FX_PAIRS },
+  { label: "貴金属", href: `${base}metals/`, pairs: METAL_PAIRS },
   { label: "暗号資産", href: `${base}crypto/`, pairs: CRYPTO_PAIRS },
 ];
 ---
