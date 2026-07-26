@@ -97,6 +97,30 @@ export const CHART_PAIRS = [
     pair: "XRP/JPY",
     lead: "XRP（リップル）の円建て価格（XRP/JPY）を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。国際送金分野での活用が注目される、日本でも取引量の多い暗号資産です。",
   },
+  {
+    id: "dogejpy",
+    category: "crypto",
+    symbol: "BINANCE:DOGEJPY",
+    name: "ドージコイン円",
+    pair: "DOGE/JPY",
+    lead: "ドージコイン（DOGE）の円建て価格（DOGE/JPY）を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。ミームコインの代表格で、SNSや著名人の発言をきっかけに大きく動くことがある暗号資産です。",
+  },
+  {
+    id: "astr",
+    category: "crypto",
+    symbol: "BINANCE:ASTRUSDT",
+    name: "アスター",
+    pair: "ASTR/USDT",
+    lead: "アスター（ASTR）のドル建て価格（ASTR/USDT）を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。日本発のパブリックブロックチェーン「Astar Network」のトークンです（円建ての取り扱いがないためドル建て表示です）。",
+  },
+  {
+    id: "ltcjpy",
+    category: "crypto",
+    symbol: "BINANCE:LTCJPY",
+    name: "ライトコイン円",
+    pair: "LTC/JPY",
+    lead: "ライトコイン（LTC）の円建て価格（LTC/JPY）を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。ビットコインから派生した歴史の長い暗号資産で、送金の速さと手数料の安さが特徴です。",
+  },
 ];
 
 export const FX_PAIRS = CHART_PAIRS.filter((p) => p.category === "fx");
