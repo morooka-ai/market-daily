@@ -181,22 +181,22 @@ const description =
   }
   /* シンボル情報ウィジェット（ロゴ・株価・EPS等）:
      TradingView が設定する iframe の高さが実際の内容より低く、指標行が切れるため、
-     全体を70%に縮小した上で高さをこちらで明示的に確保する */
+     全体を75%に縮小した上で高さをこちらで明示的に確保する */
   .tv-info {
-    height: 182px; /* 260px × 0.7 */
+    height: 195px; /* 260px × 0.75 */
     margin-bottom: 0.6rem;
     overflow: hidden;
   }
   .tv-info :global(iframe) {
-    width: 143% !important; /* 縮小分だけ広げて実質幅を保つ（1/0.7） */
+    width: 133% !important; /* 縮小分だけ広げて実質幅を保つ（1/0.75） */
     height: 260px !important;
-    transform: scale(0.7);
+    transform: scale(0.75);
     transform-origin: top left;
   }
   /* 1列表示で横に広い中間幅では、ウィジェットが1行レイアウトになるため低くてよい */
   @media (min-width: 640px) and (max-width: 899.98px) {
     .tv-info {
-      height: 84px; /* 120px × 0.7 */
+      height: 90px; /* 120px × 0.75 */
     }
     .tv-info :global(iframe) {
       height: 120px !important;
