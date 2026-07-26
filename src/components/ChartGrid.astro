@@ -103,13 +103,9 @@ const items = pairs.map((p) => ({
     text-align: right;
   }
   @media (min-width: 900px) {
-    /* 本文コンテナ（760px）を超えて最大1280pxまで広げ、3列を確保する */
+    /* wideコンテナ（最大1280px）の中で3列に並べる */
     .chart-grid {
       grid-template-columns: repeat(3, 1fr);
-      width: min(1280px, calc(100vw - 2rem));
-      position: relative;
-      left: 50%;
-      transform: translateX(-50%);
     }
   }
 </style>

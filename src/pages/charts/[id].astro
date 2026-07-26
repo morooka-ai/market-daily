@@ -46,7 +46,7 @@ const title = `${pair.name}（${pair.pair}）チャート`;
 const description = `${pair.name}（${pair.pair}）のリアルタイムチャートを1分足・30分足・日足で表示。スキャルピングからスイングまで、時間軸ごとの値動きを無料で確認できます。`;
 ---
 
-<Base title={title} description={description}>
+<Base title={title} description={description} wide>
   <h1>{pair.name}（{pair.pair}）チャート</h1>
   <p>{pair.lead}チャートは操作でき、テクニカル指標の追加や期間の変更も可能です。</p>
 
@@ -173,13 +173,9 @@ const description = `${pair.name}（${pair.pair}）のリアルタイムチャ�
     color: var(--muted);
   }
   @media (min-width: 900px) {
-    /* 本文コンテナ（760px）を超えて最大1280pxまで広げ、3列を確保する */
+    /* wideコンテナ（最大1280px）の中で3列に並べる */
     .timeframe-grid {
       grid-template-columns: repeat(3, 1fr);
-      width: min(1280px, calc(100vw - 2rem));
-      position: relative;
-      left: 50%;
-      transform: translateX(-50%);
     }
   }
 </style>

@@ -27,7 +27,7 @@ const description =
   "アルファベット・アマゾン・アップル・スペースX・ラスベガス・サンズ・フェラーリの株価、前日比、リアルタイムチャートと解説をまとめて確認できます。";
 ---
 
-<Base title={title} description={description}>
+<Base title={title} description={description} wide>
   <h1>米国株 注目6銘柄</h1>
   <p>
     注目の米国株6銘柄について、<strong
@@ -166,14 +166,9 @@ const description =
     font-size: 1.05rem;
   }
   @media (min-width: 900px) {
-    /* 本文コンテナ（760px）を超えて最大1280pxまで広げ、3列を確保する。
-       シンボル情報ウィジェットの5指標が横一列で欠けず収まる幅を確保する */
+    /* wideコンテナ（最大1280px）の中で3列に並べる */
     .stocks-grid {
       grid-template-columns: repeat(3, 1fr);
-      width: min(1280px, calc(100vw - 2rem));
-      position: relative;
-      left: 50%;
-      transform: translateX(-50%);
     }
   }
   .ticker {

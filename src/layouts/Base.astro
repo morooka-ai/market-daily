@@ -4,9 +4,11 @@ import { SITE_TITLE, SITE_DESCRIPTION } from "../consts.mjs";
 interface Props {
   title?: string;
   description?: string;
+  /** チャート系ページで本文コンテナを1280pxまで広げる（3列グリッド用） */
+  wide?: boolean;
 }
 
-const { title, description = SITE_DESCRIPTION } = Astro.props;
+const { title, description = SITE_DESCRIPTION, wide = false } = Astro.props;
 const pageTitle = title ? `${title}｜${SITE_TITLE}` : SITE_TITLE;
 const base = import.meta.env.BASE_URL;
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -73,7 +75,7 @@ const isActive = (item) =>
         }
       </nav>
     </header>
-    <main>
+    <main class:list={[{ wide }]}>
       <slot />
     </main>
     <footer>
@@ -147,6 +149,10 @@ const isActive = (item) =>
     border-bottom-color: var(--accent);
   }
   main { max-width: 760px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+  /* チャート系ページはコンテナごと広げる（グリッドは中で自然に中央揃えになる）。
+     本文の段落は読みやすい幅に留める */
+  main.wide { max-width: 1280px; }
+  main.wide > p { max-width: 50rem; }
   footer {
     border-top: 1px solid var(--border);
     padding: 1.5rem 1rem;
