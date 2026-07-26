@@ -150,7 +150,7 @@ const description =
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 0.9rem 1rem 1rem;
+    padding: 0.9rem 0.7rem 1rem;
     transition: border-color 0.15s, box-shadow 0.15s;
   }
   .stock-block:hover {
@@ -166,10 +166,11 @@ const description =
     font-size: 1.05rem;
   }
   @media (min-width: 900px) {
-    /* 本文コンテナ（760px）を超えて最大1200pxまで広げ、3列を確保する */
+    /* 本文コンテナ（760px）を超えて最大1280pxまで広げ、3列を確保する。
+       シンボル情報ウィジェットの5指標が横一列で欠けず収まる幅を確保する */
     .stocks-grid {
       grid-template-columns: repeat(3, 1fr);
-      width: min(1200px, calc(100vw - 2rem));
+      width: min(1280px, calc(100vw - 2rem));
       position: relative;
       left: 50%;
       transform: translateX(-50%);
