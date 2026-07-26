@@ -10,6 +10,17 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 const pageTitle = title ? `${title}｜${SITE_TITLE}` : SITE_TITLE;
 const base = import.meta.env.BASE_URL;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+
+const path = Astro.url.pathname;
+const navItems = [
+  { href: base, label: "ホーム", exact: true },
+  { href: `${base}fx/`, label: "FX" },
+  { href: `${base}metals/`, label: "貴金属" },
+  { href: `${base}crypto/`, label: "暗号資産" },
+  { href: `${base}us-stocks/`, label: "米国株" },
+];
+const isActive = (item) =>
+  item.exact ? path === item.href : path.startsWith(item.href);
 ---
 
 <!doctype html>
@@ -20,13 +31,18 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <meta name="theme-color" content="#0f5aa8" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content={SITE_TITLE} />
     <meta property="og:locale" content="ja_JP" />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={new URL("og-image.png", Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link
       rel="alternate"
       type="application/rss+xml"
@@ -44,17 +60,32 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       <a class="site-title" href={base}>{SITE_TITLE}</a>
       <p class="tagline">毎営業日、朝夕2回更新の市況まとめ</p>
       <nav class="site-nav">
-        <a href={base}>ホーム</a>
-        <a href={`${base}fx/`}>FX</a>
-        <a href={`${base}metals/`}>貴金属</a>
-        <a href={`${base}crypto/`}>暗号資産</a>
-        <a href={`${base}us-stocks/`}>米国株</a>
+        {
+          navItems.map((it) => (
+            <a
+              href={it.href}
+              class:list={[{ active: isActive(it) }]}
+              aria-current={isActive(it) ? "page" : undefined}
+            >
+              {it.label}
+            </a>
+          ))
+        }
       </nav>
     </header>
     <main>
       <slot />
     </main>
     <footer>
+      <nav class="footer-nav">
+        <a href={base}>ホーム</a>
+        <a href={`${base}fx/`}>FX</a>
+        <a href={`${base}metals/`}>貴金属</a>
+        <a href={`${base}crypto/`}>暗号資産</a>
+        <a href={`${base}us-stocks/`}>米国株</a>
+        <a href={`${base}archive/`}>記事アーカイブ</a>
+        <a href={`${base}rss.xml`}>RSS</a>
+      </nav>
       <p class="footer-links">
         <a href={`${base}about/`}>運営者情報</a>
         <a href={`${base}privacy/`}>プライバシーポリシー</a>
@@ -98,12 +129,23 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   .site-nav {
     margin-top: 0.6rem;
     display: flex;
-    gap: 1rem;
+    gap: 0.2rem 1rem;
     justify-content: center;
+    flex-wrap: wrap;
     font-size: 0.9rem;
   }
-  .site-nav a { color: var(--accent); text-decoration: none; }
-  .site-nav a:hover { text-decoration: underline; }
+  .site-nav a {
+    color: var(--accent);
+    text-decoration: none;
+    padding: 0.1rem 0.2rem 0.2rem;
+    border-bottom: 2px solid transparent;
+  }
+  .site-nav a:hover { border-bottom-color: var(--border); }
+  .site-nav a.active {
+    font-weight: 700;
+    color: var(--text);
+    border-bottom-color: var(--accent);
+  }
   main { max-width: 760px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
   footer {
     border-top: 1px solid var(--border);
@@ -112,10 +154,20 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     font-size: 0.85rem;
     color: var(--muted);
   }
-  footer a { color: var(--accent); }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  .footer-nav {
+    display: flex;
+    gap: 0.3rem 1.2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border);
+  }
   .footer-links {
     display: flex;
-    gap: 1.2rem;
+    gap: 0.3rem 1.2rem;
     justify-content: center;
     flex-wrap: wrap;
   }
@@ -136,4 +188,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   th, td { border: 1px solid var(--border); padding: 0.45rem 0.6rem; text-align: left; }
   th { background: #eef2f7; }
   a { color: var(--accent); }
+  /* スマホでは幅の広い表を横スクロールさせ、本文のはみ出しを防ぐ */
+  @media (max-width: 640px) {
+    table {
+      display: block;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+  }
 </style>
