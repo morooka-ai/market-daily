@@ -120,6 +120,11 @@ const isActive = (item) =>
     border-bottom: 1px solid var(--border);
     padding: 1.2rem 1rem;
     text-align: center;
+    /* スクロールしてもヘッダーを画面上部に固定する */
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 4px rgba(26, 34, 51, 0.06);
   }
   .site-title {
     font-size: 1.5rem;

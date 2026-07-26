@@ -16,12 +16,6 @@ const fmt = new Intl.DateTimeFormat("ja-JP", {
 ---
 
 <Base>
-  <nav class="quick-links">
-    <a href={`${base}fx/`}>💱 FXチャート</a>
-    <a href={`${base}metals/`}>🥇 貴金属チャート</a>
-    <a href={`${base}crypto/`}>🪙 暗号資産チャート</a>
-    <a href={`${base}us-stocks/`}>📈 米国株</a>
-  </nav>
   <h1>最新の記事</h1>
   <div class="schedule-note">
     <p class="schedule-title">更新時間の目安（毎営業日）</p>
@@ -95,26 +89,6 @@ const fmt = new Intl.DateTimeFormat("ja-JP", {
     font-size: 0.78rem;
     color: var(--muted);
     line-height: 1.6;
-  }
-  .quick-links {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin: 0.3rem 0 1.4rem;
-  }
-  .quick-links a {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 0.35rem 0.9rem;
-    font-size: 0.88rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-  }
-  .quick-links a:hover {
-    border-color: var(--accent);
-    box-shadow: 0 1px 4px rgba(15, 90, 168, 0.15);
   }
   .post-list { list-style: none; padding: 0; }
   .post-list li {
