@@ -1,0 +1,182 @@
+---
+import Base from "../layouts/Base.astro";
+import AffiliateSlot from "../components/AffiliateSlot.astro";
+import { JP_STOCKS } from "../jp-stocks-data.mjs";
+
+const title = "日本株 主要10銘柄 チャート・株価・前日比一覧";
+const description =
+  "トヨタ・ソニー・ソフトバンクグループ・キーエンス・任天堂・NTT・三菱UFJ・ファーストリテイリング・東京エレクトロン・リクルートホールディングスの株価、前日比、リアルタイムチャートをまとめて確認できます。";
+---
+
+<Base title={title} description={description} wide>
+  <h1>日本株 主要10銘柄</h1>
+  <p>
+    東証プライム市場の主要10銘柄について、<strong
+      >①チャート・②現在の株価（円）・③前日比</strong
+    >をまとめました。株価はリアルタイム表示（遅延を含む場合があります）です。
+  </p>
+
+  <div class="stocks-grid">
+    {
+      JP_STOCKS.map((s) => (
+        <section class="stock-block">
+          <h2>
+            {s.name}
+            <span class="ticker">{s.ticker}</span>
+          </h2>
+          <div class="tv-info" id={`info-${s.ticker}`}>
+            <div class="tradingview-widget-container__widget" />
+          </div>
+          <div class="tv-wrapper">
+            <div class="tradingview-widget-container" id={`chart-${s.ticker}`}>
+              <div class="tradingview-widget-container__widget" />
+            </div>
+          </div>
+        </section>
+      ))
+    }
+  </div>
+
+  <AffiliateSlot name="jp-stocks" />
+
+  <p class="source-note">
+    株価・チャート提供：<a
+      href="https://jp.tradingview.com/"
+      target="_blank"
+      rel="noopener">TradingView</a
+    >。表示される株価には遅延が含まれる場合があります。本ページは情報提供のみを目的としたもので、特定の銘柄の売買を推奨するものではありません。投資の判断はご自身の責任で行ってください。詳しくは<a
+      href={`${import.meta.env.BASE_URL}disclaimer/`}>免責事項</a
+    >をご覧ください。
+  </p>
+</Base>
+
+<script
+  is:inline
+  define:vars={{ widgets: JP_STOCKS.map((s) => ({ ticker: s.ticker, symbol: s.symbol })) }}
+  type="module"
+>
+  const theme = "light";
+  for (const s of widgets) {
+    const info = document.getElementById(`info-${s.ticker}`);
+    if (info) {
+      const si = document.createElement("script");
+      si.type = "text/javascript";
+      si.src =
+        "https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js";
+      si.async = true;
+      si.innerHTML = JSON.stringify({
+        symbol: s.symbol,
+        width: "100%",
+        locale: "ja",
+        colorTheme: theme,
+        isTransparent: true,
+      });
+      info.appendChild(si);
+    }
+
+    const chart = document.getElementById(`chart-${s.ticker}`);
+    if (chart) {
+      const ch = document.createElement("script");
+      ch.type = "text/javascript";
+      ch.src =
+        "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+      ch.async = true;
+      ch.innerHTML = JSON.stringify({
+        autosize: true,
+        symbol: s.symbol,
+        interval: "D",
+        timezone: "Asia/Tokyo",
+        theme,
+        style: "1",
+        locale: "ja",
+        hide_side_toolbar: true,
+        allow_symbol_change: false,
+        calendar: false,
+        support_host: "https://www.tradingview.com",
+      });
+      chart.appendChild(ch);
+    }
+  }
+</script>
+
+<style>
+  .stocks-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    margin: 1.5rem 0;
+  }
+  .stock-block {
+    margin: 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.9rem 0.7rem 1rem;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .stock-block:hover {
+    border-color: var(--accent);
+    box-shadow: 0 1px 5px rgba(15, 90, 168, 0.15);
+  }
+  .stock-block h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin: 0 0 0.5rem;
+    font-size: 1.05rem;
+  }
+  @media (min-width: 900px) {
+    /* wideコンテナ（最大1280px）の中で3列に並べる */
+    .stocks-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .ticker {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.05rem 0.4rem;
+  }
+  /* シンボル情報ウィジェット（ロゴ・株価・EPS等）:
+     TradingView が設定する iframe の高さが実際の内容より低く、指標行が切れるため、
+     全体を75%に縮小した上で高さをこちらで明示的に確保する（米国株ページと同仕様） */
+  .tv-info {
+    height: 195px; /* 260px × 0.75 */
+    margin-bottom: 0.6rem;
+    overflow: hidden;
+  }
+  .tv-info :global(iframe) {
+    width: 133% !important; /* 縮小分だけ広げて実質幅を保つ（1/0.75） */
+    height: 260px !important;
+    transform: scale(0.75);
+    transform-origin: top left;
+  }
+  @media (min-width: 640px) and (max-width: 899.98px) {
+    .tv-info {
+      height: 90px; /* 120px × 0.75 */
+    }
+    .tv-info :global(iframe) {
+      height: 120px !important;
+    }
+  }
+  .tv-wrapper {
+    height: 340px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .tv-wrapper .tradingview-widget-container,
+  .tv-wrapper .tradingview-widget-container__widget {
+    height: 100%;
+    width: 100%;
+  }
+  .source-note {
+    margin-top: 2rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+</style>
