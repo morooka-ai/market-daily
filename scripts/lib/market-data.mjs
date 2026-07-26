@@ -38,6 +38,37 @@ export async function fetchYahooDaily(symbol) {
 }
 
 /**
+ * Yahoo Finance chart API から現在値・前日比を取得する（日本株など個別銘柄向け）。
+ * 例: "7203.T"（トヨタ自動車）
+ */
+export async function fetchYahooQuote(symbol) {
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=5d&interval=1d`;
+  const res = await fetch(url, UA);
+  const json = await res.json().catch(() => null);
+  const meta = json?.chart?.result?.[0]?.meta;
+  if (!res.ok || !meta || meta.regularMarketPrice == null) {
+    throw new Error(`yahoo quote ${symbol}: ${json?.chart?.error?.description ?? `HTTP ${res.status}`}`);
+  }
+
+  const price = meta.regularMarketPrice;
+  const previousClose = meta.chartPreviousClose ?? meta.previousClose;
+  const change = previousClose != null ? price - previousClose : null;
+  const changePercent = previousClose ? (change / previousClose) * 100 : null;
+  const date = new Date(meta.regularMarketTime * 1000).toISOString().slice(0, 10);
+
+  return {
+    symbol: meta.symbol ?? symbol,
+    longName: meta.longName ?? meta.shortName ?? null,
+    currency: meta.currency ?? null,
+    price,
+    previousClose,
+    change,
+    changePercent,
+    date,
+  };
+}
+
+/**
  * Alpha Vantage の TOP_GAINERS_LOSERS から米国株の出来高TOP5を取得する。
  * 無料APIキー: https://www.alphavantage.co/support/#api-key
  */

@@ -1,0 +1,190 @@
+---
+import Base from "../layouts/Base.astro";
+import AffiliateSlot from "../components/AffiliateSlot.astro";
+import { JP_STOCKS } from "../jp-stocks-data.mjs";
+import notes from "../../content/jp-stocks.json";
+
+// 東証銘柄はTradingViewの外部埋め込みウィジェットが使えない（データ提供元のライセンス制限）ため、
+// このページはチャートを掲載せず、Yahoo Financeの株価データ（quote）とAI解説をカードで表示する。
+const stocks = JP_STOCKS.map((s) => {
+  const n = notes.stocks?.[s.ticker];
+  return {
+    ...s,
+    quote: n?.quote ?? null,
+    current: n?.current ?? "",
+    updates: n?.updates ?? "",
+  };
+});
+
+const updatedAt = notes.generatedAt
+  ? new Date(notes.generatedAt).toLocaleDateString("ja-JP", {
+      timeZone: "Asia/Tokyo",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    })
+  : null;
+
+const yen = new Intl.NumberFormat("ja-JP", { maximumFractionDigits: 1 });
+
+const title = "日本株 主要10銘柄 株価・前日比一覧";
+const description =
+  "トヨタ・ソニー・ソフトバンクグループ・キーエンス・任天堂・NTT・三菱UFJ・ファーストリテイリング・東京エレクトロン・リクルートホールディングスの株価、前日比、解説をまとめて確認できます。";
+---
+
+<Base title={title} description={description} wide>
+  <h1>日本株 主要10銘柄</h1>
+  <p>
+    東証プライム市場の主要10銘柄について、<strong
+      >①現在の株価（円）・②前日比・③解説（現状と公表されている企業の動向）</strong
+    >をまとめました。
+  </p>
+  <p class="note">
+    東証銘柄はデータ提供元のライセンス制限により、当サイトで採用しているチャートウィジェットでの掲載ができません。そのため本ページはチャートを掲載せず、株価と解説のみを表示しています。
+  </p>
+  {updatedAt && <p class="updated-at">最終更新：{updatedAt}</p>}
+
+  <div class="stocks-grid">
+    {
+      stocks.map((s) => (
+        <section class="stock-block">
+          <h2>
+            {s.name}
+            <span class="ticker">{s.ticker}</span>
+          </h2>
+          {s.quote ? (
+            <p class="quote">
+              <span class="price">
+                ¥{yen.format(s.quote.price)}
+              </span>
+              {s.quote.change != null && (
+                <span class:list={["change", { up: s.quote.change >= 0, down: s.quote.change < 0 }]}>
+                  {s.quote.change >= 0 ? "+" : ""}
+                  {yen.format(s.quote.change)} (
+                  {s.quote.change >= 0 ? "+" : ""}
+                  {s.quote.changePercent?.toFixed(2)}%)
+                </span>
+              )}
+            </p>
+          ) : (
+            <p class="quote quote-na">株価データを取得できませんでした</p>
+          )}
+          {s.current && (
+            <p class="stock-note">
+              <span class="note-label">現状</span>
+              {s.current}
+            </p>
+          )}
+          {s.updates && (
+            <p class="stock-note">
+              <span class="note-label">企業の動向</span>
+              {s.updates}
+            </p>
+          )}
+        </section>
+      ))
+    }
+  </div>
+
+  <AffiliateSlot name="jp-stocks" />
+
+  <p class="source-note">
+    株価データ提供：Yahoo!ファイナンス。表示される株価には遅延が含まれる場合があります。本ページは情報提供のみを目的としたもので、特定の銘柄の売買を推奨するものではありません。投資の判断はご自身の責任で行ってください。詳しくは<a
+      href={`${import.meta.env.BASE_URL}disclaimer/`}>免責事項</a
+    >をご覧ください。
+  </p>
+</Base>
+
+<style>
+  .note {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .updated-at {
+    margin: 0.2rem 0 0;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .stocks-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    margin: 1.5rem 0;
+  }
+  .stock-block {
+    margin: 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.9rem 1rem 1rem;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .stock-block:hover {
+    border-color: var(--accent);
+    box-shadow: 0 1px 5px rgba(15, 90, 168, 0.15);
+  }
+  .stock-block h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin: 0 0 0.5rem;
+    font-size: 1.05rem;
+  }
+  @media (min-width: 900px) {
+    /* wideコンテナ（最大1280px）の中で3列に並べる */
+    .stocks-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .ticker {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.05rem 0.4rem;
+  }
+  .quote {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin: 0 0 0.7rem;
+  }
+  .price {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  .change {
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+  .change.up { color: #1a7f37; }
+  .change.down { color: #cf222e; }
+  .quote-na {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .stock-note {
+    margin: 0.7rem 0 0;
+    font-size: 0.92rem;
+    line-height: 1.7;
+  }
+  .note-label {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 3px;
+    padding: 0 0.35rem;
+    margin-right: 0.4rem;
+    vertical-align: 0.08em;
+  }
+  .source-note {
+    margin-top: 2rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+</style>

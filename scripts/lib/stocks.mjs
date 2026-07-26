@@ -4,8 +4,9 @@
 
 const MODEL = process.env.ARTICLE_MODEL || "gemini-3.5-flash";
 
-const SYSTEM = `あなたは日本の個人投資家向けメディア「マーケットデイリー」の編集者です。
-指定された米国上場企業について、事実にもとづく短い解説を日本語で執筆します。
+function buildSystem(marketLabel) {
+  return `あなたは日本の個人投資家向けメディア「マーケットデイリー」の編集者です。
+指定された${marketLabel}について、事実にもとづく短い解説を日本語で執筆します。
 
 # 絶対に守るルール（法令遵守）
 - 個別銘柄の売買推奨は絶対に書かない。「買い」「売り」「おすすめ」「今が仕込み時」等の表現は禁止。
@@ -25,6 +26,7 @@ const SYSTEM = `あなたは日本の個人投資家向けメディア「マー�
 - 各文は簡潔に。誇張しない。
 - 出力は次の形式のJSONのみ。前後に説明文やコードフェンス(\`\`\`)を付けない。
   {"current":"（現状の文）","updates":"（企業の動向の文）"}`;
+}
 
 // レスポンステキストからJSONオブジェクトを取り出す（コードフェンス等を除去）。
 function extractJson(text) {
@@ -38,13 +40,13 @@ function extractJson(text) {
   return JSON.parse(raw.slice(start, end + 1));
 }
 
-async function callGemini(prompt) {
+async function callGemini(prompt, marketLabel) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error("環境変数 GEMINI_API_KEY が未設定です");
 
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
   const body = {
-    system_instruction: { parts: [{ text: SYSTEM }] },
+    system_instruction: { parts: [{ text: buildSystem(marketLabel) }] },
     contents: [{ role: "user", parts: [{ text: prompt }] }],
     tools: [{ google_search: {} }],
     generationConfig: { maxOutputTokens: 4096 },
@@ -97,16 +99,17 @@ async function callGemini(prompt) {
 /**
  * 1銘柄分の解説（current/updates）を生成して返す。
  * @param {{name:string, ticker:string}} stock
+ * @param {string} [marketLabel="米国上場企業"] プロンプトに埋め込む市場の説明（例: "日本の上場企業（東証プライム市場）"）
  * @returns {Promise<{current:string, updates:string}>}
  */
-export async function writeStockNote(stock) {
+export async function writeStockNote(stock, marketLabel = "米国上場企業") {
   const prompt = `対象企業: ${stock.name}（ティッカー: ${stock.ticker}）
 
 この企業について、current（現状）と updates（企業の動向）を、システム指示のルールに従って執筆してください。
 updates は、この企業が直近で公表・発表した最新の事実（新製品・投資計画・決算で公表された数値・イベント・提携など）を中心にまとめてください。
 出力は指定のJSONのみとしてください。`;
 
-  const text = await callGemini(prompt);
+  const text = await callGemini(prompt, marketLabel);
   const parsed = extractJson(text);
   const current = String(parsed.current ?? "").trim();
   const updates = String(parsed.updates ?? "").trim();
