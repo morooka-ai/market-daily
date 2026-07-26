@@ -106,14 +106,6 @@ export const CHART_PAIRS = [
     lead: "ドージコイン（DOGE）の円建て価格（DOGE/JPY）を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。ミームコインの代表格で、SNSや著名人の発言をきっかけに大きく動くことがある暗号資産です。",
   },
   {
-    id: "astr",
-    category: "crypto",
-    symbol: "BINANCE:ASTRUSDT",
-    name: "アスター",
-    pair: "ASTR/USDT",
-    lead: "アスター（ASTR）のドル建て価格（ASTR/USDT）を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。日本発のパブリックブロックチェーン「Astar Network」のトークンです（円建ての取り扱いがないためドル建て表示です）。",
-  },
-  {
     id: "ltcjpy",
     category: "crypto",
     symbol: "BINANCE:LTCJPY",
