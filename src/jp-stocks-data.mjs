@@ -15,4 +15,6 @@ export const JP_STOCKS = [
   { ticker: "9983", yahooSymbol: "9983.T", name: "ファーストリテイリング" },
   { ticker: "8035", yahooSymbol: "8035.T", name: "東京エレクトロン" },
   { ticker: "6098", yahooSymbol: "6098.T", name: "リクルートホールディングス" },
+  { ticker: "6501", yahooSymbol: "6501.T", name: "日立製作所" },
+  { ticker: "8058", yahooSymbol: "8058.T", name: "三菱商事" },
 ];
