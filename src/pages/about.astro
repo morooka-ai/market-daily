@@ -22,9 +22,7 @@ const description = `${SITE_TITLE}の運営者情報とお問い合わせ先の�
       <tr>
         <th>お問い合わせ</th>
         <td>
-          <span id="contact-email" data-user="inquiry" data-domain="jimulabo.com"
-            >inquiry［at］jimulabo.com（［at］を@に置き換えてください）</span
-          >
+          <a href={`${import.meta.env.BASE_URL}contact/`}>お問い合わせフォーム</a>
         </td>
       </tr>
     </tbody>
@@ -44,24 +42,12 @@ const description = `${SITE_TITLE}の運営者情報とお問い合わせ先の�
 
   <h2>お問い合わせ</h2>
   <p>
-    当サイトに関するお問い合わせは、上記メールアドレスまでお願いいたします。内容によっては回答までお時間をいただく場合、または回答いたしかねる場合があります。
+    当サイトに関するお問い合わせは、<a
+      href={`${import.meta.env.BASE_URL}contact/`}>お問い合わせフォーム</a
+    >からお願いいたします。内容によっては回答までお時間をいただく場合、または回答いたしかねる場合があります。
   </p>
   <p>
     <strong>お問い合わせは日本語での記述を必須</strong
-    >としています。迷惑メール対策のため、日本語以外で記述されたメール、および広告・営業目的のメールには返信いたしません。あらかじめご了承ください。
+    >としています。迷惑メール対策のため、日本語以外で記述されたもの、および広告・営業目的のご連絡には返信いたしません。あらかじめご了承ください。
   </p>
 </Base>
-
-<script is:inline>
-  // 迷惑メール対策: メールアドレスはHTMLに平文で置かず、JSで組み立てて表示する。
-  // JS無効環境には ［at］表記のフォールバックがそのまま残る。
-  (function () {
-    const el = document.getElementById("contact-email");
-    if (!el) return;
-    const addr = el.dataset.user + "@" + el.dataset.domain;
-    const a = document.createElement("a");
-    a.href = "mailto:" + addr;
-    a.textContent = addr;
-    el.replaceWith(a);
-  })();
-</script>

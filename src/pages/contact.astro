@@ -1,0 +1,60 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE_TITLE } from "../consts.mjs";
+
+const title = "お問い合わせ";
+const description = `${SITE_TITLE}へのお問い合わせフォームです。`;
+
+const FORM_EMBED_URL =
+  "https://docs.google.com/forms/d/e/1FAIpQLSdz2F1n6QCh0FBf0DztHuvNcJofeyixwxZScgJpC-mYAWNR0Q/viewform?embedded=true";
+---
+
+<Base title={title} description={description}>
+  <h1>お問い合わせ</h1>
+  <p>
+    当サイトに関するお問い合わせは、以下のフォームからお願いいたします。内容によっては回答までお時間をいただく場合、または回答いたしかねる場合があります。
+  </p>
+  <p class="note">
+    <strong>お問い合わせは日本語での記述を必須</strong
+    >としています。日本語以外で記述されたもの、および広告・営業目的のご連絡には返信いたしません。
+  </p>
+
+  <div class="form-wrapper">
+    <iframe
+      src={FORM_EMBED_URL}
+      title="お問い合わせフォーム"
+      loading="lazy"
+    >読み込んでいます…</iframe>
+  </div>
+
+  <p class="fallback">
+    フォームが表示されない場合は、<a
+      href={FORM_EMBED_URL.replace("?embedded=true", "")}
+      target="_blank"
+      rel="noopener">こちらのリンク</a
+    >から直接開いてください。
+  </p>
+</Base>
+
+<style>
+  .note {
+    font-size: 0.92rem;
+  }
+  .form-wrapper {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 1.2rem 0 0.8rem;
+  }
+  .form-wrapper iframe {
+    display: block;
+    width: 100%;
+    height: 1000px;
+    border: 0;
+  }
+  .fallback {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+</style>
