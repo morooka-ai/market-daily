@@ -1,0 +1,110 @@
+---
+// 銘柄一覧を30分足チャートのグリッドで表示する（PCは3列・スマホは1列）。
+// 各ブロックから銘柄の詳細ページ（1分足・30分足・日足）へリンクする。
+const { pairs } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const items = pairs.map((p) => ({
+  id: `grid-${p.id}`,
+  symbol: p.symbol,
+  name: p.name,
+  pair: p.pair,
+  detail: `${base}charts/${p.id}/`,
+}));
+---
+
+<div class="chart-grid">
+  {
+    items.map((it) => (
+      <section class="grid-item">
+        <h2>
+          <a href={it.detail}>
+            {it.name}（{it.pair}）
+          </a>
+        </h2>
+        <div class="tv-wrapper">
+          <div class="tradingview-widget-container" id={it.id}>
+            <div class="tradingview-widget-container__widget" />
+          </div>
+        </div>
+        <p class="detail-link">
+          <a href={it.detail}>1分足・日足チャートを見る →</a>
+        </p>
+      </section>
+    ))
+  }
+</div>
+
+<script is:inline define:vars={{ items }} type="module">
+  for (const it of items) {
+    const container = document.getElementById(it.id);
+    if (!container) continue;
+    const s = document.createElement("script");
+    s.type = "text/javascript";
+    s.src =
+      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+    s.async = true;
+    s.innerHTML = JSON.stringify({
+      autosize: true,
+      symbol: it.symbol,
+      interval: "30",
+      timezone: "Asia/Tokyo",
+      theme: "light",
+      style: "1",
+      locale: "ja",
+      hide_side_toolbar: true,
+      allow_symbol_change: false,
+      calendar: false,
+      support_host: "https://www.tradingview.com",
+    });
+    container.appendChild(s);
+  }
+</script>
+
+<style>
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    margin: 1.5rem 0;
+  }
+  .grid-item h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.05rem;
+    border-left: 4px solid var(--accent);
+    padding-left: 0.6rem;
+  }
+  .grid-item h2 a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .grid-item h2 a:hover {
+    color: var(--accent);
+  }
+  .tv-wrapper {
+    height: 340px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .tradingview-widget-container,
+  .tradingview-widget-container__widget {
+    height: 100%;
+    width: 100%;
+  }
+  .detail-link {
+    margin: 0.4rem 0 0;
+    font-size: 0.85rem;
+    text-align: right;
+  }
+  @media (min-width: 900px) {
+    /* 本文コンテナ（760px）を超えて最大1200pxまで広げ、3列を確保する */
+    .chart-grid {
+      grid-template-columns: repeat(3, 1fr);
+      width: min(1200px, calc(100vw - 2rem));
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+</style>

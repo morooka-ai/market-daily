@@ -1,116 +1,23 @@
 ---
 import Base from "../layouts/Base.astro";
 import AffiliateSlot from "../components/AffiliateSlot.astro";
+import ChartGrid from "../components/ChartGrid.astro";
+import { FX_PAIRS } from "../chart-pairs.mjs";
 
-const charts = [
-  {
-    id: "chart-1m",
-    symbol: "FX:GBPJPY",
-    interval: "1",
-    heading: "ポンド円 1分足チャート",
-    note: "超短期のスキャルピング向け。直近の値動きをリアルタイムで確認できます。",
-  },
-  {
-    id: "chart-30m",
-    symbol: "FX:GBPJPY",
-    interval: "30",
-    heading: "ポンド円 30分足チャート",
-    note: "デイトレード向け。当日のトレンドや押し目・戻りの目安に。",
-  },
-  {
-    id: "chart-1d",
-    symbol: "FX:GBPJPY",
-    interval: "D",
-    heading: "ポンド円 日足チャート",
-    note: "スイング・中長期向け。大きな流れや節目の水準を把握できます。",
-  },
-];
-
-const crossCharts = [
-  {
-    id: "chart-chfjpy-30m",
-    symbol: "FX:CHFJPY",
-    interval: "30",
-    heading: "CHF円（CHF/JPY）",
-    note: "スイスフラン／円の30分足。",
-  },
-  {
-    id: "chart-audjpy-30m",
-    symbol: "FX:AUDJPY",
-    interval: "30",
-    heading: "AUD円（AUD/JPY）",
-    note: "豪ドル／円の30分足。",
-  },
-  {
-    id: "chart-nzdjpy-30m",
-    symbol: "FX:NZDJPY",
-    interval: "30",
-    heading: "NZD円（NZD/JPY）",
-    note: "NZドル／円の30分足。",
-  },
-];
-
-const allCharts = [...charts, ...crossCharts];
-
-const title = "ポンド円（GBP/JPY）チャート";
+const title = "FXチャート一覧（ドル円・ユーロ円・ポンド円ほか）";
 const description =
-  "ポンド円（GBP/JPY）のリアルタイムチャートを1分足・30分足・日足で表示。CHF円・AUD円・NZD円の30分足チャートも掲載。スキャルピングからスイングまで、時間軸ごとの値動きを無料で確認できます。";
+  "ドル円・ユーロ円・ポンド円・CHF円・AUD円・NZD円・ゴールドのリアルタイム30分足チャートを一覧表示。各銘柄の1分足・日足チャートも無料で確認できます。";
 ---
 
 <Base title={title} description={description}>
-  <h1>ポンド円（GBP/JPY）チャート</h1>
+  <h1>FXチャート一覧</h1>
   <p>
-    英ポンド／日本円（GBP/JPY）の為替レートを、<strong>1分足・30分足・日足</strong>の3つの時間軸でリアルタイム表示しています。チャートは操作でき、テクニカル指標の追加や期間の変更も可能です。
+    主要通貨ペアとゴールドの<strong>リアルタイム30分足チャート</strong>を一覧表示しています。銘柄名をクリックすると、1分足・30分足・日足を掲載した各銘柄の詳細ページを開けます。
   </p>
 
-  {
-    charts.map((c) => (
-      <section class="chart-block">
-        <h2>{c.heading}</h2>
-        <p class="chart-note">{c.note}</p>
-        <div class="tv-wrapper">
-          <div class="tradingview-widget-container" id={c.id}>
-            <div class="tradingview-widget-container__widget" />
-          </div>
-        </div>
-      </section>
-    ))
-  }
-
-  <section class="chart-block">
-    <h2>クロス円 30分足チャート</h2>
-    <p class="chart-note">
-      CHF円・AUD円・NZD円の30分足。ポンド円と合わせてクロス円全体の流れを確認できます。
-    </p>
-    <div class="cross-grid">
-      {
-        crossCharts.map((c) => (
-          <div class="cross-item">
-            <h3>{c.heading}</h3>
-            <p class="chart-note">{c.note}</p>
-            <div class="tv-wrapper tv-wrapper-small">
-              <div class="tradingview-widget-container" id={c.id}>
-                <div class="tradingview-widget-container__widget" />
-              </div>
-            </div>
-          </div>
-        ))
-      }
-    </div>
-  </section>
+  <ChartGrid pairs={FX_PAIRS} />
 
   <AffiliateSlot name="fx-page" />
-
-  <section class="related">
-    <h2>その他のチャート</h2>
-    <ul>
-      <li><a href={`${import.meta.env.BASE_URL}charts/usdjpy/`}>ドル円（USD/JPY）チャート</a></li>
-      <li><a href={`${import.meta.env.BASE_URL}charts/eurjpy/`}>ユーロ円（EUR/JPY）チャート</a></li>
-      <li><a href={`${import.meta.env.BASE_URL}charts/gold/`}>ゴールド（XAU/USD）チャート</a></li>
-      <li><a href={`${import.meta.env.BASE_URL}charts/btcjpy/`}>ビットコイン円（BTC/JPY）チャート</a></li>
-      <li><a href={`${import.meta.env.BASE_URL}us-stocks/`}>米国株 注目銘柄チャート</a></li>
-    </ul>
-  </section>
 
   <p class="source-note">
     チャート提供：<a
@@ -123,83 +30,7 @@ const description =
   </p>
 </Base>
 
-<script
-  is:inline
-  define:vars={{ allCharts }}
-  type="module"
->
-  const theme = "light";
-  for (const c of allCharts) {
-    const container = document.getElementById(c.id);
-    if (!container) continue;
-    const s = document.createElement("script");
-    s.type = "text/javascript";
-    s.src =
-      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
-    s.async = true;
-    s.innerHTML = JSON.stringify({
-      autosize: true,
-      symbol: c.symbol,
-      interval: c.interval,
-      timezone: "Asia/Tokyo",
-      theme,
-      style: "1",
-      locale: "ja",
-      hide_side_toolbar: false,
-      allow_symbol_change: false,
-      calendar: false,
-      support_host: "https://www.tradingview.com",
-    });
-    container.appendChild(s);
-  }
-</script>
-
 <style>
-  .chart-block {
-    margin: 1.5rem 0 2rem;
-  }
-  .chart-note {
-    margin: 0.2rem 0 0.8rem;
-    font-size: 0.9rem;
-    color: var(--muted);
-  }
-  .tv-wrapper {
-    height: 420px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    overflow: hidden;
-  }
-  .cross-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  .cross-item h3 {
-    margin: 0 0 0.2rem;
-    font-size: 1rem;
-  }
-  .tv-wrapper-small {
-    height: 340px;
-  }
-  @media (min-width: 900px) {
-    /* 本文コンテナ（760px）を超えて最大1200pxまで広げ、3列を確保する */
-    .cross-grid {
-      grid-template-columns: repeat(3, 1fr);
-      width: min(1200px, calc(100vw - 2rem));
-      position: relative;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-  }
-  .tradingview-widget-container,
-  .tradingview-widget-container__widget {
-    height: 100%;
-    width: 100%;
-  }
-  .related ul {
-    padding-left: 1.2rem;
-  }
   .source-note {
     margin-top: 2rem;
     font-size: 0.82rem;
