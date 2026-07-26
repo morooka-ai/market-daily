@@ -35,9 +35,9 @@ const items = pairs.map((p) => ({
 </div>
 
 <script is:inline define:vars={{ items }} type="module">
-  for (const it of items) {
-    const container = document.getElementById(it.id);
-    if (!container) continue;
+  // 画面内に入った時だけウィジェットを読み込む（遅延読み込み）。
+  // 一覧ページはチャート数が多く、全件を即時読み込むと表示が重くなるため。
+  function loadWidget(container, it) {
     const s = document.createElement("script");
     s.type = "text/javascript";
     s.src =
@@ -57,6 +57,24 @@ const items = pairs.map((p) => ({
       support_host: "https://www.tradingview.com",
     });
     container.appendChild(s);
+  }
+
+  const byId = new Map(items.map((it) => [it.id, it]));
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        observer.unobserve(entry.target);
+        const it = byId.get(entry.target.id);
+        if (it) loadWidget(entry.target, it);
+      }
+    },
+    { rootMargin: "400px 0px" },
+  );
+
+  for (const it of items) {
+    const container = document.getElementById(it.id);
+    if (container) observer.observe(container);
   }
 </script>
 

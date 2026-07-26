@@ -39,7 +39,7 @@ const description =
   <div class="stocks-grid">
   {
     stocks.map((s) => (
-      <section class="stock-block">
+      <section class="stock-block" id={`stock-${s.ticker}`}>
         <h2>
           {s.name}
           <span class="ticker">{s.ticker}</span>
@@ -87,9 +87,11 @@ const description =
   define:vars={{ widgets: stocks.map((s) => ({ ticker: s.ticker, symbol: s.symbol })) }}
   type="module"
 >
+  // 画面内に入った銘柄ブロックだけウィジェットを読み込む（遅延読み込み）。
+  // 12個のウィジェットを即時読み込むと表示が重くなるため。
   const theme = "light";
-  for (const s of widgets) {
-    // ②現在の株価・③前日比を表示するシンボル情報ウィジェット
+
+  function loadStockWidgets(s) {
     const info = document.getElementById(`info-${s.ticker}`);
     if (info) {
       const si = document.createElement("script");
@@ -107,7 +109,6 @@ const description =
       info.appendChild(si);
     }
 
-    // ①チャート（アドバンストチャート）
     const chart = document.getElementById(`chart-${s.ticker}`);
     if (chart) {
       const ch = document.createElement("script");
@@ -130,6 +131,25 @@ const description =
       });
       chart.appendChild(ch);
     }
+  }
+
+  const byTicker = new Map(widgets.map((s) => [s.ticker, s]));
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        observer.unobserve(entry.target);
+        const ticker = entry.target.id.replace(/^stock-/, "");
+        const s = byTicker.get(ticker);
+        if (s) loadStockWidgets(s);
+      }
+    },
+    { rootMargin: "400px 0px" },
+  );
+
+  for (const s of widgets) {
+    const block = document.getElementById(`stock-${s.ticker}`);
+    if (block) observer.observe(block);
   }
 </script>
 

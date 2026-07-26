@@ -103,9 +103,9 @@ const description = `${pair.name}（${pair.pair}）のリアルタイムチャ�
   define:vars={{ charts, symbol: pair.symbol }}
   type="module"
 >
-  for (const c of charts) {
-    const container = document.getElementById(c.id);
-    if (!container) continue;
+  // 画面内に入った時間軸だけウィジェットを読み込む（遅延読み込み）。
+  // スマホでは3枚が縦に並ぶため、画面外の分の即時読み込みを避ける。
+  function loadWidget(container, interval) {
     const s = document.createElement("script");
     s.type = "text/javascript";
     s.src =
@@ -114,7 +114,7 @@ const description = `${pair.name}（${pair.pair}）のリアルタイムチャ�
     s.innerHTML = JSON.stringify({
       autosize: true,
       symbol,
-      interval: c.interval,
+      interval,
       timezone: "Asia/Tokyo",
       theme: "light",
       style: "1",
@@ -125,6 +125,24 @@ const description = `${pair.name}（${pair.pair}）のリアルタイムチャ�
       support_host: "https://www.tradingview.com",
     });
     container.appendChild(s);
+  }
+
+  const byId = new Map(charts.map((c) => [c.id, c.interval]));
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        observer.unobserve(entry.target);
+        const interval = byId.get(entry.target.id);
+        if (interval) loadWidget(entry.target, interval);
+      }
+    },
+    { rootMargin: "400px 0px" },
+  );
+
+  for (const c of charts) {
+    const container = document.getElementById(c.id);
+    if (container) observer.observe(container);
   }
 </script>
 
