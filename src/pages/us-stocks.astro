@@ -146,14 +146,24 @@ const description =
     margin: 1.5rem 0;
   }
   .stock-block {
-    margin: 0 0 1rem;
+    margin: 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.9rem 1rem 1rem;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .stock-block:hover {
+    border-color: var(--accent);
+    box-shadow: 0 1px 5px rgba(15, 90, 168, 0.15);
   }
   .stock-block h2 {
     display: flex;
     align-items: baseline;
     gap: 0.5rem;
     flex-wrap: wrap;
-    margin-top: 0;
+    margin: 0 0 0.5rem;
+    font-size: 1.05rem;
   }
   @media (min-width: 900px) {
     /* 本文コンテナ（760px）を超えて最大1200pxまで広げ、3列を確保する */
@@ -173,18 +183,26 @@ const description =
     border-radius: 4px;
     padding: 0.05rem 0.4rem;
   }
+  /* シンボル情報ウィジェット（株価・前日比・EPS等）は内容に応じて高さが変わるため、
+     高さを固定せず TradingView 側の自動調整に任せる */
   .tv-info {
     margin-bottom: 0.6rem;
+    overflow: visible;
+  }
+  .tv-info :global(iframe) {
+    max-width: 100%;
   }
   .tv-wrapper {
-    height: 380px;
+    height: 340px;
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 6px;
     overflow: hidden;
   }
-  .tradingview-widget-container,
-  .tradingview-widget-container__widget {
+  /* height:100% はチャート（.tv-wrapper 内）にだけ適用する。
+     .tv-info に適用すると情報ウィジェットが潰れて数値が欠ける */
+  .tv-wrapper .tradingview-widget-container,
+  .tv-wrapper .tradingview-widget-container__widget {
     height: 100%;
     width: 100%;
   }
