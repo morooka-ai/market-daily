@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import AffiliateSlot from "../components/AffiliateSlot.astro";
+import SymbolPicker from "../components/SymbolPicker.astro";
 import { US_STOCKS } from "../us-stocks-data.mjs";
 import notes from "../../content/us-stocks.json";
 
@@ -22,24 +23,26 @@ const updatedAt = notes.generatedAt
     })
   : null;
 
-const title = "米国株 注目6銘柄 チャート・株価・前日比一覧";
+const title = "米国株 注目12銘柄 チャート・株価・前日比一覧";
 const description =
-  "アルファベット・アマゾン・アップル・スペースX・ラスベガス・サンズ・フェラーリの株価、前日比、リアルタイムチャートと解説をまとめて確認できます。";
+  "アルファベット・アマゾン・アップル・マイクロソフト・エヌビディア・テスラなど米国株12銘柄の株価、前日比、リアルタイムチャートと解説をまとめて確認できます。";
 ---
 
 <Base title={title} description={description} wide>
-  <h1>米国株 注目6銘柄</h1>
+  <h1>米国株 注目12銘柄</h1>
   <p>
-    注目の米国株6銘柄について、<strong
+    注目の米国株12銘柄について、<strong
       >①チャート・②現在の株価（ドル）・③前日比・④解説（現状と公表されている企業の動向）</strong
     >をまとめました。株価はリアルタイム表示（遅延を含む場合があります）です。
   </p>
   {updatedAt && <p class="updated-at">解説の最終更新：{updatedAt}</p>}
 
+  <SymbolPicker pageKey="us-stocks" />
+
   <div class="stocks-grid">
   {
     stocks.map((s) => (
-      <section class="stock-block" id={`stock-${s.ticker}`}>
+      <section class="stock-block" id={`stock-${s.ticker}`} data-symbol-id={s.ticker}>
         <h2>
           {s.name}
           <span class="ticker">{s.ticker}</span>

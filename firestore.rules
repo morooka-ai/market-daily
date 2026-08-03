@@ -1,0 +1,89 @@
+rules_version = '2';
+
+// マーケットデイリー 会員機能のアクセス制御。
+//
+// PUBLIC_FIREBASE_* の設定値はブラウザに埋め込まれる公開情報なので、
+// 実質的な防御はすべてこのルールで行う。
+//
+// 反映方法:
+//   firebase deploy --only firestore:rules
+// もしくは Firebase コンソールの Firestore → ルール に貼り付けて公開する。
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /users/{uid} {
+
+      // --- 本人（ログイン中の会員）------------------------------------------
+      function isOwner() {
+        return request.auth != null && request.auth.uid == uid;
+      }
+
+      // 1ページあたりの選択銘柄は9件まで。未設定（キー無し）も許可する。
+      function selectionOk(sel, key) {
+        return !(key in sel)
+            || (sel[key] is list && sel[key].size() <= 9);
+      }
+
+      function validSelections() {
+        let sel = request.resource.data.selections;
+        return sel is map
+            && sel.keys().hasOnly(['fx', 'metals', 'crypto', 'jp-stocks', 'us-stocks'])
+            && selectionOk(sel, 'fx')
+            && selectionOk(sel, 'metals')
+            && selectionOk(sel, 'crypto')
+            && selectionOk(sel, 'jp-stocks')
+            && selectionOk(sel, 'us-stocks');
+      }
+
+      function validMail() {
+        let mail = request.resource.data.mail;
+        return mail is map
+            && (mail.address == null
+                || (mail.address is string && mail.address.size() <= 254))
+            && mail.status in ['none', 'pending', 'subscribed', 'unsubscribed'];
+      }
+
+      // 会員のメールアドレスとパスワードは Firebase Authentication 側が持つ。
+      // この文書には設定内容だけを置き、想定外のキーは受け付けない。
+      function validProfile() {
+        return request.resource.data.keys()
+                 .hasOnly(['selections', 'mail', 'createdAt', 'updatedAt'])
+            && validSelections()
+            && validMail();
+      }
+
+      // --- メール内リンクからの操作（未ログイン）-----------------------------
+      // 正しいトークンを送ってきた場合にのみ、配信状態の切り替えを許可する。
+      // トークンは本人のメールにしか送られないため、これを本人確認として扱う。
+      // 変更できるのは mail と updatedAt だけで、アドレス自体は書き換えられない。
+      function validTokenUpdate() {
+        let before = resource.data.mail;
+        let after = request.resource.data.mail;
+        return request.resource.data.diff(resource.data)
+                 .affectedKeys().hasOnly(['mail', 'updatedAt'])
+            && before.token is string
+            && after.token == before.token
+            && after.address == before.address
+            && after.status in ['subscribed', 'unsubscribed'];
+      }
+
+      // --- 権限 --------------------------------------------------------------
+      // 読み取りは本人のみ。一覧取得（list）はどこからも許可しない。
+      // メール配信バッチは Admin SDK（サーバー側）で動くためルールの対象外。
+      allow get: if isOwner();
+      allow list: if false;
+
+      allow create: if isOwner() && validProfile();
+
+      allow update: if (isOwner() && validProfile()) || validTokenUpdate();
+
+      allow delete: if isOwner();
+    }
+
+    // 上記以外のパスはすべて拒否する
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

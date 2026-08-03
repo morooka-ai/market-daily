@@ -1,0 +1,390 @@
+---
+import Base from "../../layouts/Base.astro";
+import { PAGES, MAX_SELECTION } from "../../catalog.mjs";
+
+const base = import.meta.env.BASE_URL;
+const configured = Boolean(
+  import.meta.env.PUBLIC_FIREBASE_API_KEY &&
+    import.meta.env.PUBLIC_FIREBASE_PROJECT_ID &&
+    import.meta.env.PUBLIC_FIREBASE_APP_ID,
+);
+
+// 銘柄IDから表示名を引くための対応表。
+// chart-pairs.mjs 等をそのままクライアントへ送ると解説文まで含まれて重くなるため、
+// 名前だけを抜き出した最小限のJSONをページに埋め込む。
+const pageMeta = PAGES.map((p) => ({
+  key: p.key,
+  label: p.label,
+  href: `${base}${p.path}`,
+  total: p.items.length,
+  names: Object.fromEntries(p.items.map((it) => [it.id, it.name])),
+}));
+
+const title = "マイページ";
+const description = "表示銘柄の設定と、毎日のメール配信の設定を確認・変更できます。";
+---
+
+<Base title={title} description={description} noindex>
+  <h1>マイページ</h1>
+
+  {
+    !configured ? (
+      <p class="card">会員機能は現在準備中です。</p>
+    ) : (
+      <>
+        <script
+          type="application/json"
+          id="page-meta"
+          set:html={JSON.stringify(pageMeta)}
+        />
+
+        <p class="card" data-loading>読み込んでいます…</p>
+
+        <div data-anon hidden>
+          <p class="card">この機能を使うにはログインが必要です。</p>
+          <p class="btn-row">
+            <a class="btn" href={`${base}account/login/`}>ログイン</a>
+            <a class="btn btn-ghost" href={`${base}account/register/`}>
+              無料会員登録
+            </a>
+          </p>
+        </div>
+
+        <div data-member hidden>
+          <section class="card">
+            <h2>アカウント</h2>
+            <p class="account-mail">
+              メールアドレス（ログインID）：<strong data-account-email />
+            </p>
+            <p class="verify" data-verify hidden>
+              このメールアドレスはまだ確認されていません。確認しておくと、パスワードを忘れたときに確実に再設定できます。
+              <button class="link-btn" type="button" data-resend>
+                確認メールを再送する
+              </button>
+              <span class="verify-msg" data-verify-msg role="status" />
+            </p>
+            <p class="btn-row">
+              <a class="btn btn-ghost" href={`${base}account/reset/`}>
+                パスワードを変更する
+              </a>
+              <button class="btn btn-ghost" type="button" data-logout>
+                ログアウト
+              </button>
+            </p>
+          </section>
+
+          <section class="card">
+            <h2>表示する銘柄</h2>
+            <p class="section-lead">
+              各ページで最大{MAX_SELECTION}件まで選べます。変更は各ページの「表示する銘柄を選ぶ」から行ってください。
+            </p>
+            <ul class="selection-list" data-selections />
+          </section>
+
+          <section class="card">
+            <h2>毎日のメール配信（任意）</h2>
+            <p class="section-lead">
+              選んだ銘柄の最新の価格・前日比と、その日の記事へのリンクを
+              <strong>毎営業日1回（16:30ごろ）</strong>お届けします。受け取るかどうかは任意で、いつでも停止できます。
+            </p>
+
+            <p class="mail-state" data-mail-state />
+
+            <form data-mail-form>
+              <label class="field">
+                <span>配信先メールアドレス</span>
+                <input
+                  type="email"
+                  name="address"
+                  autocomplete="email"
+                  placeholder="you@example.com"
+                  required
+                />
+                <span class="field-hint">
+                  ログイン用と別のアドレスにもできます。登録後に確認メールをお送りし、その中のリンクを開いていただくと配信が始まります（確認前は配信されません）。
+                </span>
+              </label>
+              <p class="btn-row">
+                <button class="btn" type="submit" data-mail-submit>
+                  配信を申し込む
+                </button>
+                <button class="btn btn-ghost" type="button" data-mail-remove hidden>
+                  配信の登録を取り消す
+                </button>
+              </p>
+              <p class="form-msg" data-mail-msg role="status" />
+            </form>
+          </section>
+
+          <section class="card">
+            <h2>退会</h2>
+            <p class="section-lead">
+              アカウントと保存内容（選択銘柄・配信先メールアドレス）をすべて削除します。取り消しはできません。
+            </p>
+            <p class="btn-row">
+              <button class="btn btn-danger" type="button" data-delete>
+                退会する
+              </button>
+            </p>
+            <p class="form-msg" data-delete-msg role="status" />
+          </section>
+        </div>
+      </>
+    )
+  }
+</Base>
+
+<script>
+  import {
+    watchUser,
+    loadProfile,
+    logout,
+    deleteAccount,
+    requestMailSubscription,
+    removeMailSubscription,
+    resendEmailVerification,
+    toMessage,
+  } from "../../lib/firebase.mjs";
+
+  const metaEl = document.getElementById("page-meta");
+  if (metaEl) {
+    const pageMeta = JSON.parse(metaEl.textContent);
+    const base = import.meta.env.BASE_URL;
+
+    const loadingEl = document.querySelector("[data-loading]");
+    const anonEl = document.querySelector("[data-anon]");
+    const memberEl = document.querySelector("[data-member]");
+    const accountEmailEl = document.querySelector("[data-account-email]");
+    const verifyEl = document.querySelector("[data-verify]");
+    const verifyMsg = document.querySelector("[data-verify-msg]");
+    const selectionsEl = document.querySelector("[data-selections]");
+    const mailStateEl = document.querySelector("[data-mail-state]");
+    const mailForm = document.querySelector("[data-mail-form]");
+    const mailInput = mailForm.querySelector('input[name="address"]');
+    const mailSubmit = document.querySelector("[data-mail-submit]");
+    const mailRemove = document.querySelector("[data-mail-remove]");
+    const mailMsg = document.querySelector("[data-mail-msg]");
+    const deleteMsg = document.querySelector("[data-delete-msg]");
+
+    let currentUser = null;
+
+    const show = (el, on) => {
+      if (el) el.hidden = !on;
+    };
+
+    function renderSelections(selections) {
+      selectionsEl.replaceChildren();
+      for (const page of pageMeta) {
+        const ids = (selections?.[page.key] ?? []).filter((id) => page.names[id]);
+        const li = document.createElement("li");
+
+        const link = document.createElement("a");
+        link.href = page.href;
+        link.textContent = page.label;
+        li.append(link);
+
+        const detail = document.createElement("span");
+        detail.className = "selection-detail";
+        detail.textContent = ids.length
+          ? ids.map((id) => page.names[id]).join("、")
+          : `全${page.total}銘柄を表示（未設定）`;
+        li.append(detail);
+
+        selectionsEl.append(li);
+      }
+    }
+
+    const MAIL_STATE = {
+      none: { text: "配信は申し込まれていません。", cls: "" },
+      pending: {
+        text: "確認メールの送信待ちです。届いたメール内のリンクを開くと配信が始まります（送信まで最大1時間ほどかかります）。",
+        cls: "pending",
+      },
+      subscribed: { text: "配信中です。", cls: "ok" },
+      unsubscribed: {
+        text: "配信を停止しています。再開するには、下のボタンからもう一度申し込んでください。",
+        cls: "",
+      },
+    };
+
+    function renderMail(mail, user) {
+      const status = mail?.status ?? "none";
+      const state = MAIL_STATE[status] ?? MAIL_STATE.none;
+      mailStateEl.className = `mail-state ${state.cls}`;
+      mailStateEl.textContent = mail?.address
+        ? `${mail.address}：${state.text}`
+        : state.text;
+      // 未申込のときはログイン用アドレスを初期値にしておく（そのまま押せば済むように）
+      mailInput.value = mail?.address ?? user.email ?? "";
+      show(mailRemove, Boolean(mail?.address));
+      mailSubmit.textContent = mail?.address ? "この内容に変更する" : "配信を申し込む";
+    }
+
+    async function refresh(user) {
+      const profile = await loadProfile(user);
+      accountEmailEl.textContent = user.email ?? "(不明)";
+      show(verifyEl, !user.emailVerified);
+      renderSelections(profile.selections);
+      renderMail(profile.mail, user);
+    }
+
+    watchUser(async (user) => {
+      currentUser = user;
+      show(loadingEl, false);
+      show(anonEl, !user);
+      show(memberEl, Boolean(user));
+      if (!user) return;
+      try {
+        await refresh(user);
+      } catch (err) {
+        mailMsg.className = "form-msg error";
+        mailMsg.textContent = toMessage(err);
+      }
+    }).catch((err) => {
+      show(loadingEl, false);
+      show(anonEl, true);
+      console.error(err);
+    });
+
+    document.querySelector("[data-resend]")?.addEventListener("click", async () => {
+      verifyMsg.textContent = "送信しています…";
+      try {
+        await resendEmailVerification();
+        verifyMsg.textContent = "確認メールを送信しました。";
+      } catch (err) {
+        verifyMsg.textContent = toMessage(err);
+      }
+    });
+
+    document.querySelector("[data-logout]")?.addEventListener("click", async () => {
+      await logout();
+      location.href = base;
+    });
+
+    mailForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!currentUser) return;
+      mailSubmit.disabled = true;
+      mailMsg.className = "form-msg";
+      mailMsg.textContent = "申し込んでいます…";
+      try {
+        await requestMailSubscription(currentUser, mailInput.value);
+        await refresh(currentUser);
+        mailMsg.className = "form-msg ok";
+        mailMsg.textContent =
+          "受け付けました。確認メールをお送りしますので、メール内のリンクを開いてください。";
+      } catch (err) {
+        mailMsg.className = "form-msg error";
+        mailMsg.textContent = toMessage(err);
+      } finally {
+        mailSubmit.disabled = false;
+      }
+    });
+
+    mailRemove.addEventListener("click", async () => {
+      if (!currentUser) return;
+      if (!confirm("配信の登録を取り消します。よろしいですか？")) return;
+      mailMsg.className = "form-msg";
+      mailMsg.textContent = "取り消しています…";
+      try {
+        await removeMailSubscription(currentUser);
+        await refresh(currentUser);
+        mailMsg.className = "form-msg ok";
+        mailMsg.textContent = "配信の登録を取り消しました。";
+      } catch (err) {
+        mailMsg.className = "form-msg error";
+        mailMsg.textContent = toMessage(err);
+      }
+    });
+
+    document.querySelector("[data-delete]")?.addEventListener("click", async () => {
+      if (!currentUser) return;
+      if (
+        !confirm(
+          "退会するとアカウントと保存内容がすべて削除されます。取り消しはできません。よろしいですか？",
+        )
+      ) {
+        return;
+      }
+      deleteMsg.className = "form-msg";
+      deleteMsg.textContent = "処理しています…";
+      try {
+        await deleteAccount();
+        location.href = base;
+      } catch (err) {
+        deleteMsg.className = "form-msg error";
+        deleteMsg.textContent = toMessage(err);
+      }
+    });
+  }
+</script>
+
+<style>
+  .account-mail {
+    margin: 0 0 0.6rem;
+    word-break: break-all;
+  }
+  .verify {
+    margin: 0 0 0.9rem;
+    font-size: 0.88rem;
+    background: #fdf5e3;
+    color: #7a5a10;
+    border-radius: 5px;
+    padding: 0.5rem 0.7rem;
+  }
+  .link-btn {
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    color: var(--accent);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .verify-msg {
+    display: block;
+    color: var(--muted);
+  }
+  .verify-msg:empty {
+    display: none;
+  }
+  .section-lead {
+    margin: 0 0 0.9rem;
+    font-size: 0.92rem;
+  }
+  .selection-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .selection-list li {
+    padding: 0.5rem 0;
+    border-top: 1px solid var(--border);
+  }
+  .selection-list li:first-child {
+    border-top: 0;
+  }
+  .selection-list a {
+    font-weight: 700;
+    margin-right: 0.6rem;
+  }
+  .selection-detail {
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+  .mail-state {
+    margin: 0 0 1rem;
+    font-size: 0.92rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: 5px;
+    background: #eef2f7;
+  }
+  .mail-state.ok {
+    background: #e9f6ec;
+    color: #14612d;
+  }
+  .mail-state.pending {
+    background: #fdf5e3;
+    color: #7a5a10;
+  }
+</style>

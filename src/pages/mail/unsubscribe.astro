@@ -1,0 +1,32 @@
+---
+import Base from "../../layouts/Base.astro";
+import MailTokenAction from "../../components/MailTokenAction.astro";
+
+const base = import.meta.env.BASE_URL;
+const title = "メール配信の停止";
+const description = "毎日のメール配信を停止するページです。";
+---
+
+<Base title={title} description={description} noindex>
+  <h1>メール配信の停止</h1>
+  <p>下のボタンを押すと、毎日のメール配信を停止します。</p>
+
+  <MailTokenAction
+    action="unsubscribed"
+    buttonLabel="配信を停止する"
+    successText="配信を停止しました。ご利用ありがとうございました。"
+  />
+
+  <p class="note">
+    配信を停止しても会員アカウントは残ります。<a href={`${base}account/`}
+      >マイページ</a
+    >から配信の再開・アドレスの削除・退会ができます。
+  </p>
+</Base>
+
+<style>
+  .note {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+</style>

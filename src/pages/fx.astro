@@ -2,11 +2,12 @@
 import Base from "../layouts/Base.astro";
 import AffiliateSlot from "../components/AffiliateSlot.astro";
 import ChartGrid from "../components/ChartGrid.astro";
+import SymbolPicker from "../components/SymbolPicker.astro";
 import { FX_PAIRS } from "../chart-pairs.mjs";
 
 const title = "FXチャート一覧（ドル円・ユーロ円・ポンド円ほか）";
 const description =
-  "ドル円・ユーロ円・ポンド円・CHF円・AUD円・NZD円のリアルタイム30分足チャートを一覧表示。各通貨ペアの1分足・日足チャートも無料で確認できます。";
+  "ドル円・ユーロ円・ポンド円・ユーロドル・豪ドル・メキシコペソ円など主要17通貨ペアのリアルタイム30分足チャートを一覧表示。各通貨ペアの1分足・日足チャートも無料で確認できます。";
 ---
 
 <Base title={title} description={description} wide>
@@ -14,6 +15,8 @@ const description =
   <p>
     主要通貨ペアの<strong>リアルタイム30分足チャート</strong>を一覧表示しています。通貨ペア名をクリックすると、1分足・30分足・日足を掲載した各銘柄の詳細ページを開けます。
   </p>
+
+  <SymbolPicker pageKey="fx" />
 
   <ChartGrid pairs={FX_PAIRS} />
 

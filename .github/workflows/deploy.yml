@@ -35,10 +35,18 @@ jobs:
           cache: npm
       - run: npm ci
       - name: ビルド
+        # PUBLIC_FIREBASE_* は会員機能（Firebase Authentication / Firestore）の接続設定。
+        # ブラウザに埋め込まれる公開値なので Secrets ではなくリポジトリ変数で管理する。
+        # 未設定でもビルドは通り、その場合は会員機能が「準備中」表示になる。
         run: |
           export SITE_URL="https://market-daily.jimulabo.com"
           export BASE_PATH="/"
           npm run build
+        env:
+          PUBLIC_FIREBASE_API_KEY: ${{ vars.PUBLIC_FIREBASE_API_KEY }}
+          PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ vars.PUBLIC_FIREBASE_AUTH_DOMAIN }}
+          PUBLIC_FIREBASE_PROJECT_ID: ${{ vars.PUBLIC_FIREBASE_PROJECT_ID }}
+          PUBLIC_FIREBASE_APP_ID: ${{ vars.PUBLIC_FIREBASE_APP_ID }}
       - name: Google Cloudへ認証（Workload Identity Federation）
         id: auth
         uses: google-github-actions/auth@v2

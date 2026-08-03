@@ -10,3 +10,8 @@ market-dairy API.txt
 
 # Cloud Scheduler セットアップ用の GitHub PAT（絶対にコミットしない）
 .gh-dispatch-token
+
+# Firebase のサービスアカウント鍵・ローカル設定（絶対にコミットしない）
+*service-account*.json
+firebase-adminsdk-*.json
+.firebase/

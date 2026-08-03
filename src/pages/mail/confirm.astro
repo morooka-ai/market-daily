@@ -1,0 +1,35 @@
+---
+import Base from "../../layouts/Base.astro";
+import MailTokenAction from "../../components/MailTokenAction.astro";
+
+const base = import.meta.env.BASE_URL;
+const title = "メール配信の確認";
+const description = "毎日のメール配信を開始するための確認ページです。";
+---
+
+<Base title={title} description={description} noindex>
+  <h1>メール配信の確認</h1>
+  <p>
+    下のボタンを押すと、選択中の銘柄の毎営業日の配信を開始します。配信はいつでも停止できます（配信メールの末尾に停止用のリンクを記載しています）。
+  </p>
+
+  <MailTokenAction
+    action="subscribed"
+    buttonLabel="配信を開始する"
+    successText="配信を開始しました。次回の配信からお届けします。"
+  />
+
+  <p class="note">
+    このページに心当たりがない場合は、何もせずに閉じてください。配信は開始されません。
+  </p>
+  <p class="note">
+    <a href={`${base}account/`}>マイページ</a>から配信先の変更・削除ができます。
+  </p>
+</Base>
+
+<style>
+  .note {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+</style>

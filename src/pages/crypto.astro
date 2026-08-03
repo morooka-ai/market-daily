@@ -2,11 +2,12 @@
 import Base from "../layouts/Base.astro";
 import AffiliateSlot from "../components/AffiliateSlot.astro";
 import ChartGrid from "../components/ChartGrid.astro";
+import SymbolPicker from "../components/SymbolPicker.astro";
 import { CRYPTO_PAIRS } from "../chart-pairs.mjs";
 
 const title = "暗号資産チャート一覧（ビットコイン・イーサリアム・XRPほか）";
 const description =
-  "ビットコイン円・イーサリアム円・XRP円・ドージコイン円・ライトコイン円のリアルタイム30分足チャートを一覧表示。各銘柄の1分足・日足チャートも無料で確認できます。";
+  "ビットコイン円・イーサリアム円・XRP円・ソラナ円・カルダノ円など主要12銘柄のリアルタイム30分足チャートを一覧表示。各銘柄の1分足・日足チャートも無料で確認できます。";
 ---
 
 <Base title={title} description={description} wide>
@@ -14,6 +15,8 @@ const description =
   <p>
     主要な暗号資産の円建て価格の<strong>リアルタイム30分足チャート</strong>を一覧表示しています。銘柄名をクリックすると、1分足・30分足・日足を掲載した各銘柄の詳細ページを開けます。暗号資産は24時間365日取引されています。
   </p>
+
+  <SymbolPicker pageKey="crypto" />
 
   <ChartGrid pairs={CRYPTO_PAIRS} />
 

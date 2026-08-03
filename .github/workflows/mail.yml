@@ -1,0 +1,68 @@
+name: 会員向けメールを送信
+
+# 有効化するには、リポジトリ変数 MAIL_ENABLED=true と、
+# 送信サービスの設定（MAIL_PROVIDER / MAIL_FROM / secrets.MAIL_API_KEY）を登録する。
+# 未設定のうちは全ジョブがスキップされ、サイト側の会員機能だけが動く状態になる。
+
+on:
+  schedule:
+    # 毎時0分（UTC）: 配信登録の確認メールを拾って送る
+    - cron: "0 * * * *"
+    # 07:30 UTC (月-金) = 16:30 JST — 夕刊（16:00 JST）の生成後にダイジェストを配信
+    - cron: "30 7 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "送信モード"
+        type: choice
+        options: [confirm, daily, all]
+        default: confirm
+
+# 認証は Workload Identity Federation（鍵レス）。deploy.yml と同じ構成。
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: send-mail
+  cancel-in-progress: false
+
+jobs:
+  send:
+    if: vars.MAIL_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main # 当日の記事（content/posts）を含む最新の状態を取得する
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Google Cloudへ認証（Workload Identity Federation）
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/1058048954400/locations/global/workloadIdentityPools/github/providers/github-oidc
+          service_account: github-action-deploy@market-daily-503003.iam.gserviceaccount.com
+      - name: 送信モードを決定
+        id: mode
+        # 16:30 JST の定期実行だけダイジェスト（確認メールも同時に処理する）。
+        # 毎時の実行は確認メールのみ。手動実行は入力値に従う。
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "value=${{ inputs.mode }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.schedule }}" = "30 7 * * 1-5" ]; then
+            echo "value=all" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=confirm" >> "$GITHUB_OUTPUT"
+          fi
+      - name: メールを送信
+        run: node scripts/send-mail.mjs ${{ steps.mode.outputs.value }}
+        env:
+          FIREBASE_PROJECT_ID: market-daily-503003
+          SITE_URL: https://market-daily.jimulabo.com
+          MAIL_PROVIDER: ${{ vars.MAIL_PROVIDER }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          MAIL_FROM_NAME: ${{ vars.MAIL_FROM_NAME }}
+          MAIL_API_KEY: ${{ secrets.MAIL_API_KEY }}

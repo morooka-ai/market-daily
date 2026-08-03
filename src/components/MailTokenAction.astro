@@ -1,0 +1,79 @@
+---
+// メール内リンクからの「配信開始の確認」「配信停止」を処理する共通パーツ。
+//
+// リンクには uid とトークンが付いており、トークンが Firestore の保存値と一致する場合だけ
+// 状態を書き換えられる（検証は firestore.rules 側で行う）。ログインは不要。
+//
+// 実行はボタン押下を必須にしている。メールのセキュリティスキャナがリンクを
+// 自動的に開いても、意図せず配信開始・停止されないようにするため。
+interface Props {
+  /** "subscribed" = 配信開始の確認 / "unsubscribed" = 配信停止 */
+  action: "subscribed" | "unsubscribed";
+  buttonLabel: string;
+  successText: string;
+}
+
+const { action, buttonLabel, successText } = Astro.props;
+const configured = Boolean(
+  import.meta.env.PUBLIC_FIREBASE_API_KEY &&
+    import.meta.env.PUBLIC_FIREBASE_PROJECT_ID &&
+    import.meta.env.PUBLIC_FIREBASE_APP_ID,
+);
+---
+
+{
+  !configured ? (
+    <p class="card">会員機能は現在準備中です。</p>
+  ) : (
+    <div
+      class="card"
+      data-mail-action={action}
+      data-success-text={successText}
+    >
+      <p data-invalid hidden>
+        リンクが正しくありません。メール内のリンクをそのまま開いてください。
+      </p>
+      <p class="btn-row" data-ready hidden>
+        <button class="btn" type="button" data-run>
+          {buttonLabel}
+        </button>
+      </p>
+      <p class="form-msg" data-msg role="status" />
+    </div>
+  )
+}
+
+<script>
+  import { updateMailStatusByToken, toMessage } from "../lib/firebase.mjs";
+
+  const root = document.querySelector("[data-mail-action]");
+  if (root) {
+    const params = new URLSearchParams(location.search);
+    const uid = params.get("u") ?? "";
+    const token = params.get("t") ?? "";
+    const status = root.dataset.mailAction;
+    const msg = root.querySelector("[data-msg]");
+    const button = root.querySelector("[data-run]");
+
+    if (!uid || !token) {
+      root.querySelector("[data-invalid]").hidden = false;
+    } else {
+      root.querySelector("[data-ready]").hidden = false;
+      button.addEventListener("click", async () => {
+        button.disabled = true;
+        msg.className = "form-msg";
+        msg.textContent = "処理しています…";
+        try {
+          await updateMailStatusByToken(uid, token, status);
+          msg.className = "form-msg ok";
+          msg.textContent = root.dataset.successText;
+          button.hidden = true;
+        } catch (err) {
+          button.disabled = false;
+          msg.className = "form-msg error";
+          msg.textContent = toMessage(err);
+        }
+      });
+    }
+  }
+</script>

@@ -1,0 +1,382 @@
+---
+// 会員が「このページに表示する銘柄」を最大9件まで選ぶパネル。
+//
+// 表示の絞り込み方針:
+//   ページ本体は常に全銘柄をHTMLに出力する（検索エンジンには全件を見せる）。
+//   会員の選択は、localStorage のキャッシュから組み立てた <style> で
+//   非選択の銘柄を display:none にし、選択順を CSS の order で並べ替えて適用する。
+//   DOM構築前に効くのでチラつきが出ず、Firebase SDK も不要。
+//   （非表示の要素は画面内に入らないため、チャートウィジェットも読み込まれない）
+//
+// パネルを開く／ログイン済みの手がかりがある場合に初めて Firebase SDK を動的読み込みする。
+import { getPage, MAX_SELECTION } from "../catalog.mjs";
+
+interface Props {
+  /** catalog.mjs の PAGES のキー（例: "fx"） */
+  pageKey: string;
+}
+
+const { pageKey } = Astro.props;
+const page = getPage(pageKey);
+if (!page) throw new Error(`未知のページキーです: ${pageKey}`);
+
+const base = import.meta.env.BASE_URL;
+const configured = Boolean(
+  import.meta.env.PUBLIC_FIREBASE_API_KEY &&
+    import.meta.env.PUBLIC_FIREBASE_PROJECT_ID &&
+    import.meta.env.PUBLIC_FIREBASE_APP_ID,
+);
+---
+
+{/* 選択の即時適用。DOM構築前に <style> を差し込むため、他のscriptより先に置く */}
+<script is:inline define:vars={{ pageKey }}>
+  (function () {
+    try {
+      var raw = localStorage.getItem("md_selections");
+      if (!raw) return;
+      var ids = (JSON.parse(raw) || {})[pageKey];
+      if (!Array.isArray(ids) || ids.length === 0) return;
+      var sel = function (id) {
+        return '[data-symbol-id="' + String(id).replace(/["\\]/g, "\\$&") + '"]';
+      };
+      var keep = ids.map(sel).join(",");
+      var order = ids
+        .map(function (id, i) {
+          return sel(id) + "{order:" + (i + 1) + "}";
+        })
+        .join("");
+      var style = document.createElement("style");
+      style.id = "md-symbol-filter";
+      style.textContent =
+        "[data-symbol-id]:not(:is(" + keep + ")){display:none!important}" + order;
+      document.head.appendChild(style);
+    } catch (e) {
+      /* 何かあれば絞り込まない（=全件表示）で続行する */
+    }
+  })();
+</script>
+
+<details
+  class="picker"
+  data-picker
+  data-page-key={pageKey}
+  data-max={MAX_SELECTION}
+  data-enabled={configured ? "1" : "0"}
+>
+  <summary>
+    <span class="picker-title">表示する銘柄を選ぶ</span>
+    <span class="picker-state" data-picker-state>会員機能</span>
+  </summary>
+
+  <div class="picker-body">
+    {
+      !configured ? (
+        <p class="picker-msg">
+          会員機能は準備中です。準備が整うまでは全銘柄を表示します。
+        </p>
+      ) : (
+        <>
+          <div class="picker-msg" data-picker-anon hidden>
+            <p>
+              無料の会員登録をすると、このページに表示する銘柄を
+              <strong>最大{MAX_SELECTION}件</strong
+              >まで選んで並べ替えできます。メール配信を受け取るかどうかは任意です。
+            </p>
+            <p class="picker-actions">
+              <a class="btn" href={`${base}account/register/`}>
+                無料で会員登録
+              </a>
+              <a class="btn btn-ghost" href={`${base}account/login/`}>
+                ログイン
+              </a>
+            </p>
+          </div>
+
+          <form data-picker-form hidden>
+            <p class="picker-count">
+              選択中 <strong data-picker-selected>0</strong> / {MAX_SELECTION}件
+              <span class="picker-hint">
+                （0件のときは全{page.items.length}銘柄を表示します）
+              </span>
+            </p>
+            <ul class="picker-list">
+              {page.items.map((it) => (
+                <li>
+                  <label>
+                    <input type="checkbox" name="symbol" value={it.id} />
+                    <span class="picker-name">{it.name}</span>
+                    <span class="picker-sub">{it.sub}</span>
+                  </label>
+                </li>
+              ))}
+            </ul>
+            <p class="picker-actions">
+              <button class="btn" type="submit">
+                この内容で保存
+              </button>
+              <button class="btn btn-ghost" type="button" data-picker-reset>
+                すべて表示に戻す
+              </button>
+              <span class="picker-status" data-picker-status role="status" />
+            </p>
+          </form>
+
+          <p class="picker-msg" data-picker-loading>読み込んでいます…</p>
+        </>
+      )
+    }
+  </div>
+</details>
+
+<script>
+  import {
+    hasSignedInHint,
+    watchUser,
+    loadProfile,
+    saveSelection,
+    toMessage,
+  } from "../lib/firebase.mjs";
+
+  const root = document.querySelector("[data-picker]");
+  const form = root?.querySelector("[data-picker-form]");
+
+  // 会員機能が未設定のページ（Firebase設定なし）ではフォーム自体が無いので何もしない
+  if (root && form && root.dataset.enabled === "1") {
+    const pageKey = root.dataset.pageKey;
+    const max = Number(root.dataset.max);
+    const anon = root.querySelector("[data-picker-anon]");
+    const loading = root.querySelector("[data-picker-loading]");
+    const stateBadge = root.querySelector("[data-picker-state]");
+    const countEl = root.querySelector("[data-picker-selected]");
+    const statusEl = root.querySelector("[data-picker-status]");
+    const boxes = () => [...form.querySelectorAll('input[name="symbol"]')];
+
+    let currentUser = null;
+    let started = false;
+
+    const show = (el, on) => {
+      if (el) el.hidden = !on;
+    };
+
+    function refreshCount() {
+      const checked = boxes().filter((b) => b.checked);
+      countEl.textContent = String(checked.length);
+      // 上限に達したら未選択のチェックボックスは押せなくする
+      for (const b of boxes()) {
+        b.disabled = !b.checked && checked.length >= max;
+      }
+      stateBadge.textContent =
+        checked.length === 0 ? "全件表示" : `${checked.length}件を表示`;
+    }
+
+    /** 選択内容を即座に画面へ反映する（保存の完了を待たせない） */
+    function applyFilter(ids) {
+      document.getElementById("md-symbol-filter")?.remove();
+      if (!ids.length) return;
+      const sel = (id) =>
+        `[data-symbol-id="${String(id).replace(/["\\]/g, "\\$&")}"]`;
+      const keep = ids.map(sel).join(",");
+      const order = ids.map((id, i) => `${sel(id)}{order:${i + 1}}`).join("");
+      const style = document.createElement("style");
+      style.id = "md-symbol-filter";
+      style.textContent = `[data-symbol-id]:not(:is(${keep})){display:none!important}${order}`;
+      document.head.appendChild(style);
+    }
+
+    /** 保存値のうち、このページに実在する銘柄だけを上限まで採用する */
+    function sanitize(ids) {
+      const valid = new Set(boxes().map((b) => b.value));
+      const out = [];
+      for (const id of Array.isArray(ids) ? ids : []) {
+        if (!valid.has(id) || out.includes(id)) continue;
+        out.push(id);
+        if (out.length >= max) break;
+      }
+      return out;
+    }
+
+    async function start() {
+      if (started) return;
+      started = true;
+      try {
+        await watchUser(async (user) => {
+          currentUser = user;
+          show(loading, false);
+          show(anon, !user);
+          show(form, Boolean(user));
+          if (!user) {
+            stateBadge.textContent = "会員機能";
+            // ログアウト済み・セッション切れの状態で、前回の絞り込みが
+            // 残ったままにならないよう解除して全件表示に戻す
+            applyFilter([]);
+            return;
+          }
+          const profile = await loadProfile(user);
+          const saved = sanitize(profile.selections?.[pageKey]);
+          for (const b of boxes()) b.checked = saved.includes(b.value);
+          refreshCount();
+          applyFilter(saved);
+        });
+      } catch (err) {
+        show(loading, false);
+        show(anon, true);
+        if (statusEl) statusEl.textContent = toMessage(err);
+      }
+    }
+
+    // ログイン済みの手がかりがあれば裏で同期しておく（他端末での変更を反映するため）。
+    // 未ログインの訪問者はパネルを開くまでSDKを読み込まない。
+    if (hasSignedInHint()) {
+      const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 1));
+      idle(() => start());
+    } else {
+      show(loading, false);
+      show(anon, true);
+    }
+    root.addEventListener("toggle", () => {
+      if (root.open) start();
+    });
+
+    form.addEventListener("change", refreshCount);
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!currentUser) return;
+      const ids = boxes()
+        .filter((b) => b.checked)
+        .map((b) => b.value);
+      statusEl.textContent = "保存中…";
+      applyFilter(ids);
+      try {
+        await saveSelection(currentUser, pageKey, ids);
+        statusEl.textContent = "保存しました";
+      } catch (err) {
+        statusEl.textContent = toMessage(err);
+      }
+    });
+
+    root.querySelector("[data-picker-reset]")?.addEventListener("click", async () => {
+      if (!currentUser) return;
+      for (const b of boxes()) b.checked = false;
+      refreshCount();
+      applyFilter([]);
+      statusEl.textContent = "保存中…";
+      try {
+        await saveSelection(currentUser, pageKey, []);
+        statusEl.textContent = "全銘柄を表示します";
+      } catch (err) {
+        statusEl.textContent = toMessage(err);
+      }
+    });
+  }
+</script>
+
+<style>
+  .picker {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 1.2rem 0;
+    font-size: 0.92rem;
+  }
+  .picker > summary {
+    cursor: pointer;
+    padding: 0.6rem 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    list-style: none;
+  }
+  .picker > summary::-webkit-details-marker {
+    display: none;
+  }
+  .picker > summary::before {
+    content: "▶";
+    font-size: 0.7rem;
+    color: var(--muted);
+    transition: transform 0.15s;
+  }
+  .picker[open] > summary::before {
+    transform: rotate(90deg);
+  }
+  .picker-title {
+    font-weight: 700;
+  }
+  .picker-state {
+    font-size: 0.75rem;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.05rem 0.55rem;
+  }
+  .picker-body {
+    border-top: 1px solid var(--border);
+    padding: 0.9rem;
+  }
+  .picker-msg {
+    margin: 0;
+  }
+  .picker-msg p {
+    margin: 0 0 0.6rem;
+  }
+  .picker-count {
+    margin: 0 0 0.6rem;
+  }
+  .picker-hint {
+    color: var(--muted);
+    font-size: 0.85em;
+  }
+  .picker-list {
+    list-style: none;
+    margin: 0 0 0.9rem;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 0.15rem 0.8rem;
+  }
+  .picker-list label {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    padding: 0.15rem 0;
+    cursor: pointer;
+  }
+  .picker-list input:disabled ~ * {
+    color: var(--muted);
+  }
+  .picker-sub {
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .picker-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin: 0;
+  }
+  .picker-status {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .btn {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    border: 1px solid var(--accent);
+    border-radius: 5px;
+    padding: 0.35rem 0.9rem;
+    font: inherit;
+    font-size: 0.9rem;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .btn:hover {
+    filter: brightness(1.08);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--accent);
+  }
+</style>

@@ -1,0 +1,92 @@
+---
+import Base from "../../layouts/Base.astro";
+
+const base = import.meta.env.BASE_URL;
+const configured = Boolean(
+  import.meta.env.PUBLIC_FIREBASE_API_KEY &&
+    import.meta.env.PUBLIC_FIREBASE_PROJECT_ID &&
+    import.meta.env.PUBLIC_FIREBASE_APP_ID,
+);
+
+const title = "パスワードの再設定";
+const description = "登録済みのメールアドレス宛に、パスワード再設定用のリンクをお送りします。";
+---
+
+<Base title={title} description={description} noindex>
+  <h1>パスワードの再設定</h1>
+  <p>
+    ご登録のメールアドレスを入力してください。パスワードを再設定するためのリンクをメールでお送りします。
+  </p>
+
+  {
+    !configured ? (
+      <p class="card">会員機能は現在準備中です。</p>
+    ) : (
+      <form class="card" data-reset-form>
+        <label class="field">
+          <span>メールアドレス</span>
+          <input type="email" name="email" autocomplete="email" required />
+        </label>
+        <p class="btn-row">
+          <button class="btn" type="submit" data-submit>
+            再設定メールを送る
+          </button>
+          <a class="btn btn-ghost" href={`${base}account/login/`}>
+            ログインに戻る
+          </a>
+        </p>
+        <p class="form-msg" data-msg role="status" />
+      </form>
+    )
+  }
+
+  <p class="note">
+    メールが届かない場合は、迷惑メールフォルダをご確認ください。それでも見つからない場合、そのアドレスは登録されていない可能性があります。<a
+      href={`${base}account/register/`}>新規登録</a
+    >をお試しください。
+  </p>
+</Base>
+
+<script>
+  import { sendPasswordReset, toMessage } from "../../lib/firebase.mjs";
+
+  const form = document.querySelector("[data-reset-form]");
+  if (form) {
+    const msg = form.querySelector("[data-msg]");
+    const submit = form.querySelector("[data-submit]");
+
+    // どのアドレスが登録済みかを外部から探れないよう、
+    // 未登録のアドレスでも成功時と同じ文言を返す。
+    const DONE =
+      "送信しました。メールが届いたら、記載のリンクからパスワードを再設定してください。";
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = String(new FormData(form).get("email") ?? "");
+      submit.disabled = true;
+      msg.className = "form-msg";
+      msg.textContent = "送信しています…";
+      try {
+        await sendPasswordReset(email);
+        msg.className = "form-msg ok";
+        msg.textContent = DONE;
+      } catch (err) {
+        if (err?.code === "auth/user-not-found") {
+          msg.className = "form-msg ok";
+          msg.textContent = DONE;
+        } else {
+          submit.disabled = false;
+          msg.className = "form-msg error";
+          msg.textContent = toMessage(err);
+        }
+      }
+    });
+  }
+</script>
+
+<style>
+  .note {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+</style>

@@ -6,9 +6,16 @@ interface Props {
   description?: string;
   /** チャート系ページで本文コンテナを1280pxまで広げる（3列グリッド用） */
   wide?: boolean;
+  /** 会員向けページなど、検索結果に載せたくないページで true にする */
+  noindex?: boolean;
 }
 
-const { title, description = SITE_DESCRIPTION, wide = false } = Astro.props;
+const {
+  title,
+  description = SITE_DESCRIPTION,
+  wide = false,
+  noindex = false,
+} = Astro.props;
 const pageTitle = title ? `${title}｜${SITE_TITLE}` : SITE_TITLE;
 const base = import.meta.env.BASE_URL;
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -21,6 +28,7 @@ const navItems = [
   { href: `${base}crypto/`, label: "暗号資産" },
   { href: `${base}jp-stocks/`, label: "日本株" },
   { href: `${base}us-stocks/`, label: "米国株" },
+  { href: `${base}account/`, label: "マイページ" },
 ];
 const isActive = (item) =>
   item.exact ? path === item.href : path.startsWith(item.href);
@@ -33,6 +41,7 @@ const isActive = (item) =>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
     <meta name="theme-color" content="#0f5aa8" />
@@ -87,12 +96,14 @@ const isActive = (item) =>
         <a href={`${base}crypto/`}>暗号資産</a>
         <a href={`${base}jp-stocks/`}>日本株</a>
         <a href={`${base}us-stocks/`}>米国株</a>
+        <a href={`${base}account/`}>マイページ</a>
         <a href={`${base}archive/`}>記事アーカイブ</a>
         <a href={`${base}rss.xml`}>RSS</a>
       </nav>
       <p class="footer-links">
         <a href={`${base}about/`}>運営者情報</a>
         <a href={`${base}contact/`}>お問い合わせ</a>
+        <a href={`${base}terms/`}>会員規約</a>
         <a href={`${base}privacy/`}>プライバシーポリシー</a>
         <a href={`${base}disclaimer/`}>免責事項</a>
       </p>
@@ -202,6 +213,76 @@ const isActive = (item) =>
   th, td { border: 1px solid var(--border); padding: 0.45rem 0.6rem; text-align: left; }
   th { background: #eef2f7; }
   a { color: var(--accent); }
+
+  /* 会員機能（登録・ログイン・マイページ）で共有するフォーム部品 */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.1rem 1.2rem 1.3rem;
+    margin: 1.2rem 0;
+  }
+  .card > h2:first-child { margin-top: 0; }
+  .field { display: block; margin-bottom: 1rem; }
+  .field > span {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+  .field input {
+    width: 100%;
+    font: inherit;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: #fff;
+    color: var(--text);
+  }
+  .field input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+  .field-hint {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+  .btn {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    border: 1px solid var(--accent);
+    border-radius: 5px;
+    padding: 0.4rem 1rem;
+    font: inherit;
+    font-size: 0.95rem;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .btn:hover { filter: brightness(1.08); }
+  .btn:disabled { opacity: 0.55; cursor: default; filter: none; }
+  .btn-ghost { background: transparent; color: var(--accent); }
+  .btn-danger { background: transparent; color: #cf222e; border-color: #cf222e; }
+  .btn-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin: 0;
+  }
+  .form-msg {
+    margin: 0.8rem 0 0;
+    font-size: 0.9rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: 5px;
+  }
+  .form-msg:empty { display: none; }
+  .form-msg.error { background: #fdecec; color: #a4232b; }
+  .form-msg.ok { background: #e9f6ec; color: #14612d; }
+
   /* スマホでは幅の広い表を横スクロールさせ、本文のはみ出しを防ぐ */
   @media (max-width: 640px) {
     table {

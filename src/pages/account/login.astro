@@ -1,0 +1,85 @@
+---
+import Base from "../../layouts/Base.astro";
+
+const base = import.meta.env.BASE_URL;
+const configured = Boolean(
+  import.meta.env.PUBLIC_FIREBASE_API_KEY &&
+    import.meta.env.PUBLIC_FIREBASE_PROJECT_ID &&
+    import.meta.env.PUBLIC_FIREBASE_APP_ID,
+);
+
+const title = "ログイン";
+const description = "マーケットデイリーの無料会員ログインページです。";
+---
+
+<Base title={title} description={description} noindex>
+  <h1>ログイン</h1>
+
+  {
+    !configured ? (
+      <p class="card">会員機能は現在準備中です。</p>
+    ) : (
+      <form class="card" data-login-form>
+        <label class="field">
+          <span>メールアドレス</span>
+          <input type="email" name="email" autocomplete="email" required />
+        </label>
+        <label class="field">
+          <span>パスワード</span>
+          <input
+            type="password"
+            name="password"
+            autocomplete="current-password"
+            required
+          />
+        </label>
+        <p class="btn-row">
+          <button class="btn" type="submit" data-submit>
+            ログイン
+          </button>
+          <a class="btn btn-ghost" href={`${base}account/register/`}>
+            無料会員登録はこちら
+          </a>
+        </p>
+        <p class="form-msg" data-msg role="status" />
+        <p class="reset-link">
+          <a href={`${base}account/reset/`}>パスワードをお忘れの方</a>
+        </p>
+      </form>
+    )
+  }
+</Base>
+
+<script>
+  import { login, toMessage } from "../../lib/firebase.mjs";
+
+  const form = document.querySelector("[data-login-form]");
+  if (form) {
+    const msg = form.querySelector("[data-msg]");
+    const submit = form.querySelector("[data-submit]");
+    const base = import.meta.env.BASE_URL;
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      submit.disabled = true;
+      msg.className = "form-msg";
+      msg.textContent = "ログインしています…";
+      try {
+        await login(String(data.get("email") ?? ""), String(data.get("password") ?? ""));
+        location.href = `${base}account/`;
+      } catch (err) {
+        submit.disabled = false;
+        msg.classList.add("error");
+        msg.textContent = toMessage(err);
+      }
+    });
+  }
+</script>
+
+<style>
+  .reset-link {
+    margin: 1rem 0 0;
+    font-size: 0.88rem;
+  }
+</style>

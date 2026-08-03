@@ -5,6 +5,7 @@ const { pairs } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const items = pairs.map((p) => ({
   id: `grid-${p.id}`,
+  symbolId: p.id, // 会員の表示銘柄の絞り込み（SymbolPicker）が参照する
   symbol: p.symbol,
   name: p.name,
   pair: p.pair,
@@ -15,7 +16,7 @@ const items = pairs.map((p) => ({
 <div class="chart-grid">
   {
     items.map((it) => (
-      <section class="grid-item">
+      <section class="grid-item" data-symbol-id={it.symbolId}>
         <h2>
           <a href={it.detail}>
             {it.name}（{it.pair}）

@@ -2,18 +2,23 @@
 import Base from "../layouts/Base.astro";
 import AffiliateSlot from "../components/AffiliateSlot.astro";
 import ChartGrid from "../components/ChartGrid.astro";
+import SymbolPicker from "../components/SymbolPicker.astro";
 import { METAL_PAIRS } from "../chart-pairs.mjs";
 
-const title = "貴金属チャート一覧（金・プラチナ・銀）";
+const title = "貴金属・非鉄金属チャート一覧（金・プラチナ・銀・銅ほか）";
 const description =
-  "金（ゴールド）・プラチナ・銀（シルバー）のリアルタイム30分足チャートを一覧表示。各銘柄の1分足・日足チャートも無料で確認できます。";
+  "金（ゴールド）・プラチナ・銀（シルバー）・パラジウム・銅・アルミニウムのリアルタイム30分足チャートを一覧表示。各銘柄の1分足・日足チャートも無料で確認できます。";
 ---
 
 <Base title={title} description={description} wide>
-  <h1>貴金属チャート一覧</h1>
+  <h1>貴金属・非鉄金属チャート一覧</h1>
   <p>
-    金・プラチナ・銀のドル建て価格の<strong>リアルタイム30分足チャート</strong>を一覧表示しています。銘柄名をクリックすると、1分足・30分足・日足を掲載した各銘柄の詳細ページを開けます。
+    金・プラチナ・銀・パラジウムのドル建て価格と、銅・アルミニウムの先物価格の<strong
+      >リアルタイム30分足チャート</strong
+    >を一覧表示しています。銘柄名をクリックすると、1分足・30分足・日足を掲載した各銘柄の詳細ページを開けます。
   </p>
+
+  <SymbolPicker pageKey="metals" />
 
   <ChartGrid pairs={METAL_PAIRS} />
 

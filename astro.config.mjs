@@ -6,5 +6,11 @@ import sitemap from "@astrojs/sitemap";
 export default defineConfig({
   site: process.env.SITE_URL || "https://market-daily.jimulabo.com",
   base: process.env.BASE_PATH || "/",
-  integrations: [sitemap()],
+  // 会員向けページ（/account/・/mail/）は検索結果に載せる必要がないので
+  // サイトマップから除外する（各ページ側でも noindex を付けている）。
+  integrations: [
+    sitemap({
+      filter: (page) => !/\/(account|mail)\//.test(page),
+    }),
+  ],
 });

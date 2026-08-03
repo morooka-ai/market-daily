@@ -77,6 +77,128 @@ node scripts/setup/cloud-run-domain-mapping.mjs   # カスタムドメイン設�
 
 以降は毎営業日、自動で投稿されます。
 
+## 会員機能（無料会員登録・表示銘柄の選択・メール配信）
+
+| 機能 | 内容 |
+| --- | --- |
+| 無料会員登録 | **メールアドレス（＝ログインID）とパスワード**で登録 |
+| 表示銘柄の選択 | FX・貴金属・暗号資産・日本株・米国株の各ページで**最大9件**まで選択・並べ替え |
+| メール配信 | **希望した会員のみ**。選択銘柄の価格と当日の記事を毎営業日16:30ごろ配信 |
+| パスワード再設定 | Firebase が送る再設定メールで対応（**送信サービスの契約前でも動きます**） |
+
+「任意」なのは**配信を受け取るかどうか**です。会員登録の時点では配信されず、
+登録画面のチェック（既定オフ）またはマイページから申し込み、確認メールのリンクを
+開いた会員にだけ配信します。
+
+サイトは静的サイトのまま（nginx / Cloud Run 構成は変更なし）で、認証とデータ保存は
+ブラウザから Firebase を直接呼びます。**設定を入れるまでは会員機能が「準備中」表示になるだけ**で、
+サイトのビルド・公開はこれまでどおり動きます。
+
+```
+[ブラウザ] ──Firebase SDK──> Firebase Authentication（ID+パスワード）
+                          └─> Firestore  users/{uid} … 選択銘柄・配信先メール
+
+[GitHub Actions] ──WIF──> Firestore（Admin SDK で読み取り）──> 送信サービス ──> 会員
+```
+
+- 登録直後に Firebase がメールアドレスの確認メールを送ります（宛先の打ち間違いをその場で
+  気づけるようにするため）。未確認でも機能は使えますが、マイページに確認をうながす表示が出ます。
+- 各ページのHTMLには常に全銘柄を出力し、会員の選択は CSS で絞り込みます。
+  検索エンジンには全件が見え、非表示の銘柄はチャートウィジェットも読み込まれません。
+- Firebase SDK は**必要になったときだけ動的読み込み**します。未ログインの訪問者には
+  約2KBのスクリプトしか配信されないため、表示速度は変わりません。
+
+### 5. Firebase を設定する（会員機能を有効にする）
+
+1. https://console.firebase.google.com で「プロジェクトを追加」→ **既存のGCPプロジェクト
+   `market-daily-503003` を選択**（新規に作らないこと。Cloud Run と同じプロジェクトに揃える）
+2. **Authentication** → 始める → ログイン方法で「**メール / パスワード**」を有効化
+3. Authentication → 設定 → **承認済みドメイン**に `market-daily.jimulabo.com` を追加（これが無いとログインできません）
+   - Authentication → **Templates（テンプレート）** で「パスワードの再設定」「メールアドレスの確認」の
+     言語を日本語にし、差出人名をサイト名に変更しておくと体裁が整います
+   - これらのメールは Firebase が無料で送るため、下記6のメール送信サービスとは無関係に動きます
+4. **Firestore Database** を作成（本番環境モード、ロケーション `asia-northeast1`）
+5. セキュリティルールを反映する（**必須**。これが実質的なアクセス制御です）
+
+   ```sh
+   firebase login          # 認証が切れている場合は firebase login --reauth
+   firebase deploy --only firestore:rules
+   ```
+
+   （`firebase.json` と `.firebaserc` を用意してあるので、プロジェクト指定は不要です）
+
+   もしくは Firebase コンソールの Firestore → ルール に `firestore.rules` の内容を貼り付けて公開。
+
+   公開前に Firestore → ルール → **Rules Playground** で次の3点を確認しておくと安全です。
+
+   | シミュレーション | 期待する結果 |
+   | --- | --- |
+   | 未認証で `users/<他人のUID>` を `get` | **拒否** |
+   | 認証済み（自分のUID）で `users/<自分のUID>` を `get` / `update` | 許可 |
+   | 未認証で `users/<UID>` を `update`（`mail.token` に誤った値を入れる） | **拒否** |
+6. プロジェクトの設定 → マイアプリ → **ウェブアプリを追加**し、表示される構成値を控える
+7. GitHubの **Settings → Secrets and variables → Actions → Variables** に登録
+   （ブラウザに埋め込まれる公開値なので Secrets ではなく Variables でよい）
+
+   | 名前 | 値の例 |
+   | --- | --- |
+   | `PUBLIC_FIREBASE_API_KEY` | `AIza...` |
+   | `PUBLIC_FIREBASE_AUTH_DOMAIN` | `market-daily-503003.firebaseapp.com` |
+   | `PUBLIC_FIREBASE_PROJECT_ID` | `market-daily-503003` |
+   | `PUBLIC_FIREBASE_APP_ID` | `1:...:web:...` |
+
+8. 「サイトをビルドしてCloud Runへ公開」を実行 → `/account/register/` で登録できるか確認
+
+### 6. メール配信を設定する（任意・後からでOK）
+
+送信サービスは `MAIL_PROVIDER` で差し替えられます（`resend` / `brevo` / `sendgrid`）。
+追加するときは `scripts/lib/mailer.mjs` の `PROVIDERS` に1関数を足すだけです。
+
+1. 送信サービスでアカウントを作り、APIキーを取得。独自ドメインから送るなら
+   案内される **SPF / DKIM のDNSレコードを `jimulabo.com` に追加**する
+2. サービスアカウントに Firestore の読み書き権限を付与する
+
+   ```sh
+   gcloud projects add-iam-policy-binding market-daily-503003 \
+     --member="serviceAccount:github-action-deploy@market-daily-503003.iam.gserviceaccount.com" \
+     --role="roles/datastore.user"
+   ```
+
+3. GitHubの **Variables** に登録
+
+   | 名前 | 値の例 |
+   | --- | --- |
+   | `MAIL_ENABLED` | `true`（`true` 以外だと配信ワークフローは動きません） |
+   | `MAIL_PROVIDER` | `resend` |
+   | `MAIL_FROM` | `daily@market-daily.jimulabo.com` |
+   | `MAIL_FROM_NAME` | `マーケットデイリー`（省略可） |
+
+4. GitHubの **Secrets** に `MAIL_API_KEY` を登録
+5. 送信前に本文を確認する（送信せず内容を表示するだけ）
+
+   ```sh
+   MAIL_PROVIDER=console MAIL_FROM=daily@example.com npm run mail:sample
+   ```
+
+配信ワークフロー（`.github/workflows/mail.yml`）は次の2本立てです。
+
+- **毎時**: 配信登録の確認メール（登録直後の会員に届く。最大1時間ほどの遅延があります）
+- **平日16:30 JST**: 当日のダイジェスト配信
+
+### 法令対応として組み込んである点
+
+- **ダブルオプトイン**: 会員登録しただけでは配信されず、配信を申し込んだうえで確認メール内の
+  リンクを開いてボタンを押した会員にのみ配信します（特定電子メール法のオプトイン規制）。
+  登録画面の「配信を受け取る」チェックは既定でオフです
+- パスワード再設定・アドレス確認のメールは、本サービスの提供に必要な連絡（取引関係メール）として
+  配信の申し込みとは切り離して送ります
+- **配信停止**: 全配信メールの本文末尾と `List-Unsubscribe` ヘッダーに停止リンクを付けています。
+  ログイン不要で停止でき、マイページからも解除・退会できます
+- **送信者の表示**: 全メールに発行者名・サイトURL・問い合わせ先を記載しています
+- **確認/停止リンクは要クリック**: メールのセキュリティスキャナがリンクを自動で開いても
+  誤って配信開始・停止されないよう、ページ上でボタンを押す方式にしています
+- 取得する情報と利用目的は `src/pages/privacy.astro`、利用条件は `src/pages/terms.astro` に記載
+
 ## コスト目安
 
 - **すべて無料枠内で運用できます（月0円）**
@@ -86,10 +208,19 @@ node scripts/setup/cloud-run-domain-mapping.mjs   # カスタムドメイン設�
 - GitHub Actions / Yahoo Finance / Alpha Vantage: 無料枠内
 - Cloud Run: 無料枠（月200万リクエスト・メモリ 360,000 GiB秒）内に収まる想定。最小インスタンス0（アクセスがない時間は課金なし）
 - Artifact Registry: 無料枠は0.5GBまで。イメージが溜まったら古いものを削除してください
+- Firebase Authentication / Firestore: 無料枠（Firestore は1日あたり読み取り5万・書き込み2万）内。
+  会員1人あたりの読み書きはごくわずかなので、数千人規模まで無料枠で足ります
+- メール送信サービス: 無料枠は各社1日100〜300通程度。会員数がこれを超える場合は有料プランの検討が必要です
 
 ## カスタマイズ
 
 - **サイト名・説明**: `src/consts.mjs`
+- **掲載銘柄の追加・変更**: `src/chart-pairs.mjs`（FX・貴金属・暗号資産）、`src/us-stocks-data.mjs`、
+  `src/jp-stocks-data.mjs`。会員の選択肢とメール配信の対象は `src/catalog.mjs` が
+  これらを束ねて自動生成するので、追加時に触るのは各定義ファイルだけです
+  （メール配信で価格を出すため `yahooSymbol` は必ず設定してください）
+- **1ページあたりの選択上限（9件）**: `src/catalog.mjs` の `MAX_SELECTION`
+  （変更する場合は `firestore.rules` の `selectionOk` にある `9` も合わせてください）
 - **記事の書き方・禁止事項**: `scripts/lib/article.mjs` の `SYSTEM` プロンプト
 - **投稿時刻**: `.github/workflows/post-*.yml` の `cron`（UTC表記。JST−9時間）
 - **免責事項の文言**: `src/components/Disclaimer.astro` と `src/pages/disclaimer.astro`

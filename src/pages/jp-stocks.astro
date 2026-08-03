@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import AffiliateSlot from "../components/AffiliateSlot.astro";
+import SymbolPicker from "../components/SymbolPicker.astro";
 import { JP_STOCKS } from "../jp-stocks-data.mjs";
 import notes from "../../content/jp-stocks.json";
 
@@ -44,10 +45,12 @@ const description =
   </p>
   {updatedAt && <p class="updated-at">最終更新：{updatedAt}</p>}
 
+  <SymbolPicker pageKey="jp-stocks" />
+
   <div class="stocks-grid">
     {
       stocks.map((s) => (
-        <section class="stock-block">
+        <section class="stock-block" data-symbol-id={s.ticker}>
           <h2>
             {s.name}
             <span class="ticker">{s.ticker}</span>
