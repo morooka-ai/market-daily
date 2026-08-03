@@ -50,8 +50,17 @@ export async function fetchYahooQuote(symbol) {
     throw new Error(`yahoo quote ${symbol}: ${json?.chart?.error?.description ?? `HTTP ${res.status}`}`);
   }
 
+  // 前日終値は日足の終値系列から取る。
+  // meta.chartPreviousClose は「取得範囲(5日)より前の終値」＝4営業日前を指すため使えない
+  // （これを前日終値として扱うと前日比が数日分の変動になってしまう）。
+  // 系列の末尾は当日（取引時間中は現在値と同じ）なので、その1つ前の有効な終値が前日終値。
+  const closes = (json.chart.result[0].indicators?.quote?.[0]?.close ?? []).filter(
+    (v) => v != null,
+  );
+  const previousClose =
+    closes.length >= 2 ? closes[closes.length - 2] : (meta.chartPreviousClose ?? null);
+
   const price = meta.regularMarketPrice;
-  const previousClose = meta.chartPreviousClose ?? meta.previousClose;
   const change = previousClose != null ? price - previousClose : null;
   const changePercent = previousClose ? (change / previousClose) * 100 : null;
   const date = new Date(meta.regularMarketTime * 1000).toISOString().slice(0, 10);
