@@ -73,13 +73,11 @@ const PROVIDERS = {
         subject: msg.subject,
         text: msg.text,
         html: msg.html,
+        // List-Unsubscribe-Post（RFC 8058 のワンクリック解除）は付けない。
+        // 静的サイトで POST を受け取れないため、宣言だけして解除できない状態になるより、
+        // URLを開いてもらう方式に統一する。
         ...(msg.unsubscribeUrl
-          ? {
-              headers: {
-                "List-Unsubscribe": `<${msg.unsubscribeUrl}>`,
-                "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
-              },
-            }
+          ? { headers: { "List-Unsubscribe": `<${msg.unsubscribeUrl}>` } }
           : {}),
       },
     );

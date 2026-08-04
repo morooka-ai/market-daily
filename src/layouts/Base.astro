@@ -61,11 +61,18 @@ const isActive = (item) =>
       title={SITE_TITLE}
       href={new URL("rss.xml", Astro.site)}
     />
-    <script
-      is:inline
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5741786934832383"
-      crossorigin="anonymous"></script>
+    {
+      /* 広告は一般向けページだけ。会員ページ（noindex）に出さないのは、
+         確認・停止リンクの ?u=…&t=… を含むページURLが広告配信先へ渡るのを防ぐため。 */
+      !noindex && (
+        <script
+          is:inline
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5741786934832383"
+          crossorigin="anonymous"
+        />
+      )
+    }
   </head>
   <body>
     <header>

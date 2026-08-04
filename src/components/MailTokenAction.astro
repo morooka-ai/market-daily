@@ -1,8 +1,10 @@
 ---
 // メール内リンクからの「配信開始の確認」「配信停止」を処理する共通パーツ。
 //
-// リンクには uid とトークンが付いており、トークンが Firestore の保存値と一致する場合だけ
-// 状態を書き換えられる（検証は firestore.rules 側で行う）。ログインは不要。
+// リンクには uid とトークンが付いている。ログインは不要。
+//   停止 … その場で反映する（トークンが違えばルール側で弾かれる）
+//   開始 … 申請を1件作るだけで、トークンの照合と実際の開始は毎時のバッチが行う
+//          （詳細は src/lib/firebase.mjs の submitMailTokenAction）
 //
 // 実行はボタン押下を必須にしている。メールのセキュリティスキャナがリンクを
 // 自動的に開いても、意図せず配信開始・停止されないようにするため。
@@ -44,7 +46,7 @@ const configured = Boolean(
 }
 
 <script>
-  import { updateMailStatusByToken, toMessage } from "../lib/firebase.mjs";
+  import { submitMailTokenAction, toMessage } from "../lib/firebase.mjs";
 
   const root = document.querySelector("[data-mail-action]");
   if (root) {
@@ -64,7 +66,7 @@ const configured = Boolean(
         msg.className = "form-msg";
         msg.textContent = "処理しています…";
         try {
-          await updateMailStatusByToken(uid, token, status);
+          await submitMailTokenAction(uid, token, status);
           msg.className = "form-msg ok";
           msg.textContent = root.dataset.successText;
           button.hidden = true;

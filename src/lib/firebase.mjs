@@ -285,22 +285,32 @@ export async function removeMailSubscription(user) {
 }
 
 /**
- * メール内リンクからの配信確認・配信停止。ログイン不要で実行できる。
- * 正しいトークンを知っていることをもって本人確認とする（firestore.rules 側で検証）。
- * @param {"subscribed"|"unsubscribed"} status
+ * メール内リンクからの操作。ログイン不要で実行できる。
+ *
+ * 停止と開始で経路が違うのは、firestore.rules ではトークンの所持を検証できないため
+ * （書き込み後の姿しか見えず、送っていないフィールドも保存済みの値として現れる）。
+ *   - "unsubscribed" … その場で配信を止める。誤って止められても被害は「配信が止まる」だけ
+ *   - "subscribed"   … mailConfirms に申請を作るだけ。実際の開始は、毎時のバッチが
+ *                      Admin SDK で users/{uid} の mail.token と照合してから行う
+ * @param {"subscribed"|"unsubscribed"} action
  */
-export async function updateMailStatusByToken(uid, token, status) {
+export async function submitMailTokenAction(uid, token, action) {
   const { db, storeMod } = await loadSdk();
-  const patch = {
-    "mail.status": status,
-    "mail.token": token, // ルール側で保存済みトークンと照合させるために必ず送る
-  };
-  if (status === "subscribed") {
-    patch["mail.confirmedAt"] = storeMod.serverTimestamp();
-  } else {
-    patch["mail.unsubscribedAt"] = storeMod.serverTimestamp();
+
+  if (action === "subscribed") {
+    await storeMod.addDoc(storeMod.collection(db, "mailConfirms"), {
+      uid,
+      token,
+      createdAt: storeMod.serverTimestamp(),
+    });
+    return;
   }
-  await storeMod.updateDoc(storeMod.doc(db, "users", uid), patch);
+
+  await storeMod.updateDoc(storeMod.doc(db, "users", uid), {
+    "mail.status": "unsubscribed",
+    "mail.token": token, // 誤ったリンクをその場で弾くため、ルールに照合させる
+    "mail.unsubscribedAt": storeMod.serverTimestamp(),
+  });
 }
 
 // --- エラーメッセージの日本語化 ------------------------------------------------

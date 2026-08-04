@@ -53,11 +53,18 @@ service cloud.firestore {
             && validMail();
       }
 
-      // --- メール内リンクからの操作（未ログイン）-----------------------------
-      // 正しいトークンを送ってきた場合にのみ、配信状態の切り替えを許可する。
-      // トークンは本人のメールにしか送られないため、これを本人確認として扱う。
-      // 変更できるのは mail と updatedAt だけで、アドレス自体は書き換えられない。
-      function validTokenUpdate() {
+      // --- メール内リンクからの配信停止（未ログイン）-------------------------
+      // ここで許可するのは「停止」だけ。開始（pending → subscribed）は許可しない。
+      //
+      // 理由: ルールからは「どのフィールドが実際に送られたか」が分からない。
+      // request.resource.data は書き込み後のドキュメント全体（既存値とマージ済み）なので、
+      // mail.status だけを送る書き込みでも mail.token は保存済みの値として現れてしまい、
+      // 「トークンを知っていること」をルールで検証することは原理的にできない。
+      // そのため、トークンを本人確認の根拠にしなければならない配信開始はサーバー側
+      // （mailConfirms + Admin SDK のバッチ）に寄せ、ここでは影響が「配信が止まる」だけの
+      // 停止操作に限定している。UIDを知る第三者に止められる可能性は残るが、
+      // 同意なく配信が始まることはない。
+      function validUnsubscribe() {
         let before = resource.data.mail;
         let after = request.resource.data.mail;
         return request.resource.data.diff(resource.data)
@@ -65,7 +72,7 @@ service cloud.firestore {
             && before.token is string
             && after.token == before.token
             && after.address == before.address
-            && after.status in ['subscribed', 'unsubscribed'];
+            && after.status == 'unsubscribed';
       }
 
       // --- 権限 --------------------------------------------------------------
@@ -76,9 +83,28 @@ service cloud.firestore {
 
       allow create: if isOwner() && validProfile();
 
-      allow update: if (isOwner() && validProfile()) || validTokenUpdate();
+      allow update: if (isOwner() && validProfile()) || validUnsubscribe();
 
       allow delete: if isOwner();
+    }
+
+    // --- 配信開始の申請（メール内リンクからの確認）-----------------------------
+    // 未ログインでも1件だけ作成できる「申請」。ここには結果を書き込めない。
+    // 毎時のバッチ（scripts/send-mail.mjs confirm）が Admin SDK で読み、
+    // users/{uid} の mail.token と照合できたものだけ subscribed に更新して申請を削除する。
+    // 誰でも作成できるが、中身を読むことも書き換えることもできず、
+    // 照合に通らない申請はバッチが破棄するだけなので、配信の開始にはつながらない。
+    match /mailConfirms/{requestId} {
+      function validConfirmRequest() {
+        let d = request.resource.data;
+        return d.keys().hasOnly(['uid', 'token', 'createdAt'])
+            && d.uid is string && d.uid.size() > 0 && d.uid.size() <= 128
+            && d.token is string && d.token.size() > 0 && d.token.size() <= 128
+            && d.createdAt == request.time;
+      }
+
+      allow create: if validConfirmRequest();
+      allow get, list, update, delete: if false;
     }
 
     // 上記以外のパスはすべて拒否する

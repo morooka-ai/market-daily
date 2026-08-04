@@ -254,8 +254,57 @@ function renderConfirmation({ address, confirmUrl }) {
 const linkFor = (page, uid, token) =>
   `${SITE_URL}/mail/${page}/?u=${encodeURIComponent(uid)}&t=${encodeURIComponent(token)}`;
 
-/** 保留中（pending）の会員へ確認メールを送る */
+/** 配信開始の申請を受け付ける期限（これより古い申請は破棄する） */
+const CONFIRM_REQUEST_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+/** Firebase の UID として妥当な形か（不正な値でドキュメントパスを壊さないため） */
+const UID_PATTERN = /^[A-Za-z0-9_-]{1,128}$/;
+
+/**
+ * 配信開始の申請（mailConfirms）を処理する。
+ *
+ * 確認ページは users を直接書き換えず、この申請を1件作るだけにしてある。
+ * firestore.rules ではトークンの所持を検証できない（書き込み後の姿しか見えず、
+ * 送っていないフィールドも保存済みの値として現れる）ため、トークンの照合は
+ * Admin SDK で動くここが担当する。照合できた申請だけを配信中に切り替える。
+ */
+async function applyConfirmations(db) {
+  const snap = await db.collection("mailConfirms").get();
+  if (snap.empty) return;
+
+  let applied = 0;
+  let discarded = 0;
+
+  for (const req of snap.docs) {
+    const { uid, token, createdAt } = req.data();
+    const at = createdAt?.toMillis?.() ?? 0;
+    const fresh = at > 0 && Date.now() - at <= CONFIRM_REQUEST_TTL_MS;
+    let ok = false;
+
+    if (fresh && typeof uid === "string" && UID_PATTERN.test(uid) && typeof token === "string") {
+      const userRef = db.collection("users").doc(uid);
+      const user = await userRef.get();
+      const mail = (user.exists ? user.data().mail : null) ?? {};
+      // 申し込み直後（pending）のものだけを開始する。本人が停止済み・登録取消済みの
+      // 場合に、古いリンクを開いただけで配信が再開されないようにするため。
+      if (mail.status === "pending" && mail.token && mail.token === token) {
+        await userRef.update({ "mail.status": "subscribed", "mail.confirmedAt": new Date() });
+        ok = true;
+      }
+    }
+
+    // 反映済み・照合できなかった申請はどちらも残しておく理由がないので消す
+    await req.ref.delete();
+    if (ok) applied++;
+    else discarded++;
+  }
+
+  console.log(`配信開始の申請: 反映 ${applied}件 / 破棄 ${discarded}件`);
+}
+
+/** 配信開始の申請を反映してから、保留中（pending）の会員へ確認メールを送る */
 async function runConfirm(db) {
+  await applyConfirmations(db);
+
   const snap = await db.collection("users").where("mail.status", "==", "pending").get();
   let sent = 0;
   let failed = 0;
