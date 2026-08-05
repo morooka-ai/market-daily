@@ -3,7 +3,8 @@ name: 夕刊を生成（毎営業日 16:00 JST）
 on:
   # 主トリガーは Cloud Scheduler（Asia/Tokyo で 16:00 発火 → workflow_dispatch API）。
   # GitHub の schedule は発火が数時間遅延・脱落することがあるため、あくまでフォールバック。
-  # 両者が発火しても generate.mjs が「既に生成済み」でスキップするので二重投稿にはならない。
+  # 両者が発火しても generate.mjs と generate-jp-stocks.mjs が「当日分は生成済み」として
+  # スキップするため、二重投稿にならず、Gemini の呼び出しも増えない。
   schedule:
     # 07:00 UTC (月-金) = 16:00 JST (月-金) — 東証の大引け(15:30)後
     - cron: "0 7 * * 1-5"
@@ -21,7 +22,10 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     outputs:
+      # posted  … 新しい記事を投稿した（Xへの告知はこれを見る）
+      # changed … 記事または日本株データに変更があった（デプロイはこれを見る）
       posted: ${{ steps.commit.outputs.posted }}
+      changed: ${{ steps.commit.outputs.changed }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -49,16 +53,26 @@ jobs:
           git add content/posts content/jp-stocks.json
           if git diff --cached --quiet; then
             echo "posted=false" >> "$GITHUB_OUTPUT"
-            echo "新しい記事はありません（休場などによるスキップ）"
-          else
-            git commit -m "post: 夕刊 $(TZ=Asia/Tokyo date +%Y-%m-%d)"
-            git push
-            echo "posted=true" >> "$GITHUB_OUTPUT"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "更新はありません（休場、またはフォールバックの空振り）"
+            exit 0
           fi
+          today=$(TZ=Asia/Tokyo date +%Y-%m-%d)
+          # 記事が増えたのか、日本株データだけが変わったのかでメッセージを分ける。
+          # 記事がないのに「post:」と記録すると、Xへの告知が空振りする。
+          if git diff --cached --name-only | grep -q '^content/posts/'; then
+            git commit -m "post: 夕刊 $today"
+            echo "posted=true" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "data: 日本株の株価・解説を更新 $today"
+            echo "posted=false" >> "$GITHUB_OUTPUT"
+          fi
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
 
   deploy:
     needs: generate
-    if: needs.generate.outputs.posted == 'true'
+    if: needs.generate.outputs.changed == 'true'
     uses: ./.github/workflows/deploy.yml
     permissions:
       contents: read
