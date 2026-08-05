@@ -15,3 +15,13 @@ market-dairy API.txt
 *service-account*.json
 firebase-adminsdk-*.json
 .firebase/
+
+# 運用メモ・参考資料（このリポジトリは公開なので、作業用の控えは絶対に含めない）
+#   参考資料/        … 履歴事項全部証明書などの法人書類、各種控え
+#   data/            … ASPアカウント一覧・問い合わせ用アドレス・Search Console確認ファイル
+#   DMARC1.txt       … DNSレコードの控え
+#   運営者情報.txt   … /about/ に載せる内容の下書き
+参考資料/
+data/
+DMARC1.txt
+運営者情報.txt
