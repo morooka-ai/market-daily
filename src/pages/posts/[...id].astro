@@ -19,9 +19,18 @@ const fmt = new Intl.DateTimeFormat("ja-JP", {
   timeStyle: "short",
   timeZone: "Asia/Tokyo",
 });
+
+// 休場日の「お知らせ」は数行しかないので、検索結果にも広告にも出さない。
+// 読者には一覧・記事ページとして見えるが、中身の薄いページを検索対象に増やさない。
+// サイトマップからの除外は astro.config.mjs 側で行う。
+const isNotice = post.data.edition === "notice";
 ---
 
-<Base title={post.data.title} description={post.data.description}>
+<Base
+  title={post.data.title}
+  description={post.data.description}
+  noindex={isNotice}
+>
   <article>
     <h1>{post.data.title}</h1>
     <p class="meta">
