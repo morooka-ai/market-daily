@@ -12,8 +12,8 @@ import { FX_PAIRS, METAL_PAIRS, CRYPTO_PAIRS } from "./chart-pairs.mjs";
 import { US_STOCKS } from "./us-stocks-data.mjs";
 import { JP_STOCKS } from "./jp-stocks-data.mjs";
 
-/** 1ページあたりに選択できる銘柄数の上限 */
-export const MAX_SELECTION = 9;
+/** 1ページあたりに選択できる銘柄数の上限（0件＝絞り込みなしで全件表示） */
+export const MAX_SELECTION = 12;
 
 const fromPairs = (pairs) =>
   pairs.map((p) => ({
@@ -52,7 +52,7 @@ export function getPage(key) {
 
 /**
  * 保存された選択値を検証して正規化する。
- * 未知のID・重複を除き、上限（9件）で切り詰める。
+ * 未知のID・重複を除き、上限（MAX_SELECTION 件）で切り詰める。
  * 選択が空（=未設定）の場合は空配列を返し、呼び出し側で「全件表示」として扱う。
  */
 export function normalizeSelection(pageKey, ids) {

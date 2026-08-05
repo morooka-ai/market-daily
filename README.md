@@ -82,7 +82,7 @@ node scripts/setup/cloud-run-domain-mapping.mjs   # カスタムドメイン設�
 | 機能 | 内容 |
 | --- | --- |
 | 無料会員登録 | **メールアドレス（＝ログインID）とパスワード**で登録 |
-| 表示銘柄の選択 | FX・貴金属・暗号資産・日本株・米国株の各ページで**最大9件**まで選択（並び順は各ページの既定順のまま） |
+| 表示銘柄の選択 | FX・貴金属・暗号資産・日本株・米国株の各ページで**0〜12件**を選択（0件＝全銘柄を表示。並び順は各ページの既定順のまま） |
 | メール配信 | **希望した会員のみ**。選択銘柄の価格と当日の記事を毎営業日16:30ごろ配信 |
 | パスワード再設定 | Firebase が送る再設定メールで対応（**送信サービスの契約前でも動きます**） |
 
@@ -224,7 +224,15 @@ node scripts/setup/cloud-run-domain-mapping.mjs   # カスタムドメイン設�
   - モデルを変える場合: **Settings → Secrets and variables → Actions → Variables** で `ARTICLE_MODEL` を設定（Proモデルは無料枠対象外なので注意）
 - GitHub Actions / Yahoo Finance / Alpha Vantage: 無料枠内
 - Cloud Run: 無料枠（月200万リクエスト・メモリ 360,000 GiB秒）内に収まる想定。最小インスタンス0（アクセスがない時間は課金なし）
-- Artifact Registry: 無料枠は0.5GBまで。イメージが溜まったら古いものを削除してください
+- Artifact Registry: 無料枠は0.5GBまで。デプロイのたびにイメージが1つ増えるので、
+  クリーンアップポリシー（最新10世代は保持・30日より古いものは削除）を一度設定しておきます。
+
+  ```sh
+  firebase login   # 認証が切れている場合は firebase login --reauth
+  node scripts/setup/artifact-registry-cleanup.mjs --status   # 現在の設定とサイズを確認
+  node scripts/setup/artifact-registry-cleanup.mjs --dry-run  # 判定だけ（削除しない）
+  node scripts/setup/artifact-registry-cleanup.mjs            # 有効化
+  ```
 - Firebase Authentication / Firestore: 無料枠（Firestore は1日あたり読み取り5万・書き込み2万）内。
   会員1人あたりの読み書きはごくわずかなので、数千人規模まで無料枠で足ります
 - メール送信サービス: 無料枠は各社1日100〜300通程度。会員数がこれを超える場合は有料プランの検討が必要です
@@ -236,8 +244,11 @@ node scripts/setup/cloud-run-domain-mapping.mjs   # カスタムドメイン設�
   `src/jp-stocks-data.mjs`。会員の選択肢とメール配信の対象は `src/catalog.mjs` が
   これらを束ねて自動生成するので、追加時に触るのは各定義ファイルだけです
   （メール配信で価格を出すため `yahooSymbol` は必ず設定してください）
-- **1ページあたりの選択上限（9件）**: `src/catalog.mjs` の `MAX_SELECTION`
-  （変更する場合は `firestore.rules` の `selectionOk` にある `9` も合わせてください）
+- **1ページあたりの選択上限（12件）**: `src/catalog.mjs` の `MAX_SELECTION`
+  （変更する場合は `firestore.rules` の `selectionOk` にある `12` も合わせてください）
+- **詳細ページを検索結果に載せない銘柄**: `src/chart-pairs.mjs` の `NOINDEX_DETAIL_IDS`。
+  ここに入れた銘柄は一覧ページには出ますが、`/charts/<id>/` が noindex になり
+  サイトマップからも外れます（中身の薄いページを検索対象に増やさないため）
 - **記事の書き方・禁止事項**: `scripts/lib/article.mjs` の `SYSTEM` プロンプト
 - **投稿時刻**: `.github/workflows/post-*.yml` の `cron`（UTC表記。JST−9時間）
 - **免責事項の文言**: `src/components/Disclaimer.astro` と `src/pages/disclaimer.astro`

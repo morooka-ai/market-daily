@@ -324,3 +324,27 @@ export const CHART_PAIRS = [
 export const FX_PAIRS = CHART_PAIRS.filter((p) => p.category === "fx");
 export const METAL_PAIRS = CHART_PAIRS.filter((p) => p.category === "metal");
 export const CRYPTO_PAIRS = CHART_PAIRS.filter((p) => p.category === "crypto");
+
+/**
+ * 詳細ページ（/charts/<id>/）を検索エンジンに載せない銘柄。
+ *
+ * 詳細ページはチャートウィジェットと短いリード文だけで構成されるため、掲載銘柄を
+ * 増やすほど中身の薄いページが積み上がる。会員が表示銘柄を選べるようにするために
+ * 追加したこの21銘柄は、一覧ページ（/fx/・/metals/・/crypto/）には従来どおり出しつつ、
+ * 詳細ページだけ noindex にしてサイトマップからも外す。
+ * もともと掲載していた14銘柄は、これまでどおり検索対象のまま。
+ */
+const NOINDEX_DETAIL_IDS = new Set([
+  // FX
+  "cadjpy", "zarjpy", "tryjpy", "mxnjpy",
+  "eurusd", "gbpusd", "audusd", "nzdusd", "usdchf", "usdcad", "eurgbp",
+  // 貴金属
+  "palladium", "copper", "aluminum",
+  // 暗号資産
+  "soljpy", "bnbjpy", "adajpy", "linkjpy", "avaxjpy", "dotjpy", "bchjpy",
+]);
+
+/** その銘柄の詳細ページを検索エンジンに載せるか */
+export function isDetailIndexable(id) {
+  return !NOINDEX_DETAIL_IDS.has(id);
+}

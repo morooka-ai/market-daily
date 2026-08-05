@@ -19,10 +19,11 @@ service cloud.firestore {
         return request.auth != null && request.auth.uid == uid;
       }
 
-      // 1ページあたりの選択銘柄は9件まで。未設定（キー無し）も許可する。
+      // 1ページあたりの選択銘柄は0〜12件。未設定（キー無し）も許可する。
+      // 上限は src/catalog.mjs の MAX_SELECTION と合わせること。
       function selectionOk(sel, key) {
         return !(key in sel)
-            || (sel[key] is list && sel[key].size() <= 9);
+            || (sel[key] is list && sel[key].size() <= 12);
       }
 
       function validSelections() {

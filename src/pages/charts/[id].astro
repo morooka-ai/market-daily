@@ -1,7 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import AffiliateSlot from "../../components/AffiliateSlot.astro";
-import { CHART_PAIRS } from "../../chart-pairs.mjs";
+import { CHART_PAIRS, isDetailIndexable } from "../../chart-pairs.mjs";
 
 export function getStaticPaths() {
   return CHART_PAIRS.map((p) => ({ params: { id: p.id }, props: { pair: p } }));
@@ -44,9 +44,11 @@ const { label: categoryLabel, href: categoryHref, slot: slotName } =
 
 const title = `${pair.name}（${pair.pair}）チャート`;
 const description = `${pair.name}（${pair.pair}）のリアルタイムチャートを1分足・30分足・日足で表示。スキャルピングからスイングまで、時間軸ごとの値動きを無料で確認できます。`;
+// 会員の選択肢として追加した銘柄の詳細ページは検索結果に載せない（chart-pairs.mjs 参照）
+const noindex = !isDetailIndexable(pair.id);
 ---
 
-<Base title={title} description={description} wide>
+<Base title={title} description={description} wide noindex={noindex}>
   <h1>{pair.name}（{pair.pair}）チャート</h1>
   <p>{pair.lead}チャートは操作でき、テクニカル指標の追加や期間の変更も可能です。</p>
 
