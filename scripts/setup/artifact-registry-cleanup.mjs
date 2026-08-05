@@ -129,4 +129,7 @@ if (r.status !== 200) throw new Error("設定失敗: " + JSON.stringify(r.json))
 
 console.log(dryRun ? "ドライランで設定しました（削除は行われません）" : "設定しました");
 console.log("");
-show(r.json);
+
+// PATCH の応答には sizeBytes が入らないため、表示は GET し直した内容を使う
+const after = await api(token, "GET", URL_REPO);
+show(after.status === 200 ? after.json : r.json);
