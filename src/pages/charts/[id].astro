@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import AffiliateSlot from "../../components/AffiliateSlot.astro";
 import { CHART_PAIRS, isDetailIndexable } from "../../chart-pairs.mjs";
+import { chartNote } from "../../chart-notes.mjs";
 
 export function getStaticPaths() {
   return CHART_PAIRS.map((p) => ({ params: { id: p.id }, props: { pair: p } }));
@@ -46,6 +47,8 @@ const title = `${pair.name}（${pair.pair}）チャート`;
 const description = `${pair.name}（${pair.pair}）のリアルタイムチャートを1分足・30分足・日足で表示。スキャルピングからスイングまで、時間軸ごとの値動きを無料で確認できます。`;
 // 会員の選択肢として追加した銘柄の詳細ページは検索結果に載せない（chart-pairs.mjs 参照）
 const noindex = !isDetailIndexable(pair.id);
+// 銘柄ごとの解説。用意していない銘柄では、この節ごと出さない。
+const note = chartNote(pair.id);
 ---
 
 <Base title={title} description={description} wide noindex={noindex}>
@@ -67,6 +70,31 @@ const noindex = !isDetailIndexable(pair.id);
       ))
     }
   </div>
+
+  {
+    note && (
+      <section class="note">
+        <h2>{pair.name}の値動きの見方</h2>
+        <p>{note.overview}</p>
+
+        <h3>値動きを左右する主な要因</h3>
+        <dl class="drivers">
+          {note.drivers.map((d) => (
+            <>
+              <dt>{d.label}</dt>
+              <dd>{d.text}</dd>
+            </>
+          ))}
+        </dl>
+
+        <h3>動きやすい時間帯</h3>
+        <p>{note.timing}</p>
+
+        <h3>取引・閲覧時の注意点</h3>
+        <p>{note.caution}</p>
+      </section>
+    )
+  }
 
   <AffiliateSlot name={slotName} />
 
@@ -178,6 +206,29 @@ const noindex = !isDetailIndexable(pair.id);
   .tradingview-widget-container__widget {
     height: 100%;
     width: 100%;
+  }
+  .note {
+    margin: 2.5rem 0 0;
+    /* 解説は読み物なので、チャート（wide）より行長を詰めて読みやすくする */
+    max-width: 760px;
+  }
+  .note h3 {
+    margin: 1.6rem 0 0.4rem;
+    font-size: 1rem;
+  }
+  .note p {
+    line-height: 1.85;
+  }
+  .drivers {
+    margin: 0.4rem 0 0;
+  }
+  .drivers dt {
+    font-weight: 600;
+    margin-top: 0.9rem;
+  }
+  .drivers dd {
+    margin: 0.2rem 0 0;
+    line-height: 1.85;
   }
   .related ul {
     padding-left: 1.2rem;
