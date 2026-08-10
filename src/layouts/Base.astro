@@ -76,8 +76,20 @@ const isActive = (item) =>
   </head>
   <body>
     <header>
-      <a class="site-title" href={base}>{SITE_TITLE}</a>
-      <p class="tagline">毎営業日、朝夕2回更新の市況まとめ</p>
+      <div class="header-top">
+        <p class="header-intro">
+          <a class="site-title" href={base}>{SITE_TITLE}</a>
+          <span class="site-summary">
+            AIが自動でまとめる市況ブログ。FX・貴金属・暗号資産・日本株・米国株の値動きを毎営業日更新。
+          </span>
+        </p>
+        <p class="header-promo">
+          <a href={`${base}account/register/`}>会員登録は無料</a>
+          <span class="header-promo-note">
+            気になる銘柄だけを選んで表示できます
+          </span>
+        </p>
+      </div>
       <nav class="site-nav">
         {
           navItems.map((it) => (
@@ -136,31 +148,60 @@ const isActive = (item) =>
     background: var(--bg);
     line-height: 1.8;
   }
+  /* ヘッダーは占有する高さを従来の約半分に抑え、空いた横幅に
+     左＝サイト概要、右＝会員登録の案内を並べる */
   header {
     background: var(--card);
     border-bottom: 1px solid var(--border);
-    padding: 1.2rem 1rem;
-    text-align: center;
+    padding: 0.45rem 1rem 0.35rem;
+    line-height: 1.5;
     /* スクロールしてもヘッダーを画面上部に固定する */
     position: sticky;
     top: 0;
     z-index: 100;
     box-shadow: 0 1px 4px rgba(26, 34, 51, 0.06);
   }
+  .header-top,
+  .site-nav { max-width: 1280px; margin-left: auto; margin-right: auto; }
+  /* 折り返して2行にならないよう、はみ出す概要側だけを省略記号で切る。
+     これでどの画面幅でもヘッダーの高さが変わらない */
+  .header-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+  .header-intro {
+    margin: 0;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .site-title {
-    font-size: 1.5rem;
+    font-size: 1.15rem;
     font-weight: 700;
     color: var(--text);
     text-decoration: none;
+    margin-right: 0.6rem;
+    white-space: nowrap;
   }
-  .tagline { margin: 0.3rem 0 0; font-size: 0.85rem; color: var(--muted); }
+  .site-summary { font-size: 0.78rem; color: var(--muted); }
+  .header-promo {
+    margin: 0;
+    flex: none;
+    font-size: 0.78rem;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .header-promo a { font-weight: 700; }
+  .header-promo-note { color: var(--muted); margin-left: 0.4rem; }
   .site-nav {
-    margin-top: 0.6rem;
+    margin-top: 0.25rem;
     display: flex;
     gap: 0.2rem 1rem;
-    justify-content: center;
     flex-wrap: wrap;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
   }
   .site-nav a {
     color: var(--accent);
@@ -297,5 +338,12 @@ const isActive = (item) =>
       max-width: 100%;
       overflow-x: auto;
     }
+    /* 横に並べる余裕がないので、ヘッダーは要点だけ残す */
+    .header-top { align-items: center; }
+    .site-summary { display: none; }
+  }
+  /* 中くらいの幅では、まず右側の補足を落としてサイト概要の表示を優先する */
+  @media (max-width: 980px) {
+    .header-promo-note { display: none; }
   }
 </style>

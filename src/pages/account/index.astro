@@ -41,12 +41,40 @@ const description = "表示銘柄の設定と、毎日のメール配信の設�
         <p class="card" data-loading>読み込んでいます…</p>
 
         <div data-anon hidden>
-          <p class="card">この機能を使うにはログインが必要です。</p>
-          <p class="btn-row">
-            <a class="btn" href={`${base}account/login/`}>ログイン</a>
-            <a class="btn btn-ghost" href={`${base}account/register/`}>
-              無料会員登録
-            </a>
+          <section class="card">
+            <h2>会員登録は無料です</h2>
+            <p class="promo-lead">
+              メールアドレスとパスワードだけ、1分ほどで登録できます。会費や有料プランはありません。
+            </p>
+            <ul class="promo-benefits">
+              <li>
+                <strong>見たい銘柄だけを表示</strong>
+                FX・貴金属・暗号資産・日本株・米国株の各ページで、表示する銘柄を最大{MAX_SELECTION}件まで選べます。関心のない銘柄を毎回読み飛ばす必要がなくなります。
+              </li>
+              <li>
+                <strong>設定はどの端末でも同じ</strong>
+                選んだ内容はアカウントに保存されるので、スマホでもPCでも同じ並びで確認できます。
+              </li>
+              <li>
+                <strong>メール配信は任意</strong>
+                受け取るかどうかはご自身で選べます。登録しただけでは配信されず、いつでも停止できます。
+              </li>
+              <li>
+                <strong>やめるのも簡単</strong>
+                退会はマイページのボタンひとつ。保存した内容もあわせて削除されます。
+              </li>
+            </ul>
+            <p class="btn-row">
+              <a class="btn" href={`${base}account/register/`}>
+                無料で会員登録する
+              </a>
+              <a class="btn btn-ghost" href={`${base}account/login/`}>
+                登録済みの方はログイン
+              </a>
+            </p>
+          </section>
+          <p class="promo-foot">
+            マイページの設定内容を表示するには、ログインが必要です。
           </p>
         </div>
 
@@ -320,6 +348,31 @@ const description = "表示銘柄の設定と、毎日のメール配信の設�
 </script>
 
 <style>
+  .promo-lead {
+    margin: 0 0 0.9rem;
+    font-size: 0.95rem;
+  }
+  .promo-benefits {
+    list-style: none;
+    margin: 0 0 1.2rem;
+    padding: 0;
+    font-size: 0.92rem;
+  }
+  .promo-benefits li {
+    padding: 0.6rem 0;
+    border-top: 1px solid var(--border);
+  }
+  .promo-benefits li:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+  .promo-benefits strong {
+    display: block;
+  }
+  .promo-foot {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
   .account-mail {
     margin: 0 0 0.6rem;
     word-break: break-all;
