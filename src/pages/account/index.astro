@@ -41,41 +41,74 @@ const description = "表示銘柄の設定と、毎日のメール配信の設�
         <p class="card" data-loading>読み込んでいます…</p>
 
         <div data-anon hidden>
-          <section class="card">
-            <h2>会員登録は無料です</h2>
-            <p class="promo-lead">
-              メールアドレスとパスワードだけ、1分ほどで登録できます。会費や有料プランはありません。
-            </p>
-            <ul class="promo-benefits">
-              <li>
-                <strong>見たい銘柄だけを表示</strong>
-                FX・貴金属・暗号資産・日本株・米国株の各ページで、表示する銘柄を最大{MAX_SELECTION}件まで選べます。関心のない銘柄を毎回読み飛ばす必要がなくなります。
-              </li>
-              <li>
-                <strong>設定はどの端末でも同じ</strong>
-                選んだ内容はアカウントに保存されるので、スマホでもPCでも同じ並びで確認できます。
-              </li>
-              <li>
-                <strong>メール配信は任意</strong>
-                受け取るかどうかはご自身で選べます。登録しただけでは配信されず、いつでも停止できます。
-              </li>
-              <li>
-                <strong>やめるのも簡単</strong>
-                退会はマイページのボタンひとつ。保存した内容もあわせて削除されます。
-              </li>
-            </ul>
-            <p class="btn-row">
-              <a class="btn" href={`${base}account/register/`}>
-                無料で会員登録する
-              </a>
-              <a class="btn btn-ghost" href={`${base}account/login/`}>
-                登録済みの方はログイン
-              </a>
-            </p>
-          </section>
-          <p class="promo-foot">
-            マイページの設定内容を表示するには、ログインが必要です。
-          </p>
+          {/* 左＝登録済みの方のログイン、右＝はじめての方の無料会員登録 */}
+          <div class="anon-grid">
+            <section class="card anon-col">
+              <h2>登録済みの方</h2>
+              <p class="section-lead">
+                メールアドレスとパスワードでログインすると、設定内容を表示できます。
+              </p>
+              <form data-login-form>
+                <label class="field">
+                  <span>メールアドレス</span>
+                  <input
+                    type="email"
+                    name="email"
+                    autocomplete="email"
+                    required
+                  />
+                </label>
+                <label class="field">
+                  <span>パスワード</span>
+                  <input
+                    type="password"
+                    name="password"
+                    autocomplete="current-password"
+                    required
+                  />
+                </label>
+                <p class="btn-row">
+                  <button class="btn" type="submit" data-login-submit>
+                    ログイン
+                  </button>
+                </p>
+                <p class="form-msg" data-login-msg role="status" />
+              </form>
+              <p class="reset-link">
+                <a href={`${base}account/reset/`}>パスワードをお忘れの方</a>
+              </p>
+            </section>
+
+            <section class="card anon-col">
+              <h2>はじめての方</h2>
+              <p class="section-lead">
+                会員登録は無料です。メールアドレスとパスワードだけ、1分ほどで登録できます。会費や有料プランはありません。
+              </p>
+              <ul class="promo-benefits">
+                <li>
+                  <strong>見たい銘柄だけを表示</strong>
+                  FX・貴金属・暗号資産・日本株・米国株の各ページで、表示する銘柄を最大{MAX_SELECTION}件まで選べます。関心のない銘柄を毎回読み飛ばす必要がなくなります。
+                </li>
+                <li>
+                  <strong>設定はどの端末でも同じ</strong>
+                  選んだ内容はアカウントに保存されるので、スマホでもPCでも同じ並びで確認できます。
+                </li>
+                <li>
+                  <strong>メール配信は任意</strong>
+                  受け取るかどうかはご自身で選べます。登録しただけでは配信されず、いつでも停止できます。
+                </li>
+                <li>
+                  <strong>やめるのも簡単</strong>
+                  退会はマイページのボタンひとつ。保存した内容もあわせて削除されます。
+                </li>
+              </ul>
+              <p class="btn-row">
+                <a class="btn" href={`${base}account/register/`}>
+                  無料で会員登録する
+                </a>
+              </p>
+            </section>
+          </div>
         </div>
 
         <div data-member hidden>
@@ -166,6 +199,7 @@ const description = "表示銘柄の設定と、毎日のメール配信の設�
   import {
     watchUser,
     loadProfile,
+    login,
     logout,
     deleteAccount,
     requestMailSubscription,
@@ -181,6 +215,9 @@ const description = "表示銘柄の設定と、毎日のメール配信の設�
 
     const loadingEl = document.querySelector("[data-loading]");
     const anonEl = document.querySelector("[data-anon]");
+    const loginForm = document.querySelector("[data-login-form]");
+    const loginSubmit = document.querySelector("[data-login-submit]");
+    const loginMsg = document.querySelector("[data-login-msg]");
     const memberEl = document.querySelector("[data-member]");
     const accountEmailEl = document.querySelector("[data-account-email]");
     const verifyEl = document.querySelector("[data-verify]");
@@ -274,6 +311,26 @@ const description = "表示銘柄の設定と、毎日のメール配信の設�
       console.error(err);
     });
 
+    // ログインに成功すると watchUser が発火して会員向け表示に切り替わるので、
+    // ここでは画面遷移させず、フォームの入力内容だけ片付ける。
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const data = new FormData(loginForm);
+      loginSubmit.disabled = true;
+      loginMsg.className = "form-msg";
+      loginMsg.textContent = "ログインしています…";
+      try {
+        await login(String(data.get("email") ?? ""), String(data.get("password") ?? ""));
+        loginForm.reset();
+        loginMsg.textContent = "";
+      } catch (err) {
+        loginMsg.className = "form-msg error";
+        loginMsg.textContent = toMessage(err);
+      } finally {
+        loginSubmit.disabled = false;
+      }
+    });
+
     document.querySelector("[data-resend]")?.addEventListener("click", async () => {
       verifyMsg.textContent = "送信しています…";
       try {
@@ -348,9 +405,26 @@ const description = "表示銘柄の設定と、毎日のメール配信の設�
 </script>
 
 <style>
-  .promo-lead {
-    margin: 0 0 0.9rem;
-    font-size: 0.95rem;
+  /* 未ログイン時は「左＝ログイン／右＝新規登録」の2列。
+     幅が足りない画面では縦に積み、ログインを先に見せる */
+  .anon-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.2rem 0;
+  }
+  /* カード自身の余白は grid の gap に任せ、高さは2列で揃える */
+  .anon-col {
+    margin: 0;
+  }
+  @media (max-width: 640px) {
+    .anon-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .reset-link {
+    margin: 1rem 0 0;
+    font-size: 0.88rem;
   }
   .promo-benefits {
     list-style: none;
@@ -368,10 +442,6 @@ const description = "表示銘柄の設定と、毎日のメール配信の設�
   }
   .promo-benefits strong {
     display: block;
-  }
-  .promo-foot {
-    font-size: 0.9rem;
-    color: var(--muted);
   }
   .account-mail {
     margin: 0 0 0.6rem;
