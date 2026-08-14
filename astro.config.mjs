@@ -2,7 +2,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
+import { satteri } from "@astrojs/markdown-satteri";
 import { isDetailIndexable } from "./src/chart-pairs.mjs";
+import newsImportancePlugin from "./src/news-importance.mjs";
 
 /**
  * 休場日の「お知らせ」記事のURLパス。
@@ -34,6 +36,10 @@ const NOTICE_PATHS = noticePostPaths();
 export default defineConfig({
   site: process.env.SITE_URL || "https://market-daily.jimulabo.com",
   base: process.env.BASE_PATH || "/",
+  // 「注目ニュース」の各項目を重要度つきのカードに組み替える（src/news-importance.mjs）
+  markdown: {
+    processor: satteri({ hastPlugins: [newsImportancePlugin] }),
+  },
   integrations: [
     sitemap({
       // サイトマップから外すもの（いずれもページ側で noindex も付けている）:

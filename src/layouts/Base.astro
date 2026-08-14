@@ -137,6 +137,10 @@ const isActive = (item) =>
     --bg: #f7f8fa;
     --card: #ffffff;
     --border: #dde3ea;
+    /* 注目ニュースの重要度（高・中・低）を示す色 */
+    --lv-high: #bf2c2c;
+    --lv-mid: #b06a00;
+    --lv-low: #8a94a6;
   }
   * { box-sizing: border-box; }
   body {
@@ -266,6 +270,72 @@ const isActive = (item) =>
   th, td { border: 1px solid var(--border); padding: 0.45rem 0.6rem; text-align: left; }
   th { background: #eef2f7; }
   a { color: var(--accent); }
+
+  /* 「注目ニュース」のカード（src/rehype-news-importance.mjs が組み立てる）。
+     どれを優先して読めばよいかが一目で分かるよう、重要度を
+     左の色帯・バッジ・見出しの濃さの3点で示す */
+  .news-legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.2rem 0.7rem;
+    margin: 0.6rem 0 1rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .news-legend-item { white-space: nowrap; }
+  .news-legend-item.lv-high { color: var(--lv-high); font-weight: 700; }
+  .news-legend-item.lv-mid { color: var(--lv-mid); }
+  .news-legend-item.lv-low { color: var(--lv-low); }
+  .news-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 5px solid var(--lv-low);
+    border-radius: 8px;
+    padding: 0.9rem 1.1rem 1rem;
+    margin: 0.9rem 0;
+  }
+  .news-item h3 {
+    margin: 0.15rem 0 0.5rem;
+    font-size: 1.02rem;
+    line-height: 1.6;
+  }
+  .news-item p { margin: 0.5rem 0; }
+  /* 「一般的な影響：」の箇条書きは、見出しと区別できるよう淡い枠に収める */
+  .news-item ul {
+    list-style: none;
+    margin: 0.7rem 0 0;
+    padding: 0.55rem 0.8rem;
+    background: #f4f7fb;
+    border-radius: 6px;
+    font-size: 0.93rem;
+  }
+  .news-item ul li + li { margin-top: 0.5rem; }
+  .news-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0.05rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .news-dots { letter-spacing: 0.08em; }
+  /* 重要度：高＝相場全体、中＝一部の市場、低＝参考 */
+  .news-item--high {
+    border-left-color: var(--lv-high);
+    box-shadow: 0 1px 6px rgba(191, 44, 44, 0.1);
+  }
+  .news-item--high .news-badge { background: #fdecec; color: var(--lv-high); }
+  .news-item--high h3 { color: var(--lv-high); }
+  .news-item--mid { border-left-color: var(--lv-mid); }
+  .news-item--mid .news-badge { background: #fdf3e2; color: var(--lv-mid); }
+  .news-item--low { border-left-color: var(--lv-low); }
+  .news-item--low .news-badge { background: #eef1f5; color: var(--lv-low); }
+  /* 低い項目は控えめに見せて、上位との差をつける */
+  .news-item--low h3 { font-weight: 600; color: var(--muted); }
 
   /* 会員機能（登録・ログイン・マイページ）で共有するフォーム部品 */
   .card {
