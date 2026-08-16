@@ -20,6 +20,29 @@ const pageTitle = title ? `${title}｜${SITE_TITLE}` : SITE_TITLE;
 const base = import.meta.env.BASE_URL;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 
+// Google アナリティクス（GA4）の測定ID。ブラウザに埋め込まれる公開値なので
+// Secrets ではなくリポジトリ変数で渡す（PUBLIC_FIREBASE_* と同じ扱い）。
+// 未設定ならタグを一切出力しないので、ローカルの開発中は計測されない。
+const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
+// 会員ページのURLにはメール確認・配信停止用のトークン（?u=…&t=…）が入る。
+// これをGoogleへ送らないよう、計測するURLはクエリを落としたパスだけにする。
+// 参照元も同じ理由で、サイト内リンク由来のものはパスまでに切り詰める。
+const gaSnippet = `
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+var cfg = { page_location: location.origin + location.pathname };
+var ref = document.referrer;
+if (ref) {
+  try {
+    var u = new URL(ref);
+    if (u.origin === location.origin) ref = u.origin + u.pathname;
+  } catch (e) {}
+  cfg.page_referrer = ref;
+}
+gtag('config', '${gaId}', cfg);
+`;
+
 const path = Astro.url.pathname;
 const navItems = [
   { href: base, label: "ホーム", exact: true },
@@ -61,6 +84,20 @@ const isActive = (item) =>
       title={SITE_TITLE}
       href={new URL("rss.xml", Astro.site)}
     />
+    {
+      /* アクセス解析。広告と違い会員ページでも読み込む。会員登録までの
+         流れを見るため。URLはトークンを落として送る（gaSnippet を参照）。 */
+      gaId && (
+        <Fragment>
+          <script
+            is:inline
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+          />
+          <script is:inline set:html={gaSnippet} />
+        </Fragment>
+      )
+    }
     {
       /* 広告は一般向けページだけ。会員ページ（noindex）に出さないのは、
          確認・停止リンクの ?u=…&t=… を含むページURLが広告配信先へ渡るのを防ぐため。 */

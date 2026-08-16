@@ -161,7 +161,25 @@ node scripts/setup/cloud-run-domain-mapping.mjs   # カスタムドメイン設�
 
 8. 「サイトをビルドしてCloud Runへ公開」を実行 → `/account/register/` で登録できるか確認
 
-### 6. メール配信を設定する（任意・後からでOK）
+### 6. Googleアナリティクス（GA4）を設定する（任意・後からでOK）
+
+1. https://analytics.google.com でアカウントとプロパティを作成し、
+   データストリームに「ウェブ」を追加（URL: `https://market-daily.jimulabo.com`）
+2. 発行された**測定ID**（`G-` で始まる）を控える
+3. GitHubの **Settings → Secrets and variables → Actions → Variables** に登録
+
+   | 名前 | 値の例 |
+   | --- | --- |
+   | `PUBLIC_GA_MEASUREMENT_ID` | `G-XXXXXXXXXX` |
+
+4. 「サイトをビルドしてCloud Runへ公開」を実行 → GA4の「リアルタイム」で自分の
+   アクセスが計上されるか確認
+
+未設定のあいだは計測タグを出力しません（ローカルの開発中も同じ）。
+会員ページのURLに入る確認用トークン（`?u=…&t=…`）はGoogleへ送らないよう、
+パスだけを送信しています（`src/layouts/Base.astro`）。
+
+### 7. メール配信を設定する（任意・後からでOK）
 
 送信サービスは `MAIL_PROVIDER` で差し替えられます（`resend` / `brevo` / `sendgrid`）。
 追加するときは `scripts/lib/mailer.mjs` の `PROVIDERS` に1関数を足すだけです。
