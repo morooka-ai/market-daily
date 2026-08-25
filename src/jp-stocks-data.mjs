@@ -6,12 +6,16 @@
 // content/featured.json の売買代金順で毎日決まるため、ここでの並び順は
 // 「選択パネルでの並び」以上の意味を持たない（コード順にしてある）。
 //
-// 全銘柄を Yahoo Finance で実在確認済み（2026-08-25）。
-// 日経225の定期見直しは年1回（10月）。入れ替えがあったらこの配列を更新する。
+// 参考資料/構成銘柄：日経平均株価.txt（更新日付 2026.08.25）と全件突き合わせ済みで、
+// 過不足なく225銘柄そろっている。全銘柄を Yahoo Finance で実在確認済み。
+// 日経225の定期見直しは年1回（10月）。入れ替えがあったら参考資料を差し替えて
+// この配列と突き合わせ、差分だけを反映する。
 
 export const JP_STOCKS = [
   { ticker: "285A", yahooSymbol: "285A.T", name: "キオクシアホールディングス" },
   { ticker: "543A", yahooSymbol: "543A.T", name: "ARCHION" },
+  { ticker: "1332", yahooSymbol: "1332.T", name: "ニッスイ" },
+  { ticker: "1605", yahooSymbol: "1605.T", name: "INPEX" },
   { ticker: "1721", yahooSymbol: "1721.T", name: "コムシスホールディングス" },
   { ticker: "1801", yahooSymbol: "1801.T", name: "大成建設" },
   { ticker: "1802", yahooSymbol: "1802.T", name: "大林組" },

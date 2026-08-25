@@ -1,6 +1,32 @@
 {
-  "generatedAt": "2026-08-25T20:33:09.668+09:00",
+  "generatedAt": "2026-08-25T20:54:42.260+09:00",
   "stocks": {
+    "1332": {
+      "quote": {
+        "symbol": "1332.T",
+        "longName": "Nissui Corporation",
+        "currency": "JPY",
+        "price": 1296,
+        "previousClose": 1291.5,
+        "change": 4.5,
+        "changePercent": 0.34843205574912894,
+        "volume": 1019500,
+        "date": "2026-08-25"
+      }
+    },
+    "1605": {
+      "quote": {
+        "symbol": "1605.T",
+        "longName": "Inpex Corporation",
+        "currency": "JPY",
+        "price": 3878,
+        "previousClose": 3889,
+        "change": -11,
+        "changePercent": -0.282849061455387,
+        "volume": 3368200,
+        "date": "2026-08-25"
+      }
+    },
     "1721": {
       "quote": {
         "symbol": "1721.T",
