@@ -292,24 +292,9 @@ export const CHART_PAIRS = [
     pair: "LINK/JPY",
     lead: "チェーンリンク（LINK）の円建て価格（LINK/JPY）を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。ブロックチェーンに外部データを提供するオラクル基盤の代表格として知られる暗号資産です。",
   },
-  {
-    id: "avaxjpy",
-    category: "crypto",
-    symbol: "BINANCE:AVAXJPY",
-    yahooSymbol: "AVAX-JPY",
-    name: "アバランチ円",
-    pair: "AVAX/JPY",
-    lead: "アバランチ（AVAX）の円建て価格（AVAX/JPY）を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。高速な取引処理を特徴とするブロックチェーン基盤の暗号資産です。",
-  },
-  {
-    id: "dotjpy",
-    category: "crypto",
-    symbol: "BINANCE:DOTJPY",
-    yahooSymbol: "DOT-JPY",
-    name: "ポルカドット円",
-    pair: "DOT/JPY",
-    lead: "ポルカドット（DOT）の円建て価格（DOT/JPY）を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。複数のブロックチェーンを相互接続する構想で知られるプロジェクトの暗号資産です。",
-  },
+  // AVAX/JPY は掲載できない。TradingView に円建てのシンボルが存在しないため
+  // （シンボル検索APIで全取引所ヒットなし）、チャートが「このシンボルは存在しません」になる。
+  // 円建てが追加されたら戻せる。
   {
     id: "bchjpy",
     category: "crypto",
@@ -318,6 +303,53 @@ export const CHART_PAIRS = [
     name: "ビットコインキャッシュ円",
     pair: "BCH/JPY",
     lead: "ビットコインキャッシュ（BCH）の円建て価格（BCH/JPY）を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。ビットコインから分岐した暗号資産で、送金手数料の安さを特徴としています。",
+  },
+  {
+    id: "trxjpy",
+    category: "crypto",
+    symbol: "BINANCE:TRXJPY",
+    yahooSymbol: "TRX-JPY",
+    name: "トロン円",
+    pair: "TRX/JPY",
+    lead: "トロン（TRX）の円建て価格（TRX/JPY）を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。手数料の安さを背景にステーブルコインの送金基盤として使われることが多い暗号資産です。",
+  },
+  {
+    id: "xlmjpy",
+    category: "crypto",
+    symbol: "BITFLYER:XLMJPY",
+    yahooSymbol: "XLM-JPY",
+    name: "ステラルーメン円",
+    pair: "XLM/JPY",
+    lead: "ステラルーメン（XLM）の円建て価格（XLM/JPY）を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。個人向けの少額送金を想定して設計されたブロックチェーンの暗号資産です。",
+  },
+  {
+    // DOT/JPY は BINANCE 等には無いが KRAKEN にはある。以前に掲載を取りやめた経緯があるため、
+    // 取引所を変えて復活させた。シンボルを変えるときは symbol-search API で実在を確認すること。
+    id: "dotjpy",
+    category: "crypto",
+    symbol: "KRAKEN:DOTJPY",
+    yahooSymbol: "DOT-JPY",
+    name: "ポルカドット円",
+    pair: "DOT/JPY",
+    lead: "ポルカドット（DOT）の円建て価格（DOT/JPY）を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。複数のブロックチェーンを相互接続する構想で知られるプロジェクトの暗号資産です。",
+  },
+  {
+    id: "shibjpy",
+    category: "crypto",
+    symbol: "BINANCE:SHIBJPY",
+    yahooSymbol: "SHIB-JPY",
+    name: "柴犬コイン円",
+    pair: "SHIB/JPY",
+    lead: "柴犬コイン（SHIB）の円建て価格（SHIB/JPY）を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。ドージコインに続くミームコインの代表格で、1枚あたりの単価が非常に小さいのが特徴です。",
+  },
+  {
+    id: "monajpy",
+    category: "crypto",
+    symbol: "BITFLYER:MONAJPY",
+    yahooSymbol: "MONA-JPY",
+    name: "モナコイン円",
+    pair: "MONA/JPY",
+    lead: "モナコイン（MONA）の円建て価格（MONA/JPY）を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。日本発の暗号資産として知られ、国内取引所を中心に売買されています。",
   },
 ];
 
@@ -330,7 +362,7 @@ export const CRYPTO_PAIRS = CHART_PAIRS.filter((p) => p.category === "crypto");
  *
  * 詳細ページはチャートウィジェットと短いリード文だけで構成されるため、掲載銘柄を
  * 増やすほど中身の薄いページが積み上がる。会員が表示銘柄を選べるようにするために
- * 追加したこの21銘柄は、一覧ページ（/fx/・/metals/・/crypto/）には従来どおり出しつつ、
+ * 追加したこの24銘柄は、一覧ページ（/fx/・/metals/・/crypto/）には従来どおり出しつつ、
  * 詳細ページだけ noindex にしてサイトマップからも外す。
  * もともと掲載していた14銘柄は、これまでどおり検索対象のまま。
  */
@@ -341,7 +373,8 @@ const NOINDEX_DETAIL_IDS = new Set([
   // 貴金属
   "palladium", "copper", "aluminum",
   // 暗号資産
-  "soljpy", "bnbjpy", "adajpy", "linkjpy", "avaxjpy", "dotjpy", "bchjpy",
+  "soljpy", "bnbjpy", "adajpy", "linkjpy", "bchjpy",
+  "trxjpy", "xlmjpy", "dotjpy", "shibjpy", "monajpy",
 ]);
 
 /** その銘柄の詳細ページを検索エンジンに載せるか */

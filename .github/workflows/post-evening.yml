@@ -38,8 +38,15 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ARTICLE_MODEL: ${{ vars.ARTICLE_MODEL }}
-      - name: 日本株の株価・解説を生成
+      - name: 相場を取得して既定表示6銘柄を決定
+        # 解説の生成より先に実行する（generate-stocks.mjs が上位6銘柄をここから読む）。
+        # 失敗しても続行する。取得できなければ前回の順位、それも無ければ
+        # catalog.mjs の既定値が使われる。APIキー不要（Yahoo Finance）。
+        continue-on-error: true
+        run: node scripts/generate-featured.mjs
+      - name: 日本株の解説を生成
         # 記事本体の生成・デプロイを妨げないよう、失敗しても続行する。
+        # 株価は前段の generate-featured.mjs が全銘柄分を書き出している。
         continue-on-error: true
         run: node scripts/generate-jp-stocks.mjs
         env:
@@ -50,7 +57,7 @@ jobs:
         run: |
           git config user.name "market-daily-bot"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add content/posts content/jp-stocks.json
+          git add content/posts content/jp-stocks.json content/us-stocks.json content/featured.json
           if git diff --cached --quiet; then
             echo "posted=false" >> "$GITHUB_OUTPUT"
             echo "changed=false" >> "$GITHUB_OUTPUT"

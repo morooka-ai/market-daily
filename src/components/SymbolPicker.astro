@@ -1,18 +1,23 @@
 ---
 // 会員が「このページに表示する銘柄」を選ぶパネル（0件〜MAX_SELECTION件）。
-// 0件のときは絞り込みなしで全銘柄を表示する。
 //
 // 表示の絞り込み方針:
 //   ページ本体は常に全銘柄をHTMLに出力する（検索エンジンには全件を見せる）。
-//   会員の選択は、localStorage のキャッシュから組み立てた <style> で
-//   非選択の銘柄を display:none にして適用する。
-//   DOM構築前に効くのでチラつきが出ず、Firebase SDK も不要。
-//   保存値の順序どおりに並ぶよう CSS の order も添えているが、現在のUIは
-//   チェックボックスだけで並び順は選べないため、実際の表示は常にカタログ順になる。
-//   （非表示の要素は画面内に入らないため、チャートウィジェットも読み込まれない）
+//   実際に見せる銘柄は、localStorage のキャッシュから組み立てた <style> で
+//   対象外を display:none にして決める。DOM構築前に効くのでチラつきが出ず、
+//   Firebase SDK も不要。（非表示の要素は画面内に入らないため、
+//   TradingViewのチャートウィジェットも読み込まれない＝ページが軽くなる）
+//
+//   未ログイン … 既定表示の DEFAULT_VISIBLE 件だけ（limited なページのみ。
+//                 どの銘柄かは content/featured.json の売買代金順で毎日変わる）
+//   会員       … 選択があればその銘柄を選択順に、選択がなければ全銘柄
+//
+// 掲載候補が増えたためチェックボックスの総覧はやめ、検索で選ぶ形にしている。
+// 検索していないときは「選択済み＋既定表示」だけを出し、検索すると全候補から引ける。
 //
 // パネルを開く／ログイン済みの手がかりがある場合に初めて Firebase SDK を動的読み込みする。
-import { getPage, MAX_SELECTION } from "../catalog.mjs";
+import { getPage, MAX_SELECTION, DEFAULT_VISIBLE, defaultVisibleIds } from "../catalog.mjs";
+import featured from "../../content/featured.json";
 
 interface Props {
   /** catalog.mjs の PAGES のキー（例: "fx"） */
@@ -23,22 +28,45 @@ const { pageKey } = Astro.props;
 const page = getPage(pageKey);
 if (!page) throw new Error(`未知のページキーです: ${pageKey}`);
 
+// 未ログイン時に見せる銘柄。limited でないページ（FX・貴金属）は空配列＝全件表示。
+const defaultIds = defaultVisibleIds(pageKey, featured);
+const limited = defaultIds.length > 0;
+
 const base = import.meta.env.BASE_URL;
 const configured = Boolean(
   import.meta.env.PUBLIC_FIREBASE_API_KEY &&
     import.meta.env.PUBLIC_FIREBASE_PROJECT_ID &&
     import.meta.env.PUBLIC_FIREBASE_APP_ID,
 );
+
+// 既定表示の並び順（＝売買代金順）を選択パネルの並びにも使う。
+// ランキングに無い銘柄はカタログ順で後ろに続ける。
+const rank = new Map(
+  (featured?.pages?.[pageKey]?.ranking ?? []).map((id, i) => [id, i]),
+);
+const items = [...page.items].sort(
+  (a, b) => (rank.get(a.id) ?? 9999) - (rank.get(b.id) ?? 9999),
+);
 ---
 
-{/* 選択の即時適用。DOM構築前に <style> を差し込むため、他のscriptより先に置く */}
-<script is:inline define:vars={{ pageKey }}>
+{/* 選択の即時適用。DOM構築前に <style> を差し込むため、他のscriptより先に置く。
+    キー名は src/lib/firebase.mjs の SELECTION_CACHE_KEY / SIGNED_IN_KEY と揃えること。 */}
+<script is:inline define:vars={{ pageKey, defaultIds }}>
   (function () {
     try {
+      var ids = null;
       var raw = localStorage.getItem("md_selections");
-      if (!raw) return;
-      var ids = (JSON.parse(raw) || {})[pageKey];
-      if (!Array.isArray(ids) || ids.length === 0) return;
+      if (raw) {
+        var saved = (JSON.parse(raw) || {})[pageKey];
+        if (Array.isArray(saved) && saved.length) ids = saved;
+      }
+      if (!ids) {
+        // 選択がなければ既定表示に絞る（ログインの有無を問わない）。
+        // 掲載銘柄が日経225の223銘柄まで増えたため、未選択で全件を出すと
+        // 会員のほうが極端に重いページを見ることになるため。
+        if (!defaultIds.length) return; // FX・貴金属は従来どおり全件表示
+        ids = defaultIds;
+      }
       var sel = function (id) {
         return '[data-symbol-id="' + String(id).replace(/["\\]/g, "\\$&") + '"]';
       };
@@ -65,6 +93,8 @@ const configured = Boolean(
   data-page-key={pageKey}
   data-max={MAX_SELECTION}
   data-enabled={configured ? "1" : "0"}
+  data-limited={limited ? "1" : "0"}
+  data-default-ids={defaultIds.join(",")}
 >
   <summary>
     <span class="picker-title">表示する銘柄を選ぶ</span>
@@ -81,9 +111,21 @@ const configured = Boolean(
         <>
           <div class="picker-msg" data-picker-anon hidden>
             <p>
-              無料の会員登録をすると、このページに表示する銘柄を
-              <strong>最大{MAX_SELECTION}件</strong
-              >まで選べます。メール配信を受け取るかどうかは任意です。
+              {limited ? (
+                <>
+                  このページでは、掲載している{page.items.length}銘柄のうち
+                  {page.basis}の多い
+                  <strong>上位{DEFAULT_VISIBLE}銘柄</strong>を表示しています。
+                  無料の会員登録をすると、{page.items.length}銘柄すべてから
+                  <strong>最大{MAX_SELECTION}件</strong>を選んで表示できます。
+                </>
+              ) : (
+                <>
+                  無料の会員登録をすると、このページに表示する銘柄を
+                  <strong>最大{MAX_SELECTION}件</strong>まで選べます。
+                </>
+              )}
+              メール配信を受け取るかどうかは任意です。
             </p>
             <p class="picker-actions">
               <a class="btn" href={`${base}account/register/`}>
@@ -96,29 +138,62 @@ const configured = Boolean(
           </div>
 
           <form data-picker-form hidden>
-            <p class="picker-count">
-              選択中 <strong data-picker-selected>0</strong> / {MAX_SELECTION}件
-              <span class="picker-hint">
-                （0件のときは全{page.items.length}銘柄を表示します）
+            <div class="picker-chips" data-picker-chips />
+
+            <div class="picker-search">
+              <div class="picker-searchbox">
+                <input
+                  type="search"
+                  data-picker-query
+                  autocomplete="off"
+                  placeholder={`銘柄名・${page.key.endsWith("stocks") ? "コード" : "通貨ペア"}で検索（全${page.items.length}銘柄）`}
+                  aria-label="銘柄を検索"
+                />
+                <button
+                  class="picker-clear"
+                  type="button"
+                  data-picker-clear
+                  hidden
+                  aria-label="検索条件を消す"
+                >
+                  ×
+                </button>
+              </div>
+              <span class="picker-count">
+                選択中 <strong data-picker-selected>0</strong> / {MAX_SELECTION}件
               </span>
-            </p>
-            <ul class="picker-list">
-              {page.items.map((it) => (
-                <li>
+            </div>
+
+            <ul class="picker-list" data-picker-list>
+              {items.map((it) => (
+                <li data-item data-kw={`${it.name} ${it.sub} ${it.kw}`}>
                   <label>
                     <input type="checkbox" name="symbol" value={it.id} />
-                    <span class="picker-name">{it.name}</span>
+                    <span class="picker-name" data-name>
+                      {it.name}
+                    </span>
                     <span class="picker-sub">{it.sub}</span>
                   </label>
                 </li>
               ))}
+              <li class="picker-empty" data-picker-empty hidden>
+                一致する銘柄はありません
+              </li>
+              <li class="picker-more" data-picker-more hidden />
             </ul>
+
+            <p class="picker-hint">
+              {limited
+                ? `選択しないときは、掲載${page.items.length}銘柄のうち${page.basis}の多い上位${DEFAULT_VISIBLE}銘柄を表示します。`
+                : `0件のときは全${page.items.length}銘柄を表示します。`}
+            </p>
+
             <p class="picker-actions">
               <button class="btn" type="submit">
                 この内容で保存
               </button>
               <button class="btn btn-ghost" type="button" data-picker-reset>
-                すべて表示に戻す
+                選択を解除する
               </button>
               <span class="picker-status" data-picker-status role="status" />
             </p>
@@ -147,12 +222,23 @@ const configured = Boolean(
   if (root && form && root.dataset.enabled === "1") {
     const pageKey = root.dataset.pageKey;
     const max = Number(root.dataset.max);
+    const defaultIds = root.dataset.defaultIds
+      ? root.dataset.defaultIds.split(",")
+      : [];
+    // 掲載候補が多いページだけ、検索していないときの一覧を絞る（FX・貴金属は総覧のまま）
+    const limited = root.dataset.limited === "1";
     const anon = root.querySelector("[data-picker-anon]");
     const loading = root.querySelector("[data-picker-loading]");
     const stateBadge = root.querySelector("[data-picker-state]");
     const countEl = root.querySelector("[data-picker-selected]");
     const statusEl = root.querySelector("[data-picker-status]");
-    const boxes = () => [...form.querySelectorAll('input[name="symbol"]')];
+    const chipsEl = root.querySelector("[data-picker-chips]");
+    const queryEl = root.querySelector("[data-picker-query]");
+    const clearEl = root.querySelector("[data-picker-clear]");
+    const emptyEl = root.querySelector("[data-picker-empty]");
+    const moreEl = root.querySelector("[data-picker-more]");
+    const rows = [...form.querySelectorAll("[data-item]")];
+    const boxes = () => rows.map((li) => li.querySelector('input[name="symbol"]'));
 
     let currentUser = null;
     let started = false;
@@ -161,6 +247,96 @@ const configured = Boolean(
       if (el) el.hidden = !on;
     };
 
+    // 検索の表記ゆれを吸収する（全角/半角・大文字小文字・カタカナ/ひらがな・区切り記号）
+    const normalize = (s) =>
+      String(s)
+        .toLowerCase()
+        .normalize("NFKC")
+        .replace(/[ァ-ヶ]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0x60))
+        .replace(/[\s・／/－-]/g, "");
+
+    for (const li of rows) li.dataset.norm = normalize(li.dataset.kw);
+
+    /** 検索語に一致した箇所を強調する。位置がずれる語（記号・かなを含む）は素通し。 */
+    function highlight(li, q) {
+      const nameEl = li.querySelector("[data-name]");
+      const name = (nameEl.dataset.raw ??= nameEl.textContent);
+      const norm = normalize(name);
+      const at = q ? norm.indexOf(q) : -1;
+      if (at < 0 || norm.length !== name.length) {
+        nameEl.textContent = name;
+        return;
+      }
+      nameEl.textContent = "";
+      nameEl.append(
+        name.slice(0, at),
+        Object.assign(document.createElement("mark"), {
+          textContent: name.slice(at, at + q.length),
+        }),
+        name.slice(at + q.length),
+      );
+    }
+
+    /** 検索語と選択状態にあわせて候補リストの表示を組み替える */
+    function refreshList() {
+      const q = normalize(queryEl.value.trim());
+      let shown = 0;
+      let hiddenByDefault = 0;
+
+      for (const li of rows) {
+        const box = li.querySelector('input[name="symbol"]');
+        const hit = !q || li.dataset.norm.includes(q);
+        // 検索していないときは「選択済み＋既定表示」だけを出す。
+        // 全件の総覧は縦に長くなりすぎるため、残りは検索で引いてもらう。
+        const inShortlist =
+          !limited || box.checked || defaultIds.includes(box.value);
+        const visible = q ? hit : inShortlist;
+        li.hidden = !visible;
+        if (visible) shown++;
+        else if (!q) hiddenByDefault++;
+        if (visible) highlight(li, q);
+      }
+
+      show(emptyEl, Boolean(q) && shown === 0);
+      if (!q && hiddenByDefault > 0) {
+        moreEl.textContent = `ほか${hiddenByDefault}銘柄。検索すると全${rows.length}銘柄から選べます`;
+        show(moreEl, true);
+      } else {
+        show(moreEl, false);
+      }
+      show(clearEl, Boolean(queryEl.value));
+    }
+
+    /** 選択済みのチップを描き直す */
+    function refreshChips() {
+      const checked = boxes().filter((b) => b.checked);
+      chipsEl.textContent = "";
+      if (!checked.length) {
+        const span = document.createElement("span");
+        span.className = "picker-chips-empty";
+        span.textContent = "選択中の銘柄はありません";
+        chipsEl.append(span);
+        return;
+      }
+      for (const b of checked) {
+        const name = b.closest("[data-item]").querySelector("[data-name]");
+        const label = name.dataset.raw ?? name.textContent;
+        const chip = document.createElement("span");
+        chip.className = "picker-chip";
+        chip.append(label);
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = "×";
+        btn.setAttribute("aria-label", `${label}を選択から外す`);
+        btn.addEventListener("click", () => {
+          b.checked = false;
+          refreshAll();
+        });
+        chip.append(btn);
+        chipsEl.append(chip);
+      }
+    }
+
     function refreshCount() {
       const checked = boxes().filter((b) => b.checked);
       countEl.textContent = String(checked.length);
@@ -168,18 +344,31 @@ const configured = Boolean(
       for (const b of boxes()) {
         b.disabled = !b.checked && checked.length >= max;
       }
+      // 未選択のとき、limited なページは既定表示の件数、それ以外は全件を出す
       stateBadge.textContent =
-        checked.length === 0 ? "全件表示" : `${checked.length}件を表示`;
+        checked.length === 0
+          ? limited
+            ? `${defaultIds.length}件を表示`
+            : "全件表示"
+          : `${checked.length}件を表示`;
+    }
+
+    function refreshAll() {
+      refreshCount();
+      refreshChips();
+      refreshList();
     }
 
     /** 選択内容を即座に画面へ反映する（保存の完了を待たせない） */
     function applyFilter(ids) {
       document.getElementById("md-symbol-filter")?.remove();
-      if (!ids.length) return;
+      // 選択がなければ既定表示に戻す（limited でないページは defaultIds が空＝全件表示）
+      const target = ids.length ? ids : defaultIds;
+      if (!target.length) return;
       const sel = (id) =>
         `[data-symbol-id="${String(id).replace(/["\\]/g, "\\$&")}"]`;
-      const keep = ids.map(sel).join(",");
-      const order = ids.map((id, i) => `${sel(id)}{order:${i + 1}}`).join("");
+      const keep = target.map(sel).join(",");
+      const order = target.map((id, i) => `${sel(id)}{order:${i + 1}}`).join("");
       const style = document.createElement("style");
       style.id = "md-symbol-filter";
       style.textContent = `[data-symbol-id]:not(:is(${keep})){display:none!important}${order}`;
@@ -210,14 +399,15 @@ const configured = Boolean(
           if (!user) {
             stateBadge.textContent = "会員機能";
             // ログアウト済み・セッション切れの状態で、前回の絞り込みが
-            // 残ったままにならないよう解除して全件表示に戻す
+            // 残ったままにならないよう既定表示に戻す
+            for (const b of boxes()) b.checked = false;
             applyFilter([]);
             return;
           }
           const profile = await loadProfile(user);
           const saved = sanitize(profile.selections?.[pageKey]);
           for (const b of boxes()) b.checked = saved.includes(b.value);
-          refreshCount();
+          refreshAll();
           applyFilter(saved);
         });
       } catch (err) {
@@ -240,7 +430,18 @@ const configured = Boolean(
       if (root.open) start();
     });
 
-    form.addEventListener("change", refreshCount);
+    queryEl.addEventListener("input", refreshList);
+    clearEl.addEventListener("click", () => {
+      queryEl.value = "";
+      queryEl.focus();
+      refreshList();
+    });
+    // 検索欄でEnterを押しても保存されないようにする（誤操作防止）
+    queryEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") e.preventDefault();
+    });
+
+    form.addEventListener("change", refreshAll);
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -261,16 +462,18 @@ const configured = Boolean(
     root.querySelector("[data-picker-reset]")?.addEventListener("click", async () => {
       if (!currentUser) return;
       for (const b of boxes()) b.checked = false;
-      refreshCount();
+      refreshAll();
       applyFilter([]);
       statusEl.textContent = "保存中…";
       try {
         await saveSelection(currentUser, pageKey, []);
-        statusEl.textContent = "全銘柄を表示します";
+        statusEl.textContent = "選択を解除しました（全銘柄を表示します）";
       } catch (err) {
         statusEl.textContent = toMessage(err);
       }
     });
+
+    refreshAll();
   }
 </script>
 
@@ -323,33 +526,163 @@ const configured = Boolean(
   .picker-msg p {
     margin: 0 0 0.6rem;
   }
-  .picker-count {
-    margin: 0 0 0.6rem;
+
+  /* 選択済みのチップ。検索でリストを絞り込んでも選択が見失われないよう常に出す */
+  .picker-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    align-items: center;
+    min-height: 1.9rem;
+    margin-bottom: 0.6rem;
   }
-  .picker-hint {
+  .picker-chips-empty {
+    font-size: 0.82rem;
     color: var(--muted);
-    font-size: 0.85em;
   }
+  .picker-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: #e9f1fa;
+    border: 1px solid #b9d3ee;
+    border-radius: 999px;
+    padding: 0.1rem 0.3rem 0.1rem 0.65rem;
+    font-size: 0.82rem;
+    line-height: 1.6;
+  }
+  .picker-chip button {
+    font: inherit;
+    font-size: 0.9rem;
+    line-height: 1;
+    border: 0;
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    padding: 0.15rem 0.25rem;
+    border-radius: 50%;
+  }
+  .picker-chip button:hover {
+    background: #d5e5f5;
+  }
+
+  .picker-search {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.6rem;
+  }
+  .picker-searchbox {
+    position: relative;
+    flex: 1 1 16rem;
+  }
+  .picker-searchbox input {
+    width: 100%;
+    font: inherit;
+    font-size: 0.9rem;
+    padding: 0.4rem 2rem 0.4rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: var(--card);
+    color: var(--text);
+  }
+  .picker-searchbox input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -1px;
+    border-color: var(--accent);
+  }
+  .picker-clear {
+    position: absolute;
+    right: 0.3rem;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    cursor: pointer;
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+  }
+  .picker-clear:hover {
+    color: var(--text);
+  }
+  .picker-count {
+    font-size: 0.85rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .picker-count strong {
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+
   .picker-list {
     list-style: none;
-    margin: 0 0 0.9rem;
-    padding: 0;
+    margin: 0 0 0.6rem;
+    padding: 0.15rem;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    gap: 0.15rem 0.8rem;
+    grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+    gap: 0.1rem 0.7rem;
+    max-height: 17rem;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  .picker-list li {
+    min-width: 0;
   }
   .picker-list label {
     display: flex;
     align-items: baseline;
     gap: 0.4rem;
-    padding: 0.15rem 0;
+    padding: 0.2rem 0.35rem;
     cursor: pointer;
+    border-radius: 4px;
   }
-  .picker-list input:disabled ~ * {
-    color: var(--muted);
+  .picker-list label:hover {
+    background: #e9f1fa;
+  }
+  .picker-list input {
+    margin: 0;
+    flex: none;
+    align-self: center;
+  }
+  .picker-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .picker-name :global(mark) {
+    background: #fdefb8;
+    color: inherit;
+    border-radius: 2px;
   }
   .picker-sub {
     font-size: 0.78rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .picker-list input:disabled ~ * {
+    color: var(--muted);
+    opacity: 0.55;
+  }
+  .picker-empty,
+  .picker-more {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.8rem;
+    padding: 0.5rem;
+  }
+  .picker-more {
+    border-top: 1px dashed var(--border);
+  }
+
+  .picker-hint {
+    margin: 0 0 0.7rem;
+    font-size: 0.82rem;
     color: var(--muted);
   }
   .picker-actions {

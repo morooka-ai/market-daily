@@ -1,29 +1,31 @@
-// 日本株ページの株価（Yahoo Finance）と解説（Gemini）を生成し content/jp-stocks.json に書き出す。
+// 日本株ページの解説（現状・企業の動向）を生成し content/jp-stocks.json に追記する。
 // 使い方: node scripts/generate-jp-stocks.mjs
-// 夕刊ワークフロー（東証の大引け後）と同じタイミングで実行する。
+// 夕刊ワークフロー（東証の大引け後）で、generate-featured.mjs のあとに実行する。
 //
-// 東証銘柄はTradingViewの外部埋め込みウィジェットが使えない（データ提供元のライセンス制限で
-// 「このシンボルはTradingView上でのみ利用可能です」となる）ため、米国株ページと違いチャートは
-// 掲載せず、Yahoo Finance（キー不要）から取得した株価・前日比とAI解説のみを表示する。
+// 株価は generate-featured.mjs が全銘柄分を書き出しているので、ここでは触らない。
+// 解説を作るのは「売買代金上位6銘柄」だけに絞っている。掲載は日経225の223銘柄あるが、
+// 未ログインの訪問者（＝検索エンジンのクローラを含む）に見えるのは上位6銘柄なので、
+// それ以外の解説を毎日作っても費用に見合わないため。
+// 7位以下の銘柄を会員が選んだ場合は、株価のみが表示される（ページ側が解説なしを許容する）。
 //
 // 方針: 記事本体の生成を妨げないよう、失敗時もできる限り前回値を残す。
-//   - 個別銘柄の取得・生成に失敗しても、その銘柄は前回値を維持して続行する。
+//   - 個別銘柄の生成に失敗しても、その銘柄は前回の解説を維持して続行する。
 //   - GEMINI_API_KEY 未設定など致命的な場合のみ非ゼロ終了する。
 //   - 当日（JST）分が既にある銘柄は作り直さない（generate.mjs と同じ冪等性）。
-//     大引け後に取得した終値はその日の確定値なので、後続の実行で取り直す意味がない。
 //     FORCE_REGENERATE=true で強制的に作り直せる。
 
 import fs from "node:fs";
 import path from "node:path";
 import { JP_STOCKS } from "../src/jp-stocks-data.mjs";
-import { fetchYahooQuote } from "./lib/market-data.mjs";
+import { defaultVisibleIds } from "../src/catalog.mjs";
 import { writeStockNote } from "./lib/stocks.mjs";
 
 const OUT_PATH = path.resolve("content/jp-stocks.json");
+const FEATURED_PATH = path.resolve("content/featured.json");
 const MARKET_LABEL = "日本の上場企業（東証プライム市場）";
 const FORCE = process.env.FORCE_REGENERATE === "true";
 
-// JST の ISO 文字列（+09:00）を返す
+/** JST の ISO 文字列（+09:00） */
 function jstIso() {
   const jst = new Date(Date.now() + 9 * 3600 * 1000);
   return jst.toISOString().replace("Z", "+09:00");
@@ -34,12 +36,11 @@ function jstDay(value = Date.now()) {
   return new Date(value).toLocaleDateString("sv-SE", { timeZone: "Asia/Tokyo" });
 }
 
-// 既存データを読み込む（生成失敗時のフォールバック用）
-function loadExisting() {
+function loadJson(file, fallback) {
   try {
-    return JSON.parse(fs.readFileSync(OUT_PATH, "utf8"));
+    return JSON.parse(fs.readFileSync(file, "utf8"));
   } catch {
-    return { stocks: {} };
+    return fallback;
   }
 }
 
@@ -48,60 +49,61 @@ async function main() {
     throw new Error("環境変数 GEMINI_API_KEY が未設定です");
   }
 
-  const existing = loadExisting();
-
-  // Cloud Scheduler の定刻実行のあとに GitHub cron のフォールバックが数時間遅れて
-  // 発火することがある。当日分が既にある銘柄はそのまま使い回し、Gemini と Yahoo を
-  // 呼び直さない。定刻実行で一部の銘柄が失敗していた場合は、その銘柄だけを取り直す。
-  const sameDay =
-    !FORCE && Boolean(existing.generatedAt) && jstDay(existing.generatedAt) === jstDay();
-  const kept = sameDay ? { ...existing.stocks } : {};
-  const targets = JP_STOCKS.filter((s) => !kept[s.ticker]);
-
-  if (!targets.length) {
-    console.log(`本日（${jstDay()}）分は生成済みです。再生成をスキップしました。`);
+  const data = loadJson(OUT_PATH, null);
+  if (!data?.stocks) {
+    console.warn(
+      `${OUT_PATH} がありません。generate-featured.mjs を先に実行してください。解説の生成をスキップします。`,
+    );
     return;
   }
 
-  const generated = {};
-  let successCount = 0;
+  const featured = loadJson(FEATURED_PATH, null);
+  const targetIds = defaultVisibleIds("jp-stocks", featured);
+  const byTicker = new Map(JP_STOCKS.map((s) => [s.ticker, s]));
 
-  for (const s of targets) {
+  // 当日分が既にある銘柄は作り直さない。Cloud Scheduler の定刻実行のあとに
+  // GitHub cron のフォールバックが遅れて発火しても Gemini を呼び直さないため。
+  const sameDay =
+    !FORCE && Boolean(data.notesGeneratedAt) && jstDay(data.notesGeneratedAt) === jstDay();
+
+  let successCount = 0;
+  for (const ticker of targetIds) {
+    const stock = byTicker.get(ticker);
+    if (!stock) continue;
+    if (sameDay && data.stocks[ticker]?.current) {
+      console.log(`本日分は生成済み: ${ticker} ${stock.name}`);
+      continue;
+    }
     try {
-      const [quote, note] = await Promise.all([
-        fetchYahooQuote(s.yahooSymbol),
-        writeStockNote(s, MARKET_LABEL),
-      ]);
-      generated[s.ticker] = { quote, ...note };
+      const note = await writeStockNote(stock, MARKET_LABEL);
+      data.stocks[ticker] = { ...data.stocks[ticker], ...note };
       successCount++;
-      console.log(`生成: ${s.ticker}`);
+      console.log(`生成: ${ticker} ${stock.name}`);
     } catch (err) {
-      const prev = existing.stocks?.[s.ticker];
-      if (prev) {
-        generated[s.ticker] = prev;
-        console.warn(`生成失敗のため前回値を維持: ${s.ticker} — ${err.message}`);
-      } else {
-        console.warn(`生成失敗（前回値なし・スキップ）: ${s.ticker} — ${err.message}`);
-      }
+      console.warn(`生成失敗のため前回値を維持: ${ticker} — ${err.message}`);
     }
   }
 
-  if (successCount === 0) {
-    console.warn("全銘柄の生成に失敗しました。既存の解説を保持します。");
+  // 既定表示から外れた銘柄の解説は、古い内容が残り続けないよう落とす。
+  // （会員が選んだ場合は株価のみの表示になる）
+  const keep = new Set(targetIds);
+  let dropped = 0;
+  for (const [ticker, entry] of Object.entries(data.stocks)) {
+    if (keep.has(ticker) || !entry.current) continue;
+    delete entry.current;
+    delete entry.updates;
+    dropped++;
+  }
+
+  if (successCount === 0 && dropped === 0) {
+    console.log("更新はありません。");
     return;
   }
 
-  // 銘柄の定義順に並べ直してから書き出す（差分を読みやすく保つため）
-  const stocks = {};
-  for (const s of JP_STOCKS) {
-    const entry = generated[s.ticker] ?? kept[s.ticker];
-    if (entry) stocks[s.ticker] = entry;
-  }
-
-  const out = { generatedAt: jstIso(), stocks };
-  fs.writeFileSync(OUT_PATH, JSON.stringify(out, null, 2) + "\n", "utf8");
+  data.notesGeneratedAt = jstIso();
+  fs.writeFileSync(OUT_PATH, JSON.stringify(data, null, 2) + "\n", "utf8");
   console.log(
-    `書き出し完了（新規 ${successCount}銘柄 / 収録 ${Object.keys(stocks).length}銘柄）: ${OUT_PATH}`,
+    `書き出し完了（新規 ${successCount}銘柄 / 期限切れ ${dropped}銘柄を削除）: ${OUT_PATH}`,
   );
 }
 

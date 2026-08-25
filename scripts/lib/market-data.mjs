@@ -65,6 +65,15 @@ export async function fetchYahooQuote(symbol) {
   const changePercent = previousClose ? (change / previousClose) * 100 : null;
   const date = new Date(meta.regularMarketTime * 1000).toISOString().slice(0, 10);
 
+  // 出来高。既定表示6銘柄を売買代金順で決めるのに使う（scripts/generate-featured.mjs）。
+  // 場中・休場だと当日分が 0 や null になるので、直近の有効値まで遡る。
+  const volumes = (json.chart.result[0].indicators?.quote?.[0]?.volume ?? []).filter(
+    (v) => v != null && v > 0,
+  );
+  const volume = volumes.length
+    ? volumes[volumes.length - 1]
+    : (meta.regularMarketVolume ?? null);
+
   return {
     symbol: meta.symbol ?? symbol,
     longName: meta.longName ?? meta.shortName ?? null,
@@ -73,6 +82,7 @@ export async function fetchYahooQuote(symbol) {
     previousClose,
     change,
     changePercent,
+    volume,
     date,
   };
 }

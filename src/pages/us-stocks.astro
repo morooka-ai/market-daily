@@ -23,15 +23,15 @@ const updatedAt = notes.generatedAt
     })
   : null;
 
-const title = "米国株 注目12銘柄 チャート・株価・前日比一覧";
+const title = "米国株 注目銘柄 チャート・株価・前日比一覧";
 const description =
-  "アルファベット・アマゾン・アップル・マイクロソフト・エヌビディア・テスラなど米国株12銘柄の株価、前日比、リアルタイムチャートと解説をまとめて確認できます。";
+  "アルファベット・アマゾン・アップル・マイクロソフト・エヌビディア・テスラなど米国の注目銘柄の株価、前日比、リアルタイムチャートと解説をまとめて確認できます。";
 ---
 
 <Base title={title} description={description} wide>
-  <h1>米国株 注目12銘柄</h1>
+  <h1>米国株 注目銘柄</h1>
   <p>
-    注目の米国株12銘柄について、<strong
+    注目の米国株について、<strong
       >①チャート・②現在の株価（ドル）・③前日比・④解説（現状と公表されている企業の動向）</strong
     >をまとめました。株価はリアルタイム表示（遅延を含む場合があります）です。
   </p>
@@ -128,6 +128,9 @@ const description =
         style: "1",
         locale: "ja",
         hide_side_toolbar: true,
+        // 上部ツールバーは出さない（理由は ChartGrid.astro のコメントと同じ。
+        // 3列グリッドの1枚では幅が足りずツールバーの右側が切れる）
+        hide_top_toolbar: true,
         allow_symbol_change: false,
         calendar: false,
         support_host: "https://www.tradingview.com",

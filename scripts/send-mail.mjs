@@ -18,7 +18,12 @@ import fs from "node:fs";
 import path from "node:path";
 import { initializeApp, applicationDefault, cert } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
-import { PAGES, normalizeSelection } from "../src/catalog.mjs";
+import {
+  PAGES,
+  normalizeSelection,
+  defaultVisibleIds,
+  DEFAULT_VISIBLE,
+} from "../src/catalog.mjs";
 import { fetchYahooQuote } from "./lib/market-data.mjs";
 import { sendMail, isMailConfigured, mailProviderName } from "./lib/mailer.mjs";
 
@@ -124,15 +129,29 @@ function formatChange(quote) {
 const esc = (s) =>
   String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
+/** サイトの既定表示と同じ銘柄を選ぶための売買代金ランキング（無ければ手動の既定値が使われる） */
+function loadFeatured() {
+  try {
+    return JSON.parse(fs.readFileSync(path.resolve("content/featured.json"), "utf8"));
+  } catch {
+    return null;
+  }
+}
+const FEATURED = loadFeatured();
+
 /**
  * 会員の選択銘柄から、配信するセクションを組み立てる。
- * 選択が空のページは、既定の先頭6銘柄を送る（何も選んでいない会員にも中身のあるメールを届けるため）。
+ * 選択が空のページは既定の6銘柄を送る（何も選んでいない会員にも中身のあるメールを届けるため）。
+ * その6銘柄は、サイトの未ログイン時の表示と揃うよう売買代金の上位から採る。
  */
 function buildSections(selections) {
   const sections = [];
   for (const page of PAGES) {
     const chosen = normalizeSelection(page.key, selections?.[page.key] ?? []);
-    const ids = chosen.length ? chosen : page.items.slice(0, 6).map((it) => it.id);
+    const fallback = page.limited
+      ? defaultVisibleIds(page.key, FEATURED)
+      : page.items.slice(0, DEFAULT_VISIBLE).map((it) => it.id);
+    const ids = chosen.length ? chosen : fallback;
     const items = ids
       .map((id) => ITEM_INDEX.get(page.key).get(id))
       .filter(Boolean);

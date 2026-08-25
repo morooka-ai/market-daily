@@ -1,6 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
-import { PAGES, MAX_SELECTION } from "../../catalog.mjs";
+import { PAGES, MAX_SELECTION, DEFAULT_VISIBLE } from "../../catalog.mjs";
 
 const base = import.meta.env.BASE_URL;
 const configured = Boolean(
@@ -87,7 +87,7 @@ const description = "表示銘柄の設定と、毎日のメール配信の設�
               <ul class="promo-benefits">
                 <li>
                   <strong>見たい銘柄だけを表示</strong>
-                  FX・貴金属・暗号資産・日本株・米国株の各ページで、表示する銘柄を最大{MAX_SELECTION}件まで選べます。関心のない銘柄を毎回読み飛ばす必要がなくなります。
+                  FX・貴金属・暗号資産・日本株・米国株の各ページで、表示する銘柄を最大{MAX_SELECTION}件まで選べます。暗号資産・日本株・米国株は、登録しない状態では掲載銘柄のうち売買代金の多い上位{DEFAULT_VISIBLE}銘柄だけを表示していますが、会員になると全銘柄から選べます。
                 </li>
                 <li>
                   <strong>設定はどの端末でも同じ</strong>

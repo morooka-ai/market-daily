@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       # posted  … 新しい記事を投稿した（Xへの告知はこれを見る）
-      # changed … 記事または米国株データに変更があった（デプロイはこれを見る）
+      # changed … 記事・米国株データ・既定表示銘柄に変更があった（デプロイはこれを見る）
       posted: ${{ steps.commit.outputs.posted }}
       changed: ${{ steps.commit.outputs.changed }}
     steps:
@@ -39,6 +39,12 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
           ARTICLE_MODEL: ${{ vars.ARTICLE_MODEL }}
+      - name: 相場を取得して既定表示6銘柄を決定
+        # 解説の生成より先に実行する（generate-stocks.mjs が上位6銘柄をここから読む）。
+        # 失敗しても続行する。取得できなければ前回の順位、それも無ければ
+        # catalog.mjs の既定値が使われる。APIキー不要（Yahoo Finance）。
+        continue-on-error: true
+        run: node scripts/generate-featured.mjs
       - name: 米国株の解説を生成
         # 記事本体の生成・デプロイを妨げないよう、失敗しても続行する。
         continue-on-error: true
@@ -51,7 +57,7 @@ jobs:
         run: |
           git config user.name "market-daily-bot"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add content/posts content/us-stocks.json
+          git add content/posts content/us-stocks.json content/jp-stocks.json content/featured.json
           if git diff --cached --quiet; then
             echo "posted=false" >> "$GITHUB_OUTPUT"
             echo "changed=false" >> "$GITHUB_OUTPUT"
@@ -59,13 +65,13 @@ jobs:
             exit 0
           fi
           today=$(TZ=Asia/Tokyo date +%Y-%m-%d)
-          # 記事が増えたのか、米国株データだけが変わったのかでメッセージを分ける。
+          # 記事が増えたのか、データだけが変わったのかでメッセージを分ける。
           # 記事がないのに「post:」と記録すると、Xへの告知が空振りする。
           if git diff --cached --name-only | grep -q '^content/posts/'; then
             git commit -m "post: 朝刊 $today"
             echo "posted=true" >> "$GITHUB_OUTPUT"
           else
-            git commit -m "data: 米国株の解説を更新 $today"
+            git commit -m "data: 米国株の解説・既定表示銘柄を更新 $today"
             echo "posted=false" >> "$GITHUB_OUTPUT"
           fi
           git push

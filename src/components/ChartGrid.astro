@@ -53,6 +53,11 @@ const items = pairs.map((p) => ({
       style: "1",
       locale: "ja",
       hide_side_toolbar: true,
+      // 上部ツールバー（期間切替・インジケーター等）は出さない。
+      // 3列グリッドでは1枚あたり約403pxしかなく、ツールバーの表示には最低でも
+      // 約470px（ラベル省略時）必要なため、右側が切れてしまう。
+      // 一覧はサムネイルと割り切り、操作は詳細ページ（/charts/<id>/）に任せる。
+      hide_top_toolbar: true,
       allow_symbol_change: false,
       calendar: false,
       support_host: "https://www.tradingview.com",

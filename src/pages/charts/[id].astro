@@ -201,11 +201,23 @@ const note = chartNote(pair.id);
     border: 1px solid var(--border);
     border-radius: 6px;
     overflow: hidden;
+    /* チャートを何倍に縮めて表示するか。1列表示のときは等倍（下の @media で3列時だけ縮める） */
+    --tv-scale: 1;
   }
   .tradingview-widget-container,
   .tradingview-widget-container__widget {
     height: 100%;
     width: 100%;
+  }
+  /* iframe は TradingView が実行時に差し込むので、スコープ外（:global）で指定する。
+     幅・高さはウィジェット側が style 属性で 100% を直接書くため !important が要る。
+     --tv-scale 分だけ大きく描かせてから縮小するので、表示上の大きさは変わらず
+     ウィジェットだけが「自分は広い」と認識する。文字はその分小さくなる。 */
+  .tv-wrapper :global(iframe) {
+    width: calc(100% / var(--tv-scale)) !important;
+    height: calc(100% / var(--tv-scale)) !important;
+    transform: scale(var(--tv-scale));
+    transform-origin: top left;
   }
   .note {
     margin: 2.5rem 0 0;
@@ -247,6 +259,12 @@ const note = chartNote(pair.id);
     /* wideコンテナ（最大1280px）の中で3列に並べる */
     .timeframe-grid {
       grid-template-columns: repeat(3, 1fr);
+    }
+    /* 3列だと1枚あたり約403pxしかなく、上部ツールバーの表示に必要な約436pxに届かないため、
+       右端のスナップショットボタンが切れる。0.9倍表示にすると内部448px相当になり、
+       ツールバーが最後まで収まる（実測で確認）。1列表示のときは幅が足りているので等倍のまま。 */
+    .tv-wrapper {
+      --tv-scale: 0.9;
     }
   }
 </style>
