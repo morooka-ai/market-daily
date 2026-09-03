@@ -1,48 +1,123 @@
 // 米国株ページに掲載する銘柄の共有リスト（メタ情報のみ）。
 // ページ（src/pages/us-stocks.astro）と各生成スクリプトがここを参照する。
 // symbol は TradingView 形式（取引所:ティッカー）。
-// yahooSymbol は Yahoo Finance 形式（米国株はティッカーそのまま）で、
-// 売買代金の順位づけと会員向けメール配信の現在値取得に使う。
+// yahooSymbol は Yahoo Finance 形式で、売買代金の順位づけ（generate-featured.mjs）と
+// 会員向けメール配信の現在値取得に使う。米国株はティッカーそのままだが、
+// バークシャーだけ Yahoo が "BRK-B"（ドットではなくハイフン）を使う。
 //
-// 母集団はダウ工業株30種平均（DJIA）の構成銘柄。既定表示（未ログイン時の6銘柄）は
+// 母集団は S&P 100（OEX）の構成銘柄。既定表示（未ログイン時の6銘柄）は
 // content/featured.json の売買代金順で毎日決まるため、ここでの並び順は
 // 「選択パネルでの並び」以上の意味を持たない（ティッカー順にしてある）。
 //
-// 取引所プレフィックスは TradingView のシンボル検索APIで全銘柄を実在確認済み（2026-08-25）。
+// 参考資料/構成銘柄：S&P100.txt（更新日付 2026.09.03）と全件突き合わせ済みで、
+// 101銘柄（GOOG/GOOGL の2クラスを含むため100社+1）そろっている。
+// 取引所プレフィックスは TradingView のシンボル検索APIで全銘柄を実在確認済み（2026-09-03）。
 // 直感に反するものがあるので、追加・変更時は必ず確認すること
-// （WMT・HON は NYSE ではなく NASDAQ）。
+// （WMT・LIN・PEP は NYSE ではなく NASDAQ。HONA も NASDAQ）。
 //
-// 構成銘柄の入れ替えは不定期。直近ではアルファベット(GOOGL)が2026年6月29日に採用された。
+// S&P 100 は四半期（3・6・9・12月）ごとにリバランスされる。入れ替えがあったら
+// 参考資料を差し替えてこの配列と突き合わせ、差分だけを反映する。
 
 export const US_STOCKS = [
   { ticker: "AAPL", symbol: "NASDAQ:AAPL", yahooSymbol: "AAPL", name: "アップル" },
+  { ticker: "ABBV", symbol: "NYSE:ABBV", yahooSymbol: "ABBV", name: "アッヴィ" },
+  { ticker: "ABT", symbol: "NYSE:ABT", yahooSymbol: "ABT", name: "アボット・ラボラトリーズ" },
+  { ticker: "ACN", symbol: "NYSE:ACN", yahooSymbol: "ACN", name: "アクセンチュア" },
+  { ticker: "ADBE", symbol: "NASDAQ:ADBE", yahooSymbol: "ADBE", name: "アドビ" },
+  { ticker: "AMAT", symbol: "NASDAQ:AMAT", yahooSymbol: "AMAT", name: "アプライド・マテリアルズ" },
+  { ticker: "AMD", symbol: "NASDAQ:AMD", yahooSymbol: "AMD", name: "AMD（アドバンスト・マイクロ・デバイセズ）" },
   { ticker: "AMGN", symbol: "NASDAQ:AMGN", yahooSymbol: "AMGN", name: "アムジェン" },
+  { ticker: "AMT", symbol: "NYSE:AMT", yahooSymbol: "AMT", name: "アメリカン・タワー" },
   { ticker: "AMZN", symbol: "NASDAQ:AMZN", yahooSymbol: "AMZN", name: "アマゾン・ドット・コム" },
+  { ticker: "AVGO", symbol: "NASDAQ:AVGO", yahooSymbol: "AVGO", name: "ブロードコム" },
   { ticker: "AXP", symbol: "NYSE:AXP", yahooSymbol: "AXP", name: "アメリカン・エキスプレス" },
   { ticker: "BA", symbol: "NYSE:BA", yahooSymbol: "BA", name: "ボーイング" },
+  { ticker: "BAC", symbol: "NYSE:BAC", yahooSymbol: "BAC", name: "バンク・オブ・アメリカ" },
+  { ticker: "BKNG", symbol: "NASDAQ:BKNG", yahooSymbol: "BKNG", name: "ブッキング・ホールディングス" },
+  { ticker: "BLK", symbol: "NYSE:BLK", yahooSymbol: "BLK", name: "ブラックロック" },
+  { ticker: "BMY", symbol: "NYSE:BMY", yahooSymbol: "BMY", name: "ブリストル・マイヤーズ スクイブ" },
+  { ticker: "BNY", symbol: "NYSE:BNY", yahooSymbol: "BNY", name: "バンク・オブ・ニューヨーク・メロン" },
+  { ticker: "BRK.B", symbol: "NYSE:BRK.B", yahooSymbol: "BRK-B", name: "バークシャー・ハサウェイ" },
+  { ticker: "C", symbol: "NYSE:C", yahooSymbol: "C", name: "シティグループ" },
   { ticker: "CAT", symbol: "NYSE:CAT", yahooSymbol: "CAT", name: "キャタピラー" },
+  { ticker: "CL", symbol: "NYSE:CL", yahooSymbol: "CL", name: "コルゲート・パルモリーブ" },
+  { ticker: "CMCSA", symbol: "NASDAQ:CMCSA", yahooSymbol: "CMCSA", name: "コムキャスト" },
+  { ticker: "COF", symbol: "NYSE:COF", yahooSymbol: "COF", name: "キャピタル・ワン・ファイナンシャル" },
+  { ticker: "COP", symbol: "NYSE:COP", yahooSymbol: "COP", name: "コノコフィリップス" },
+  { ticker: "COST", symbol: "NASDAQ:COST", yahooSymbol: "COST", name: "コストコ・ホールセール" },
   { ticker: "CRM", symbol: "NYSE:CRM", yahooSymbol: "CRM", name: "セールスフォース" },
   { ticker: "CSCO", symbol: "NASDAQ:CSCO", yahooSymbol: "CSCO", name: "シスコシステムズ" },
+  { ticker: "CVS", symbol: "NYSE:CVS", yahooSymbol: "CVS", name: "CVSヘルス" },
   { ticker: "CVX", symbol: "NYSE:CVX", yahooSymbol: "CVX", name: "シェブロン" },
+  { ticker: "DE", symbol: "NYSE:DE", yahooSymbol: "DE", name: "ディア・アンド・カンパニー" },
+  { ticker: "DHR", symbol: "NYSE:DHR", yahooSymbol: "DHR", name: "ダナハー" },
   { ticker: "DIS", symbol: "NYSE:DIS", yahooSymbol: "DIS", name: "ウォルト・ディズニー" },
+  { ticker: "DUK", symbol: "NYSE:DUK", yahooSymbol: "DUK", name: "デューク・エナジー" },
+  { ticker: "EMR", symbol: "NYSE:EMR", yahooSymbol: "EMR", name: "エマソン・エレクトリック" },
+  { ticker: "FDX", symbol: "NYSE:FDX", yahooSymbol: "FDX", name: "フェデックス" },
+  { ticker: "GD", symbol: "NYSE:GD", yahooSymbol: "GD", name: "ゼネラル・ダイナミクス" },
+  { ticker: "GE", symbol: "NYSE:GE", yahooSymbol: "GE", name: "GEエアロスペース" },
+  { ticker: "GEV", symbol: "NYSE:GEV", yahooSymbol: "GEV", name: "GEバーノバ" },
+  { ticker: "GILD", symbol: "NASDAQ:GILD", yahooSymbol: "GILD", name: "ギリアド・サイエンシズ" },
+  { ticker: "GM", symbol: "NYSE:GM", yahooSymbol: "GM", name: "ゼネラル・モーターズ" },
+  { ticker: "GOOG", symbol: "NASDAQ:GOOG", yahooSymbol: "GOOG", name: "アルファベット（グーグル・Class C）" },
   { ticker: "GOOGL", symbol: "NASDAQ:GOOGL", yahooSymbol: "GOOGL", name: "アルファベット（グーグル）" },
   { ticker: "GS", symbol: "NYSE:GS", yahooSymbol: "GS", name: "ゴールドマン・サックス" },
   { ticker: "HD", symbol: "NYSE:HD", yahooSymbol: "HD", name: "ホーム・デポ" },
-  { ticker: "HON", symbol: "NASDAQ:HON", yahooSymbol: "HON", name: "ハネウェル・インターナショナル" },
+  { ticker: "HONA", symbol: "NASDAQ:HONA", yahooSymbol: "HONA", name: "ハネウェル・エアロスペース" },
   { ticker: "IBM", symbol: "NYSE:IBM", yahooSymbol: "IBM", name: "IBM" },
+  { ticker: "INTC", symbol: "NASDAQ:INTC", yahooSymbol: "INTC", name: "インテル" },
+  { ticker: "INTU", symbol: "NASDAQ:INTU", yahooSymbol: "INTU", name: "インテュイット" },
+  { ticker: "ISRG", symbol: "NASDAQ:ISRG", yahooSymbol: "ISRG", name: "インテュイティブ・サージカル" },
   { ticker: "JNJ", symbol: "NYSE:JNJ", yahooSymbol: "JNJ", name: "ジョンソン・エンド・ジョンソン" },
   { ticker: "JPM", symbol: "NYSE:JPM", yahooSymbol: "JPM", name: "JPモルガン・チェース" },
   { ticker: "KO", symbol: "NYSE:KO", yahooSymbol: "KO", name: "コカ・コーラ" },
+  { ticker: "LIN", symbol: "NASDAQ:LIN", yahooSymbol: "LIN", name: "リンデ" },
+  { ticker: "LLY", symbol: "NYSE:LLY", yahooSymbol: "LLY", name: "イーライリリー" },
+  { ticker: "LMT", symbol: "NYSE:LMT", yahooSymbol: "LMT", name: "ロッキード・マーチン" },
+  { ticker: "LOW", symbol: "NYSE:LOW", yahooSymbol: "LOW", name: "ロウズ" },
+  { ticker: "LRCX", symbol: "NASDAQ:LRCX", yahooSymbol: "LRCX", name: "ラムリサーチ" },
+  { ticker: "MA", symbol: "NYSE:MA", yahooSymbol: "MA", name: "マスターカード" },
   { ticker: "MCD", symbol: "NYSE:MCD", yahooSymbol: "MCD", name: "マクドナルド" },
+  { ticker: "MDLZ", symbol: "NASDAQ:MDLZ", yahooSymbol: "MDLZ", name: "モンデリーズ・インターナショナル" },
+  { ticker: "MDT", symbol: "NYSE:MDT", yahooSymbol: "MDT", name: "メドトロニック" },
+  { ticker: "META", symbol: "NASDAQ:META", yahooSymbol: "META", name: "メタ・プラットフォームズ" },
   { ticker: "MMM", symbol: "NYSE:MMM", yahooSymbol: "MMM", name: "スリーエム" },
+  { ticker: "MO", symbol: "NYSE:MO", yahooSymbol: "MO", name: "アルトリア・グループ" },
   { ticker: "MRK", symbol: "NYSE:MRK", yahooSymbol: "MRK", name: "メルク" },
+  { ticker: "MS", symbol: "NYSE:MS", yahooSymbol: "MS", name: "モルガン・スタンレー" },
   { ticker: "MSFT", symbol: "NASDAQ:MSFT", yahooSymbol: "MSFT", name: "マイクロソフト" },
+  { ticker: "MU", symbol: "NASDAQ:MU", yahooSymbol: "MU", name: "マイクロン・テクノロジー" },
+  { ticker: "NEE", symbol: "NYSE:NEE", yahooSymbol: "NEE", name: "ネクステラ・エナジー" },
+  { ticker: "NFLX", symbol: "NASDAQ:NFLX", yahooSymbol: "NFLX", name: "ネットフリックス" },
   { ticker: "NKE", symbol: "NYSE:NKE", yahooSymbol: "NKE", name: "ナイキ" },
+  { ticker: "NOW", symbol: "NYSE:NOW", yahooSymbol: "NOW", name: "サービスナウ" },
   { ticker: "NVDA", symbol: "NASDAQ:NVDA", yahooSymbol: "NVDA", name: "エヌビディア" },
+  { ticker: "ORCL", symbol: "NYSE:ORCL", yahooSymbol: "ORCL", name: "オラクル" },
+  { ticker: "PEP", symbol: "NASDAQ:PEP", yahooSymbol: "PEP", name: "ペプシコ" },
+  { ticker: "PFE", symbol: "NYSE:PFE", yahooSymbol: "PFE", name: "ファイザー" },
   { ticker: "PG", symbol: "NYSE:PG", yahooSymbol: "PG", name: "プロクター・アンド・ギャンブル" },
-  { ticker: "SHW", symbol: "NYSE:SHW", yahooSymbol: "SHW", name: "シャーウィン・ウィリアムズ" },
-  { ticker: "TRV", symbol: "NYSE:TRV", yahooSymbol: "TRV", name: "トラベラーズ" },
+  { ticker: "PLTR", symbol: "NASDAQ:PLTR", yahooSymbol: "PLTR", name: "パランティア・テクノロジーズ" },
+  { ticker: "PM", symbol: "NYSE:PM", yahooSymbol: "PM", name: "フィリップ・モリス・インターナショナル" },
+  { ticker: "QCOM", symbol: "NASDAQ:QCOM", yahooSymbol: "QCOM", name: "クアルコム" },
+  { ticker: "RTX", symbol: "NYSE:RTX", yahooSymbol: "RTX", name: "RTX（レイセオン）" },
+  { ticker: "SBUX", symbol: "NASDAQ:SBUX", yahooSymbol: "SBUX", name: "スターバックス" },
+  { ticker: "SCHW", symbol: "NYSE:SCHW", yahooSymbol: "SCHW", name: "チャールズ・シュワブ" },
+  { ticker: "SO", symbol: "NYSE:SO", yahooSymbol: "SO", name: "サザン・カンパニー" },
+  { ticker: "SPG", symbol: "NYSE:SPG", yahooSymbol: "SPG", name: "サイモン・プロパティ・グループ" },
+  { ticker: "T", symbol: "NYSE:T", yahooSymbol: "T", name: "AT&T" },
+  { ticker: "TMO", symbol: "NYSE:TMO", yahooSymbol: "TMO", name: "サーモフィッシャー・サイエンティフィック" },
+  { ticker: "TMUS", symbol: "NASDAQ:TMUS", yahooSymbol: "TMUS", name: "Tモバイル US" },
+  { ticker: "TSLA", symbol: "NASDAQ:TSLA", yahooSymbol: "TSLA", name: "テスラ" },
+  { ticker: "TXN", symbol: "NASDAQ:TXN", yahooSymbol: "TXN", name: "テキサス・インスツルメンツ" },
+  { ticker: "UBER", symbol: "NYSE:UBER", yahooSymbol: "UBER", name: "ウーバー・テクノロジーズ" },
   { ticker: "UNH", symbol: "NYSE:UNH", yahooSymbol: "UNH", name: "ユナイテッドヘルス・グループ" },
+  { ticker: "UNP", symbol: "NYSE:UNP", yahooSymbol: "UNP", name: "ユニオン・パシフィック" },
+  { ticker: "UPS", symbol: "NYSE:UPS", yahooSymbol: "UPS", name: "ユナイテッド・パーセル・サービス（UPS）" },
+  { ticker: "USB", symbol: "NYSE:USB", yahooSymbol: "USB", name: "USバンコープ" },
   { ticker: "V", symbol: "NYSE:V", yahooSymbol: "V", name: "ビザ" },
+  { ticker: "VZ", symbol: "NYSE:VZ", yahooSymbol: "VZ", name: "ベライゾン・コミュニケーションズ" },
+  { ticker: "WFC", symbol: "NYSE:WFC", yahooSymbol: "WFC", name: "ウェルズ・ファーゴ" },
   { ticker: "WMT", symbol: "NASDAQ:WMT", yahooSymbol: "WMT", name: "ウォルマート" },
+  { ticker: "XOM", symbol: "NYSE:XOM", yahooSymbol: "XOM", name: "エクソンモービル" },
 ];
