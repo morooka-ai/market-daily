@@ -11,7 +11,7 @@ const configured = Boolean(
 
 const title = "無料会員登録";
 const description =
-  "メールアドレスとパスワードで登録できる無料会員です。各ページに表示する銘柄を選べます。毎日のメール配信を受け取るかどうかは任意で選べます。";
+  "メールアドレスとパスワードで登録できる無料会員です。各ページに表示する銘柄を選べます。";
 ---
 
 <Base title={title} description={description} noindex>
@@ -24,10 +24,6 @@ const description =
       >まで選べます
     </li>
     <li>設定はアカウントに保存され、別の端末でも同じ表示になります</li>
-    <li>
-      毎日のメール配信は<strong>希望する方のみ</strong
-      >です。登録しただけでは配信されません（下のチェックはあとから変更できます）
-    </li>
   </ul>
 
   {
@@ -64,16 +60,6 @@ const description =
             required
             minlength="8"
           />
-        </label>
-
-        <label class="opt-in">
-          <input type="checkbox" name="subscribe" />
-          <span>
-            <strong>毎日のメール配信を受け取る（任意）</strong>
-            <span class="opt-in-note">
-              選んだ銘柄の最新の価格・前日比と当日の記事を、毎営業日1回お届けします。登録後に確認メールをお送りし、その中のリンクを開いていただいた時点で配信を開始します。いつでも停止できます。
-            </span>
-          </span>
         </label>
 
         <label class="agree">
@@ -124,7 +110,7 @@ const description =
       submit.disabled = true;
       msg.textContent = "登録しています…";
       try {
-        await register(email, password, { subscribe: data.get("subscribe") === "on" });
+        await register(email, password);
         msg.classList.add("ok");
         msg.textContent = "登録しました。マイページへ移動します…";
         location.href = `${base}account/`;
@@ -141,25 +127,6 @@ const description =
   .benefits {
     font-size: 0.95rem;
     padding-left: 1.2rem;
-  }
-  .opt-in {
-    display: flex;
-    align-items: start;
-    gap: 0.5rem;
-    background: #eef2f7;
-    border-radius: 6px;
-    padding: 0.7rem 0.8rem;
-    margin-bottom: 1rem;
-    font-size: 0.92rem;
-  }
-  .opt-in input {
-    margin-top: 0.35rem;
-  }
-  .opt-in-note {
-    display: block;
-    font-size: 0.85rem;
-    color: var(--muted);
-    margin-top: 0.2rem;
   }
   .agree {
     display: flex;

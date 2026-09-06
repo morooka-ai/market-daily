@@ -21,7 +21,7 @@ const pageMeta = PAGES.map((p) => ({
 }));
 
 const title = "マイページ";
-const description = "表示銘柄の設定と、毎日のメール配信の設定を確認・変更できます。";
+const description = "各ページに表示する銘柄の設定を確認・変更できます。";
 ---
 
 <Base title={title} description={description} noindex>
@@ -94,10 +94,6 @@ const description = "表示銘柄の設定と、毎日のメール配信の設�
                   選んだ内容はアカウントに保存されるので、スマホでもPCでも同じ並びで確認できます。
                 </li>
                 <li>
-                  <strong>メール配信は任意</strong>
-                  受け取るかどうかはご自身で選べます。登録しただけでは配信されず、いつでも停止できます。
-                </li>
-                <li>
                   <strong>やめるのも簡単</strong>
                   退会はマイページのボタンひとつ。保存した内容もあわせて削除されます。
                 </li>
@@ -143,44 +139,9 @@ const description = "表示銘柄の設定と、毎日のメール配信の設�
           </section>
 
           <section class="card">
-            <h2>毎日のメール配信（任意）</h2>
-            <p class="section-lead">
-              選んだ銘柄の最新の価格・前日比と、その日の記事へのリンクを
-              <strong>毎営業日1回（16:30ごろ）</strong>お届けします。受け取るかどうかは任意で、いつでも停止できます。
-            </p>
-
-            <p class="mail-state" data-mail-state />
-
-            <form data-mail-form>
-              <label class="field">
-                <span>配信先メールアドレス</span>
-                <input
-                  type="email"
-                  name="address"
-                  autocomplete="email"
-                  placeholder="you@example.com"
-                  required
-                />
-                <span class="field-hint">
-                  ログイン用と別のアドレスにもできます。登録後に確認メールをお送りし、その中のリンクを開いていただくと配信が始まります（確認前は配信されません）。
-                </span>
-              </label>
-              <p class="btn-row">
-                <button class="btn" type="submit" data-mail-submit>
-                  配信を申し込む
-                </button>
-                <button class="btn btn-ghost" type="button" data-mail-remove hidden>
-                  配信の登録を取り消す
-                </button>
-              </p>
-              <p class="form-msg" data-mail-msg role="status" />
-            </form>
-          </section>
-
-          <section class="card">
             <h2>退会</h2>
             <p class="section-lead">
-              アカウントと保存内容（選択銘柄・配信先メールアドレス）をすべて削除します。取り消しはできません。
+              アカウントと保存内容（選択銘柄）をすべて削除します。取り消しはできません。
             </p>
             <p class="btn-row">
               <button class="btn btn-danger" type="button" data-delete>
@@ -202,8 +163,6 @@ const description = "表示銘柄の設定と、毎日のメール配信の設�
     login,
     logout,
     deleteAccount,
-    requestMailSubscription,
-    removeMailSubscription,
     resendEmailVerification,
     toMessage,
   } from "../../lib/firebase.mjs";
@@ -223,12 +182,6 @@ const description = "表示銘柄の設定と、毎日のメール配信の設�
     const verifyEl = document.querySelector("[data-verify]");
     const verifyMsg = document.querySelector("[data-verify-msg]");
     const selectionsEl = document.querySelector("[data-selections]");
-    const mailStateEl = document.querySelector("[data-mail-state]");
-    const mailForm = document.querySelector("[data-mail-form]");
-    const mailInput = mailForm.querySelector('input[name="address"]');
-    const mailSubmit = document.querySelector("[data-mail-submit]");
-    const mailRemove = document.querySelector("[data-mail-remove]");
-    const mailMsg = document.querySelector("[data-mail-msg]");
     const deleteMsg = document.querySelector("[data-delete-msg]");
 
     let currentUser = null;
@@ -259,38 +212,11 @@ const description = "表示銘柄の設定と、毎日のメール配信の設�
       }
     }
 
-    const MAIL_STATE = {
-      none: { text: "配信は申し込まれていません。", cls: "" },
-      pending: {
-        text: "確認メールの送信待ちです。届いたメール内のリンクを開くと配信が始まります（メールの送信と、開いたあとの手続きに、それぞれ最大1時間ほどかかります）。",
-        cls: "pending",
-      },
-      subscribed: { text: "配信中です。", cls: "ok" },
-      unsubscribed: {
-        text: "配信を停止しています。再開するには、下のボタンからもう一度申し込んでください。",
-        cls: "",
-      },
-    };
-
-    function renderMail(mail, user) {
-      const status = mail?.status ?? "none";
-      const state = MAIL_STATE[status] ?? MAIL_STATE.none;
-      mailStateEl.className = `mail-state ${state.cls}`;
-      mailStateEl.textContent = mail?.address
-        ? `${mail.address}：${state.text}`
-        : state.text;
-      // 未申込のときはログイン用アドレスを初期値にしておく（そのまま押せば済むように）
-      mailInput.value = mail?.address ?? user.email ?? "";
-      show(mailRemove, Boolean(mail?.address));
-      mailSubmit.textContent = mail?.address ? "この内容に変更する" : "配信を申し込む";
-    }
-
     async function refresh(user) {
       const profile = await loadProfile(user);
       accountEmailEl.textContent = user.email ?? "(不明)";
       show(verifyEl, !user.emailVerified);
       renderSelections(profile.selections);
-      renderMail(profile.mail, user);
     }
 
     watchUser(async (user) => {
@@ -302,8 +228,9 @@ const description = "表示銘柄の設定と、毎日のメール配信の設�
       try {
         await refresh(user);
       } catch (err) {
-        mailMsg.className = "form-msg error";
-        mailMsg.textContent = toMessage(err);
+        show(loadingEl, true);
+        loadingEl.className = "card form-msg error";
+        loadingEl.textContent = toMessage(err);
       }
     }).catch((err) => {
       show(loadingEl, false);
@@ -344,42 +271,6 @@ const description = "表示銘柄の設定と、毎日のメール配信の設�
     document.querySelector("[data-logout]")?.addEventListener("click", async () => {
       await logout();
       location.href = base;
-    });
-
-    mailForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (!currentUser) return;
-      mailSubmit.disabled = true;
-      mailMsg.className = "form-msg";
-      mailMsg.textContent = "申し込んでいます…";
-      try {
-        await requestMailSubscription(currentUser, mailInput.value);
-        await refresh(currentUser);
-        mailMsg.className = "form-msg ok";
-        mailMsg.textContent =
-          "受け付けました。確認メールをお送りしますので、メール内のリンクを開いてください。";
-      } catch (err) {
-        mailMsg.className = "form-msg error";
-        mailMsg.textContent = toMessage(err);
-      } finally {
-        mailSubmit.disabled = false;
-      }
-    });
-
-    mailRemove.addEventListener("click", async () => {
-      if (!currentUser) return;
-      if (!confirm("配信の登録を取り消します。よろしいですか？")) return;
-      mailMsg.className = "form-msg";
-      mailMsg.textContent = "取り消しています…";
-      try {
-        await removeMailSubscription(currentUser);
-        await refresh(currentUser);
-        mailMsg.className = "form-msg ok";
-        mailMsg.textContent = "配信の登録を取り消しました。";
-      } catch (err) {
-        mailMsg.className = "form-msg error";
-        mailMsg.textContent = toMessage(err);
-      }
     });
 
     document.querySelector("[data-delete]")?.addEventListener("click", async () => {
@@ -494,20 +385,5 @@ const description = "表示銘柄の設定と、毎日のメール配信の設�
   .selection-detail {
     font-size: 0.88rem;
     color: var(--muted);
-  }
-  .mail-state {
-    margin: 0 0 1rem;
-    font-size: 0.92rem;
-    padding: 0.5rem 0.7rem;
-    border-radius: 5px;
-    background: #eef2f7;
-  }
-  .mail-state.ok {
-    background: #e9f6ec;
-    color: #14612d;
-  }
-  .mail-state.pending {
-    background: #fdf5e3;
-    color: #7a5a10;
   }
 </style>

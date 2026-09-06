@@ -8,6 +8,12 @@ interface Props {
   wide?: boolean;
   /** 会員向けページなど、検索結果に載せたくないページで true にする */
   noindex?: boolean;
+  /**
+   * 自動広告を出さないページで true にする。
+   * オリジナル本文が薄く、第三者ウィジェット（TradingView等）が主体のページは
+   * 「コンテンツのない画面での広告表示」に当たりうるため、noindex にはせず広告だけ外す。
+   */
+  noAds?: boolean;
 }
 
 const {
@@ -15,6 +21,7 @@ const {
   description = SITE_DESCRIPTION,
   wide = false,
   noindex = false,
+  noAds = false,
 } = Astro.props;
 const pageTitle = title ? `${title}｜${SITE_TITLE}` : SITE_TITLE;
 const base = import.meta.env.BASE_URL;
@@ -100,8 +107,9 @@ const isActive = (item) =>
     }
     {
       /* 広告は一般向けページだけ。会員ページ（noindex）に出さないのは、
-         確認・停止リンクの ?u=…&t=… を含むページURLが広告配信先へ渡るのを防ぐため。 */
-      !noindex && (
+         確認・停止リンクの ?u=…&t=… を含むページURLが広告配信先へ渡るのを防ぐため。
+         noAds のページ（チャート一覧など第三者ウィジェット主体）にも出さない。 */
+      !noindex && !noAds && (
         <script
           is:inline
           async
