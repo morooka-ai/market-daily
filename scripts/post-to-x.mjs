@@ -1,55 +1,39 @@
 // 新着記事をX（旧Twitter）に告知ポストする。
-// 使い方: node scripts/post-to-x.mjs <morning|evening> [--dry-run]
-//   - 当日(JST)の content/posts/YYYY-MM-DD-<mode>.md を読み、タイトル＋URLをポストする
+// 使い方: node scripts/post-to-x.mjs <morning|evening> [--dry-run] [--date YYYY-MM-DD]
+//   - 当日(JST)の content/posts/YYYY-MM-DD-<mode>.md を読み、見出し＋主要数値＋URLをポスト
 //   - edition: notice（お知らせ記事）は告知しない
 //   - --dry-run はポスト本文を表示するだけで送信しない
+//   - --date はローカルテスト用に対象日を上書きする
 // 認証: OAuth 1.0a（環境変数 X_API_KEY / X_API_SECRET / X_ACCESS_TOKEN / X_ACCESS_TOKEN_SECRET）
-import fs from "node:fs";
-import path from "node:path";
 import crypto from "node:crypto";
-
-const SITE_URL = "https://market-daily.jimulabo.com";
+import { buildPost, composeX, jstToday } from "./lib/social-post.mjs";
 
 const mode = process.argv[2];
 const dryRun = process.argv.includes("--dry-run");
+const dateArg = (() => {
+  const i = process.argv.indexOf("--date");
+  return i >= 0 ? process.argv[i + 1] : jstToday();
+})();
 if (!["morning", "evening"].includes(mode)) {
-  console.error("使い方: node scripts/post-to-x.mjs <morning|evening> [--dry-run]");
+  console.error(
+    "使い方: node scripts/post-to-x.mjs <morning|evening> [--dry-run] [--date YYYY-MM-DD]",
+  );
   process.exit(1);
 }
 
-// JSTの今日の日付（generate.mjs と同じ方式）
-const jstNow = new Date(Date.now() + 9 * 3600 * 1000);
-const today = jstNow.toISOString().slice(0, 10);
-
-const slug = `${today}-${mode}`;
-const file = path.resolve("content/posts", `${slug}.md`);
-if (!fs.existsSync(file)) {
-  console.log(`記事がないため告知をスキップ: ${file}`);
+const post = buildPost(mode, { platform: "x", date: dateArg });
+if (post.skip) {
+  console.log(`告知をスキップ: ${post.skip}`);
   process.exit(0);
 }
-
-const src = fs.readFileSync(file, "utf8");
-const title = src.match(/^title:\s*"(.+)"\s*$/m)?.[1];
-const edition = src.match(/^edition:\s*(\w+)\s*$/m)?.[1];
-if (!title) {
-  console.error("frontmatter から title を取得できませんでした");
-  process.exit(1);
-}
-if (edition === "notice") {
-  console.log("お知らせ記事のため告知をスキップ");
-  process.exit(0);
-}
-
-const hashtags =
-  mode === "morning" ? "#ドル円 #米国株 #為替" : "#日経平均 #東京市場 #株式";
-const url = `${SITE_URL}/posts/${slug}/`;
-// Xの文字数制限（280。URLは短縮で23文字換算）に収まるようタイトルを保険で切り詰める
-const shortTitle = title.length > 120 ? `${title.slice(0, 119)}…` : title;
-const text = `${shortTitle}\n\n${url}\n\n${hashtags}`;
+const text = composeX(post);
 
 if (dryRun) {
+  // X の文字数カウントは t.co 短縮でURLを23文字換算する
+  const weighted = [...text.replace(post.url, "x".repeat(23))].length;
   console.log("--- dry-run: 以下の内容を送信します ---");
   console.log(text);
+  console.log(`--- X換算 ${weighted} 文字（上限280） ---`);
   process.exit(0);
 }
 

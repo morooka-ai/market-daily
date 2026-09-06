@@ -86,13 +86,12 @@ jobs:
       id-token: write # Google Cloud への OIDC 認証に必要
 
   announce:
-    # サイト公開後にXへ告知（リンク先が生きている状態でポストする）。
-    # 告知の失敗で記事生成ワークフローを失敗扱いにしない。
-    # X APIはクレジット制（有料）のため既定では無効。IFTTT（RSS→X）で代替中。
-    # 有効化するにはリポジトリ変数 X_ANNOUNCE_ENABLED=true を設定（IFTTT側は停止すること）。
+    # サイト公開後に各SNSへ告知（リンク先が生きている状態でポストする）。
+    # 告知の失敗で記事生成ワークフローを失敗扱いにしない（各ステップ continue-on-error）。
+    # 文面は scripts/lib/social-post.mjs が記事mdから組み立てる（依存パッケージなし）。
+    # ⚠️ このジョブを含む手動 Re-run は再投稿になるので避けること。
     needs: [generate, deploy]
-    if: needs.generate.outputs.posted == 'true' && vars.X_ANNOUNCE_ENABLED == 'true'
-    continue-on-error: true
+    if: needs.generate.outputs.posted == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -100,10 +99,25 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main # generate ジョブが push した最新コミット（新記事入り）を取得する
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
       - name: Xへ告知ポスト
+        # X APIは無料枠（書き込み月上限）内での運用。有効化時は IFTTT の RSS→X
+        # アプレットを停止して二重投稿を防ぐこと。有効化: 変数 X_ANNOUNCE_ENABLED=true
+        if: vars.X_ANNOUNCE_ENABLED == 'true'
+        continue-on-error: true
         run: node scripts/post-to-x.mjs morning
         env:
           X_API_KEY: ${{ secrets.X_API_KEY }}
           X_API_SECRET: ${{ secrets.X_API_SECRET }}
           X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
           X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+      - name: Blueskyへ告知ポスト
+        # 有効化: リポジトリ変数 BLUESKY_ENABLED=true
+        if: vars.BLUESKY_ENABLED == 'true'
+        continue-on-error: true
+        run: node scripts/post-to-bluesky.mjs morning
+        env:
+          BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
