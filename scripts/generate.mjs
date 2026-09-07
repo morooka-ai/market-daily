@@ -22,6 +22,9 @@ function ymd(d) {
   return d.toISOString().slice(0, 10);
 }
 
+// now は +9h ずらした「JSTの壁時計」。暦日の算出・曜日/祝日判定にのみ使う。
+// これを toISOString() で保存すると Z(UTC) 表記なのに中身がJSTになり二重加算になるため、
+// pubDate には new Date()（真のUTC）を使うこと。
 const now = jstNow();
 const today = ymd(now);
 const postsDir = path.resolve("content/posts");
@@ -51,7 +54,7 @@ function postNotice(reason) {
     "---",
     `title: ${JSON.stringify(title)}`,
     `description: ${JSON.stringify(description)}`,
-    `pubDate: ${now.toISOString()}`,
+    `pubDate: ${new Date().toISOString()}`, // 公開時刻は真のUTCで保存（表示側でJSTに変換）
     "edition: notice",
     "---",
     "",
@@ -161,7 +164,7 @@ ${activesTable}
     "---",
     `title: ${JSON.stringify(title)}`,
     `description: ${JSON.stringify(description)}`,
-    `pubDate: ${now.toISOString()}`,
+    `pubDate: ${new Date().toISOString()}`, // 公開時刻は真のUTCで保存（表示側でJSTに変換）
     `edition: ${mode}`,
     "---",
     "",
