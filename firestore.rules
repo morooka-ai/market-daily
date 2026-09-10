@@ -37,75 +37,26 @@ service cloud.firestore {
             && selectionOk(sel, 'us-stocks');
       }
 
-      function validMail() {
-        let mail = request.resource.data.mail;
-        return mail is map
-            && (mail.address == null
-                || (mail.address is string && mail.address.size() <= 254))
-            && mail.status in ['none', 'pending', 'subscribed', 'unsubscribed'];
-      }
-
       // 会員のメールアドレスとパスワードは Firebase Authentication 側が持つ。
       // この文書には設定内容だけを置き、想定外のキーは受け付けない。
+      // （'mail' は配信機能を廃止する前に作られた会員ドキュメントとの互換のため
+      //   許可リストには残すが、現在のフロントは書き込まない）
       function validProfile() {
         return request.resource.data.keys()
                  .hasOnly(['selections', 'mail', 'createdAt', 'updatedAt'])
-            && validSelections()
-            && validMail();
-      }
-
-      // --- メール内リンクからの配信停止（未ログイン）-------------------------
-      // ここで許可するのは「停止」だけ。開始（pending → subscribed）は許可しない。
-      //
-      // 理由: ルールからは「どのフィールドが実際に送られたか」が分からない。
-      // request.resource.data は書き込み後のドキュメント全体（既存値とマージ済み）なので、
-      // mail.status だけを送る書き込みでも mail.token は保存済みの値として現れてしまい、
-      // 「トークンを知っていること」をルールで検証することは原理的にできない。
-      // そのため、トークンを本人確認の根拠にしなければならない配信開始はサーバー側
-      // （mailConfirms + Admin SDK のバッチ）に寄せ、ここでは影響が「配信が止まる」だけの
-      // 停止操作に限定している。UIDを知る第三者に止められる可能性は残るが、
-      // 同意なく配信が始まることはない。
-      function validUnsubscribe() {
-        let before = resource.data.mail;
-        let after = request.resource.data.mail;
-        return request.resource.data.diff(resource.data)
-                 .affectedKeys().hasOnly(['mail', 'updatedAt'])
-            && before.token is string
-            && after.token == before.token
-            && after.address == before.address
-            && after.status == 'unsubscribed';
+            && validSelections();
       }
 
       // --- 権限 --------------------------------------------------------------
       // 読み取りは本人のみ。一覧取得（list）はどこからも許可しない。
-      // メール配信バッチは Admin SDK（サーバー側）で動くためルールの対象外。
       allow get: if isOwner();
       allow list: if false;
 
       allow create: if isOwner() && validProfile();
 
-      allow update: if (isOwner() && validProfile()) || validUnsubscribe();
+      allow update: if isOwner() && validProfile();
 
       allow delete: if isOwner();
-    }
-
-    // --- 配信開始の申請（メール内リンクからの確認）-----------------------------
-    // 未ログインでも1件だけ作成できる「申請」。ここには結果を書き込めない。
-    // 毎時のバッチ（scripts/send-mail.mjs confirm）が Admin SDK で読み、
-    // users/{uid} の mail.token と照合できたものだけ subscribed に更新して申請を削除する。
-    // 誰でも作成できるが、中身を読むことも書き換えることもできず、
-    // 照合に通らない申請はバッチが破棄するだけなので、配信の開始にはつながらない。
-    match /mailConfirms/{requestId} {
-      function validConfirmRequest() {
-        let d = request.resource.data;
-        return d.keys().hasOnly(['uid', 'token', 'createdAt'])
-            && d.uid is string && d.uid.size() > 0 && d.uid.size() <= 128
-            && d.token is string && d.token.size() > 0 && d.token.size() <= 128
-            && d.createdAt == request.time;
-      }
-
-      allow create: if validConfirmRequest();
-      allow get, list, update, delete: if false;
     }
 
     // 上記以外のパスはすべて拒否する

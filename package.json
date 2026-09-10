@@ -8,10 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "generate:morning": "node scripts/generate.mjs morning",
-    "generate:evening": "node scripts/generate.mjs evening",
-    "mail:confirm": "node scripts/send-mail.mjs confirm",
-    "mail:daily": "node scripts/send-mail.mjs daily",
-    "mail:sample": "node scripts/send-mail.mjs sample"
+    "generate:evening": "node scripts/generate.mjs evening"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.3.4",
@@ -21,7 +18,5 @@
     "astro": "^7.0.0",
     "firebase": "^12.17.0"
   },
-  "devDependencies": {
-    "firebase-admin": "^14.2.0"
-  }
+  "devDependencies": {}
 }

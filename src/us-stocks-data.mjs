@@ -2,7 +2,7 @@
 // ページ（src/pages/us-stocks.astro）と各生成スクリプトがここを参照する。
 // symbol は TradingView 形式（取引所:ティッカー）。
 // yahooSymbol は Yahoo Finance 形式で、売買代金の順位づけ（generate-featured.mjs）と
-// 会員向けメール配信の現在値取得に使う。米国株はティッカーそのままだが、
+// 株価・前日比の取得に使う。米国株はティッカーそのままだが、
 // バークシャーだけ Yahoo が "BRK-B"（ドットではなくハイフン）を使う。
 //
 // 母集団は S&P 100（OEX）の構成銘柄。既定表示（未ログイン時の6銘柄）は

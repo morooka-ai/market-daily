@@ -103,13 +103,6 @@ function loadSdk() {
   return sdkPromise;
 }
 
-/** ランダムな確認トークン（配信メールの確認・配信停止リンクに使う） */
-function makeToken() {
-  const bytes = new Uint8Array(24);
-  crypto.getRandomValues(bytes);
-  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
-}
-
 // --- 認証 --------------------------------------------------------------------
 
 /** ログイン状態の変化を購読する。コールバックには user または null が渡る。 */
@@ -125,9 +118,8 @@ export async function watchUser(callback) {
  * 新規会員登録。
  * @param {string} email    ログインIDを兼ねるメールアドレス
  * @param {string} password
- * @param {{subscribe?: boolean}} options subscribe=true なら配信登録も同時に申し込む
  */
-export async function register(email, password, { subscribe = false } = {}) {
+export async function register(email, password) {
   const address = email.trim();
   if (!EMAIL_PATTERN.test(address)) {
     throw new Error("メールアドレスの形式が正しくありません");
@@ -139,21 +131,8 @@ export async function register(email, password, { subscribe = false } = {}) {
   const { auth, authMod, db, storeMod } = await loadSdk();
   const cred = await authMod.createUserWithEmailAndPassword(auth, address, password);
 
-  // 配信を希望した場合だけ配信先を保存する。
-  // 保存した時点ではまだ「保留」で、確認メールのリンクを開くまで配信は始まらない。
-  const mail = subscribe
-    ? {
-        address,
-        status: "pending",
-        token: makeToken(),
-        requestedAt: storeMod.serverTimestamp(),
-        confirmedAt: null,
-      }
-    : { address: null, status: "none", token: null };
-
   await storeMod.setDoc(storeMod.doc(db, "users", cred.user.uid), {
     selections: {},
-    mail,
     createdAt: storeMod.serverTimestamp(),
     updatedAt: storeMod.serverTimestamp(),
   });
@@ -213,7 +192,7 @@ export async function deleteAccount() {
   clearSelectionCache();
 }
 
-// --- プロフィール（選択銘柄・配信メール） -------------------------------------
+// --- プロフィール（選択銘柄） -------------------------------------------------
 
 export async function loadProfile(user) {
   const { db, storeMod } = await loadSdk();
@@ -221,7 +200,6 @@ export async function loadProfile(user) {
   const data = snap.exists() ? snap.data() : {};
   const profile = {
     selections: data.selections ?? {},
-    mail: data.mail ?? { address: null, status: "none" },
   };
   writeSelectionCache(profile.selections);
   return profile;
@@ -241,76 +219,6 @@ export async function saveSelection(user, pageKey, ids) {
   const cache = readSelectionCache();
   cache[pageKey] = ids;
   writeSelectionCache(cache);
-}
-
-/**
- * 配信用メールアドレスを登録する（本人確認前の「保留」状態にする）。
- * 実際の配信は、確認メール内のリンクを開いて status が subscribed になってから。
- */
-export async function requestMailSubscription(user, address) {
-  const email = address.trim();
-  if (!EMAIL_PATTERN.test(email)) {
-    throw new Error("メールアドレスの形式が正しくありません");
-  }
-  const { db, storeMod } = await loadSdk();
-  const token = makeToken();
-  await storeMod.setDoc(
-    storeMod.doc(db, "users", user.uid),
-    {
-      mail: {
-        address: email,
-        status: "pending",
-        token,
-        requestedAt: storeMod.serverTimestamp(),
-        confirmedAt: null,
-      },
-      updatedAt: storeMod.serverTimestamp(),
-    },
-    { merge: true },
-  );
-  return { token };
-}
-
-/** 配信先の登録を取り消す（マイページからの操作） */
-export async function removeMailSubscription(user) {
-  const { db, storeMod } = await loadSdk();
-  await storeMod.setDoc(
-    storeMod.doc(db, "users", user.uid),
-    {
-      mail: { address: null, status: "none", token: null, confirmedAt: null },
-      updatedAt: storeMod.serverTimestamp(),
-    },
-    { merge: true },
-  );
-}
-
-/**
- * メール内リンクからの操作。ログイン不要で実行できる。
- *
- * 停止と開始で経路が違うのは、firestore.rules ではトークンの所持を検証できないため
- * （書き込み後の姿しか見えず、送っていないフィールドも保存済みの値として現れる）。
- *   - "unsubscribed" … その場で配信を止める。誤って止められても被害は「配信が止まる」だけ
- *   - "subscribed"   … mailConfirms に申請を作るだけ。実際の開始は、毎時のバッチが
- *                      Admin SDK で users/{uid} の mail.token と照合してから行う
- * @param {"subscribed"|"unsubscribed"} action
- */
-export async function submitMailTokenAction(uid, token, action) {
-  const { db, storeMod } = await loadSdk();
-
-  if (action === "subscribed") {
-    await storeMod.addDoc(storeMod.collection(db, "mailConfirms"), {
-      uid,
-      token,
-      createdAt: storeMod.serverTimestamp(),
-    });
-    return;
-  }
-
-  await storeMod.updateDoc(storeMod.doc(db, "users", uid), {
-    "mail.status": "unsubscribed",
-    "mail.token": token, // 誤ったリンクをその場で弾くため、ルールに照合させる
-    "mail.unsubscribedAt": storeMod.serverTimestamp(),
-  });
 }
 
 // --- エラーメッセージの日本語化 ------------------------------------------------

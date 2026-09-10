@@ -1,7 +1,7 @@
 // チャートページの銘柄定義。
 // category: "fx" | "metal" | "crypto"。
 // symbol      : TradingView のシンボル（チャート表示用）
-// yahooSymbol : Yahoo Finance のシンボル（会員向けメール配信で現在値を取得するのに使う）
+// yahooSymbol : Yahoo Finance のシンボル（売買代金・取引高の順位づけに使う）
 // lead        : 詳細ページ冒頭の説明文
 export const CHART_PAIRS = [
   {
