@@ -44,7 +44,6 @@ const SEARCH_KEYWORDS = {
   gbpusd: "ケーブル", audusd: "豪ドル米ドル", nzdusd: "キウイ",
   usdchf: "スイスフラン", usdcad: "カナダドル", eurgbp: "ユーロポンド",
   gold: "gold ゴールド 金", platinum: "platinum プラチナ 白金", silver: "silver シルバー 銀",
-  palladium: "palladium パラジウム", copper: "copper カッパー 銅", aluminum: "aluminum アルミ",
 
   // 暗号資産
   btcjpy: "bitcoin ビットコイン", ethjpy: "ethereum イーサリアム", xrpjpy: "ripple リップル",

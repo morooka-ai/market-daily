@@ -185,33 +185,6 @@ export const CHART_PAIRS = [
     lead: "銀（シルバー）のドル建て価格（XAG/USD）を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。投資需要と太陽光パネルなどの工業需要をあわせ持ち、金より値動きが大きくなりやすい貴金属です。",
   },
   {
-    id: "palladium",
-    category: "metal",
-    symbol: "OANDA:XPDUSD",
-    yahooSymbol: "PA=F",
-    name: "パラジウム",
-    pair: "XPD/USD",
-    lead: "パラジウムのドル建て価格（XPD/USD）を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。ガソリン車の排ガス触媒に使われる産業用貴金属で、供給がロシア・南アフリカに偏るため需給の影響を強く受けます。",
-  },
-  {
-    id: "copper",
-    category: "metal",
-    symbol: "COMEX:HG1!",
-    yahooSymbol: "HG=F",
-    name: "銅（カッパー）",
-    pair: "COMEX銅先物",
-    lead: "銅（COMEX銅先物）の価格を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。電線や建設など幅広い産業で使われることから「ドクター・カッパー」と呼ばれ、世界景気の先行指標として注目されます。",
-  },
-  {
-    id: "aluminum",
-    category: "metal",
-    symbol: "COMEX:ALI1!",
-    yahooSymbol: "ALI=F",
-    name: "アルミニウム",
-    pair: "COMEXアルミ先物",
-    lead: "アルミニウム（COMEXアルミ先物）の価格を、1分足・30分足・日足の3つの時間軸でリアルタイム表示しています。自動車の軽量化や飲料缶などに使われる非鉄金属で、電力コストと中国の生産動向に左右されやすい商品です。",
-  },
-  {
     id: "btcjpy",
     category: "crypto",
     symbol: "BITFLYER:BTCJPY",
@@ -362,7 +335,7 @@ export const CRYPTO_PAIRS = CHART_PAIRS.filter((p) => p.category === "crypto");
  *
  * 詳細ページはチャートウィジェットと短いリード文だけで構成されるため、掲載銘柄を
  * 増やすほど中身の薄いページが積み上がる。会員が表示銘柄を選べるようにするために
- * 追加したこの24銘柄は、一覧ページ（/fx/・/metals/・/crypto/）には従来どおり出しつつ、
+ * 追加したこの21銘柄は、一覧ページ（/fx/・/crypto/）には従来どおり出しつつ、
  * 詳細ページだけ noindex にしてサイトマップからも外す。
  * もともと掲載していた14銘柄は、これまでどおり検索対象のまま。
  */
@@ -370,8 +343,6 @@ const NOINDEX_DETAIL_IDS = new Set([
   // FX
   "cadjpy", "zarjpy", "tryjpy", "mxnjpy",
   "eurusd", "gbpusd", "audusd", "nzdusd", "usdchf", "usdcad", "eurgbp",
-  // 貴金属
-  "palladium", "copper", "aluminum",
   // 暗号資産
   "soljpy", "bnbjpy", "adajpy", "linkjpy", "bchjpy",
   "trxjpy", "xlmjpy", "dotjpy", "shibjpy", "monajpy",
