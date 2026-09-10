@@ -1,87 +1,46 @@
 ---
 // 銘柄一覧を30分足チャートのグリッドで表示する（PCは3列・スマホは1列）。
 // 各ブロックから銘柄の詳細ページ（1分足・30分足・日足）へリンクする。
+// チャートの遅延読み込みは src/lib/tv-widgets.js に共通化してある。
 const { pairs } = Astro.props;
 const base = import.meta.env.BASE_URL;
-const items = pairs.map((p) => ({
-  id: `grid-${p.id}`,
-  symbolId: p.id, // 会員の表示銘柄の絞り込み（SymbolPicker）が参照する
-  symbol: p.symbol,
-  name: p.name,
-  pair: p.pair,
-  detail: `${base}charts/${p.id}/`,
-}));
 ---
 
 <div class="chart-grid">
   {
-    items.map((it) => (
-      <section class="grid-item" data-symbol-id={it.symbolId}>
-        <h2>
-          <a href={it.detail}>
-            {it.name}（{it.pair}）
-          </a>
-        </h2>
-        <div class="tv-wrapper">
-          <div class="tradingview-widget-container" id={it.id}>
-            <div class="tradingview-widget-container__widget" />
+    pairs.map((p) => {
+      const detail = `${base}charts/${p.id}/`;
+      return (
+        <section class="grid-item" data-symbol-id={p.id}>
+          <h2>
+            <a href={detail}>
+              {p.name}（{p.pair}）
+            </a>
+          </h2>
+          <div class="tv-wrapper">
+            <div class="tradingview-widget-container" data-tv-chart data-tv-symbol={p.symbol}>
+              <div class="tradingview-widget-container__widget" />
+            </div>
           </div>
-        </div>
-        <p class="detail-link">
-          <a href={it.detail}>1分足・日足チャートを見る →</a>
-        </p>
-      </section>
-    ))
+          <p class="detail-link">
+            <a href={detail}>1分足・日足チャートを見る →</a>
+          </p>
+        </section>
+      );
+    })
   }
 </div>
 
-<script is:inline define:vars={{ items }} type="module">
-  // 画面内に入った時だけウィジェットを読み込む（遅延読み込み）。
-  // 一覧ページはチャート数が多く、全件を即時読み込むと表示が重くなるため。
-  function loadWidget(container, it) {
-    const s = document.createElement("script");
-    s.type = "text/javascript";
-    s.src =
-      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
-    s.async = true;
-    s.innerHTML = JSON.stringify({
-      autosize: true,
-      symbol: it.symbol,
+<script>
+  import { mountAdvancedChart, loadWhenVisible } from "../lib/tv-widgets.js";
+
+  loadWhenVisible(document.querySelectorAll("[data-tv-chart]"), (el) =>
+    mountAdvancedChart(el, {
+      symbol: el.dataset.tvSymbol,
       interval: "30",
-      timezone: "Asia/Tokyo",
-      theme: "light",
-      style: "1",
-      locale: "ja",
-      hide_side_toolbar: true,
-      // 上部ツールバー（期間切替・インジケーター等）は出さない。
-      // 3列グリッドでは1枚あたり約403pxしかなく、ツールバーの表示には最低でも
-      // 約470px（ラベル省略時）必要なため、右側が切れてしまう。
-      // 一覧はサムネイルと割り切り、操作は詳細ページ（/charts/<id>/）に任せる。
-      hide_top_toolbar: true,
-      allow_symbol_change: false,
-      calendar: false,
-      support_host: "https://www.tradingview.com",
-    });
-    container.appendChild(s);
-  }
-
-  const byId = new Map(items.map((it) => [it.id, it]));
-  const observer = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        observer.unobserve(entry.target);
-        const it = byId.get(entry.target.id);
-        if (it) loadWidget(entry.target, it);
-      }
-    },
-    { rootMargin: "400px 0px" },
+      hideTopToolbar: true,
+    }),
   );
-
-  for (const it of items) {
-    const container = document.getElementById(it.id);
-    if (container) observer.observe(container);
-  }
 </script>
 
 <style>

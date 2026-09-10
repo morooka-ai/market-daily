@@ -1,8 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import AffiliateSlot from "../components/AffiliateSlot.astro";
-import ChartGrid from "../components/ChartGrid.astro";
-import SymbolPicker from "../components/SymbolPicker.astro";
+import CategoryCharts from "../components/CategoryCharts.astro";
 import { FX_PAIRS } from "../chart-pairs.mjs";
 
 const title = "FXチャート一覧（ドル円・ユーロ円・ポンド円ほか）";
@@ -11,32 +9,16 @@ const description =
 ---
 
 <Base title={title} description={description} wide noAds>
-  <h1>FXチャート一覧</h1>
-  <p>
-    主要通貨ペアの<strong>リアルタイム30分足チャート</strong>を一覧表示しています。通貨ペア名をクリックすると、1分足・30分足・日足を掲載した各銘柄の詳細ページを開けます。
-  </p>
-
-  <SymbolPicker pageKey="fx" />
-
-  <ChartGrid pairs={FX_PAIRS} />
-
-  <AffiliateSlot name="fx-page" />
-
-  <p class="source-note">
-    チャート提供：<a
-      href="https://jp.tradingview.com/"
-      target="_blank"
-      rel="noopener">TradingView</a
-    >。表示レートには遅延が含まれる場合があります。取引の判断はご自身の責任で行ってください。詳しくは<a
-      href={`${import.meta.env.BASE_URL}disclaimer/`}>免責事項</a
-    >をご覧ください。
-  </p>
+  <CategoryCharts
+    heading="FXチャート一覧"
+    pageKey="fx"
+    pairs={FX_PAIRS}
+    affiliate="fx-page"
+    disclaimer="rate"
+  >
+    <p>
+      主要通貨ペアの<strong>リアルタイム30分足チャート</strong
+      >を一覧表示しています。通貨ペア名をクリックすると、1分足・30分足・日足を掲載した各銘柄の詳細ページを開けます。
+    </p>
+  </CategoryCharts>
 </Base>
-
-<style>
-  .source-note {
-    margin-top: 2rem;
-    font-size: 0.82rem;
-    color: var(--muted);
-  }
-</style>

@@ -1,0 +1,21 @@
+---
+// 日本株・米国株ページの銘柄カードを並べるグリッド（PCは3列・スマホは1列）。
+// カード本体は StockCard.astro。
+---
+
+<div class="stocks-grid"><slot /></div>
+
+<style>
+  .stocks-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    margin: 1.5rem 0;
+  }
+  @media (min-width: 900px) {
+    /* wideコンテナ（最大1280px）の中で3列に並べる */
+    .stocks-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

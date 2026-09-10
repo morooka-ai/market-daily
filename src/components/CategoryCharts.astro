@@ -1,0 +1,36 @@
+---
+// FX・貴金属・暗号資産の各一覧ページの本体（見出し・導入文・銘柄セレクタ・
+// チャートグリッド・広告枠・出所注記）。ページ側はメタ情報と導入文だけ渡す。
+import AffiliateSlot from "./AffiliateSlot.astro";
+import ChartGrid from "./ChartGrid.astro";
+import SymbolPicker from "./SymbolPicker.astro";
+import ChartDisclaimer from "./ChartDisclaimer.astro";
+
+interface Props {
+  heading: string;
+  /** catalog.mjs のページキー（"fx" / "metals" / "crypto"） */
+  pageKey: string;
+  pairs: { id: string; symbol: string; name: string; pair: string }[];
+  /** AffiliateSlot の名前（src/data/affiliates/<name>.html） */
+  affiliate: string;
+  /** 会員向けの銘柄セレクタを出すか（貴金属は掲載3銘柄のみで不要） */
+  picker?: boolean;
+  /** 出所注記の表記（FX は「レート」、それ以外は「価格」） */
+  disclaimer?: "rate" | "price";
+}
+const {
+  heading,
+  pageKey,
+  pairs,
+  affiliate,
+  picker = true,
+  disclaimer = "price",
+} = Astro.props;
+---
+
+<h1>{heading}</h1>
+<slot />
+{picker && <SymbolPicker pageKey={pageKey} />}
+<ChartGrid pairs={pairs} />
+<AffiliateSlot name={affiliate} />
+<ChartDisclaimer variant={disclaimer} />

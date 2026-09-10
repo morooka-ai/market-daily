@@ -1,0 +1,85 @@
+---
+// 日本株・米国株ページの銘柄カード。
+// 銘柄名・ティッカーと、解説（現状／企業の動向）は共通。
+// 中身（米国株＝TradingViewウィジェット、日本株＝株価）は slot で受け取る。
+interface Props {
+  name: string;
+  ticker: string;
+  /** 指定すると data-tv-symbol を出す（米国株の遅延読み込みが参照する） */
+  tvSymbol?: string;
+  current?: string;
+  updates?: string;
+}
+const { name, ticker, tvSymbol, current, updates } = Astro.props;
+---
+
+<section class="stock-block" data-symbol-id={ticker} data-tv-symbol={tvSymbol}>
+  <h2>
+    {name}
+    <span class="ticker">{ticker}</span>
+  </h2>
+  <slot />
+  {
+    current && (
+      <p class="stock-note">
+        <span class="note-label">現状</span>
+        {current}
+      </p>
+    )
+  }
+  {
+    updates && (
+      <p class="stock-note">
+        <span class="note-label">企業の動向</span>
+        {updates}
+      </p>
+    )
+  }
+</section>
+
+<style>
+  .stock-block {
+    margin: 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.9rem 1rem 1rem;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .stock-block:hover {
+    border-color: var(--accent);
+    box-shadow: 0 1px 5px rgba(15, 90, 168, 0.15);
+  }
+  .stock-block h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin: 0 0 0.5rem;
+    font-size: 1.05rem;
+  }
+  .ticker {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.05rem 0.4rem;
+  }
+  .stock-note {
+    margin: 0.7rem 0 0;
+    font-size: 0.92rem;
+    line-height: 1.7;
+  }
+  .note-label {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 3px;
+    padding: 0 0.35rem;
+    margin-right: 0.4rem;
+    vertical-align: 0.08em;
+  }
+</style>

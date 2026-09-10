@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import AffiliateSlot from "../../components/AffiliateSlot.astro";
+import ChartDisclaimer from "../../components/ChartDisclaimer.astro";
 import { CHART_PAIRS, isDetailIndexable } from "../../chart-pairs.mjs";
 import { chartNote } from "../../chart-notes.mjs";
 
@@ -12,24 +13,9 @@ const { pair } = Astro.props;
 const base = import.meta.env.BASE_URL;
 
 const charts = [
-  {
-    id: "chart-1m",
-    interval: "1",
-    heading: "1分足",
-    note: "超短期のスキャルピング向け。",
-  },
-  {
-    id: "chart-30m",
-    interval: "30",
-    heading: "30分足",
-    note: "デイトレード向け。当日のトレンド確認に。",
-  },
-  {
-    id: "chart-1d",
-    interval: "D",
-    heading: "日足",
-    note: "スイング・中長期向け。大きな流れの把握に。",
-  },
+  { interval: "1", heading: "1分足", note: "超短期のスキャルピング向け。" },
+  { interval: "30", heading: "30分足", note: "デイトレード向け。当日のトレンド確認に。" },
+  { interval: "D", heading: "日足", note: "スイング・中長期向け。大きな流れの把握に。" },
 ];
 
 const siblings = CHART_PAIRS.filter(
@@ -62,7 +48,12 @@ const note = chartNote(pair.id);
           <h2>{pair.name} {c.heading}</h2>
           <p class="chart-note">{c.note}</p>
           <div class="tv-wrapper">
-            <div class="tradingview-widget-container" id={c.id}>
+            <div
+              class="tradingview-widget-container"
+              data-tv-chart
+              data-tv-symbol={pair.symbol}
+              data-tv-interval={c.interval}
+            >
               <div class="tradingview-widget-container__widget" />
             </div>
           </div>
@@ -117,63 +108,19 @@ const note = chartNote(pair.id);
     </p>
   </section>
 
-  <p class="source-note">
-    チャート提供：<a
-      href="https://jp.tradingview.com/"
-      target="_blank"
-      rel="noopener">TradingView</a
-    >。表示レートには遅延が含まれる場合があります。取引の判断はご自身の責任で行ってください。詳しくは<a
-      href={`${base}disclaimer/`}>免責事項</a
-    >をご覧ください。
-  </p>
+  <ChartDisclaimer variant="rate" />
 </Base>
 
-<script
-  is:inline
-  define:vars={{ charts, symbol: pair.symbol }}
-  type="module"
->
-  // 画面内に入った時間軸だけウィジェットを読み込む（遅延読み込み）。
-  // スマホでは3枚が縦に並ぶため、画面外の分の即時読み込みを避ける。
-  function loadWidget(container, interval) {
-    const s = document.createElement("script");
-    s.type = "text/javascript";
-    s.src =
-      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
-    s.async = true;
-    s.innerHTML = JSON.stringify({
-      autosize: true,
-      symbol,
-      interval,
-      timezone: "Asia/Tokyo",
-      theme: "light",
-      style: "1",
-      locale: "ja",
-      hide_side_toolbar: true,
-      allow_symbol_change: false,
-      calendar: false,
-      support_host: "https://www.tradingview.com",
-    });
-    container.appendChild(s);
-  }
+<script>
+  import { mountAdvancedChart, loadWhenVisible } from "../../lib/tv-widgets.js";
 
-  const byId = new Map(charts.map((c) => [c.id, c.interval]));
-  const observer = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        observer.unobserve(entry.target);
-        const interval = byId.get(entry.target.id);
-        if (interval) loadWidget(entry.target, interval);
-      }
-    },
-    { rootMargin: "400px 0px" },
+  // 画面内に入った時間軸だけウィジェットを読み込む（スマホでは3枚が縦に並ぶため）。
+  loadWhenVisible(document.querySelectorAll("[data-tv-chart]"), (el) =>
+    mountAdvancedChart(el, {
+      symbol: el.dataset.tvSymbol,
+      interval: el.dataset.tvInterval,
+    }),
   );
-
-  for (const c of charts) {
-    const container = document.getElementById(c.id);
-    if (container) observer.observe(container);
-  }
 </script>
 
 <style>
@@ -249,11 +196,6 @@ const note = chartNote(pair.id);
     display: flex;
     gap: 1.5rem;
     flex-wrap: wrap;
-  }
-  .source-note {
-    margin-top: 2rem;
-    font-size: 0.82rem;
-    color: var(--muted);
   }
   @media (min-width: 900px) {
     /* wideコンテナ（最大1280px）の中で3列に並べる */

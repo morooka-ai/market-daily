@@ -2,26 +2,17 @@
 import Base from "../layouts/Base.astro";
 import AffiliateSlot from "../components/AffiliateSlot.astro";
 import SymbolPicker from "../components/SymbolPicker.astro";
+import StockGrid from "../components/StockGrid.astro";
+import StockCard from "../components/StockCard.astro";
+import ChartDisclaimer from "../components/ChartDisclaimer.astro";
 import { US_STOCKS } from "../us-stocks-data.mjs";
+import { jstDateLabel } from "../lib/dates.mjs";
 import notes from "../../content/us-stocks.json";
 
 // 銘柄メタ情報（US_STOCKS）に、自動生成された解説（content/us-stocks.json）を
 // ティッカーで突き合わせてマージする。解説が未生成の銘柄はチャートのみ表示。
-const stocks = US_STOCKS.map((s) => ({
-  ...s,
-  current: notes.stocks?.[s.ticker]?.current ?? "",
-  updates: notes.stocks?.[s.ticker]?.updates ?? "",
-}));
-
-// 解説の最終更新日（JST表記、YYYY-MM-DD）
-const updatedAt = notes.generatedAt
-  ? new Date(notes.generatedAt).toLocaleDateString("ja-JP", {
-      timeZone: "Asia/Tokyo",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    })
-  : null;
+const stocks = US_STOCKS.map((s) => ({ ...s, ...(notes.stocks?.[s.ticker] ?? {}) }));
+const updatedAt = jstDateLabel(notes.generatedAt);
 
 const title = "米国株 注目銘柄 チャート・株価・前日比一覧";
 const description =
@@ -39,124 +30,49 @@ const description =
 
   <SymbolPicker pageKey="us-stocks" />
 
-  <div class="stocks-grid">
-  {
-    stocks.map((s) => (
-      <section class="stock-block" id={`stock-${s.ticker}`} data-symbol-id={s.ticker}>
-        <h2>
-          {s.name}
-          <span class="ticker">{s.ticker}</span>
-        </h2>
-        <div class="tv-info" id={`info-${s.ticker}`}>
-          <div class="tradingview-widget-container__widget" />
-        </div>
-        <div class="tv-wrapper">
-          <div class="tradingview-widget-container" id={`chart-${s.ticker}`}>
+  <StockGrid>
+    {
+      stocks.map((s) => (
+        <StockCard
+          name={s.name}
+          ticker={s.ticker}
+          tvSymbol={s.symbol}
+          current={s.current}
+          updates={s.updates}
+        >
+          <div class="tv-info" data-tv-info>
             <div class="tradingview-widget-container__widget" />
           </div>
-        </div>
-        {s.current && (
-          <p class="stock-note">
-            <span class="note-label">現状</span>
-            {s.current}
-          </p>
-        )}
-        {s.updates && (
-          <p class="stock-note">
-            <span class="note-label">企業の動向</span>
-            {s.updates}
-          </p>
-        )}
-      </section>
-    ))
-  }
-  </div>
+          <div class="tv-wrapper">
+            <div class="tradingview-widget-container" data-tv-chart>
+              <div class="tradingview-widget-container__widget" />
+            </div>
+          </div>
+        </StockCard>
+      ))
+    }
+  </StockGrid>
 
   <AffiliateSlot name="us-stocks" />
 
-  <p class="source-note">
-    株価・チャート提供：<a
-      href="https://jp.tradingview.com/"
-      target="_blank"
-      rel="noopener">TradingView</a
-    >。表示される株価には遅延が含まれる場合があります。本ページは情報提供のみを目的としたもので、特定の銘柄の売買を推奨するものではありません。投資の判断はご自身の責任で行ってください。詳しくは<a
-      href={`${import.meta.env.BASE_URL}disclaimer/`}>免責事項</a
-    >をご覧ください。
-  </p>
+  <ChartDisclaimer variant="stocks-tv" />
 </Base>
 
-<script
-  is:inline
-  define:vars={{ widgets: stocks.map((s) => ({ ticker: s.ticker, symbol: s.symbol })) }}
-  type="module"
->
-  // 画面内に入った銘柄ブロックだけウィジェットを読み込む（遅延読み込み）。
-  // 12個のウィジェットを即時読み込むと表示が重くなるため。
-  const theme = "light";
+<script>
+  import {
+    mountAdvancedChart,
+    mountSymbolInfo,
+    loadWhenVisible,
+  } from "../lib/tv-widgets.js";
 
-  function loadStockWidgets(s) {
-    const info = document.getElementById(`info-${s.ticker}`);
-    if (info) {
-      const si = document.createElement("script");
-      si.type = "text/javascript";
-      si.src =
-        "https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js";
-      si.async = true;
-      si.innerHTML = JSON.stringify({
-        symbol: s.symbol,
-        width: "100%",
-        locale: "ja",
-        colorTheme: theme,
-        isTransparent: true,
-      });
-      info.appendChild(si);
-    }
-
-    const chart = document.getElementById(`chart-${s.ticker}`);
-    if (chart) {
-      const ch = document.createElement("script");
-      ch.type = "text/javascript";
-      ch.src =
-        "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
-      ch.async = true;
-      ch.innerHTML = JSON.stringify({
-        autosize: true,
-        symbol: s.symbol,
-        interval: "D",
-        timezone: "Asia/Tokyo",
-        theme,
-        style: "1",
-        locale: "ja",
-        hide_side_toolbar: true,
-        // 上部ツールバーは出さない（理由は ChartGrid.astro のコメントと同じ。
-        // 3列グリッドの1枚では幅が足りずツールバーの右側が切れる）
-        hide_top_toolbar: true,
-        allow_symbol_change: false,
-        calendar: false,
-        support_host: "https://www.tradingview.com",
-      });
-      chart.appendChild(ch);
-    }
-  }
-
-  const byTicker = new Map(widgets.map((s) => [s.ticker, s]));
-  const observer = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        observer.unobserve(entry.target);
-        const ticker = entry.target.id.replace(/^stock-/, "");
-        const s = byTicker.get(ticker);
-        if (s) loadStockWidgets(s);
-      }
-    },
-    { rootMargin: "400px 0px" },
-  );
-
-  for (const s of widgets) {
-    const block = document.getElementById(`stock-${s.ticker}`);
-    if (block) observer.observe(block);
-  }
+  // 画面内に入った銘柄カードだけウィジェット（銘柄情報＋チャート）を読み込む。
+  loadWhenVisible(document.querySelectorAll("[data-tv-symbol]"), (card) => {
+    const symbol = card.dataset.tvSymbol;
+    const info = card.querySelector("[data-tv-info]");
+    const chart = card.querySelector("[data-tv-chart]");
+    if (info) mountSymbolInfo(info, { symbol });
+    if (chart) mountAdvancedChart(chart, { symbol, interval: "D", hideTopToolbar: true });
+  });
 </script>
 
 <style>
@@ -165,45 +81,10 @@ const description =
     font-size: 0.8rem;
     color: var(--muted);
   }
-  .stocks-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.2rem;
-    margin: 1.5rem 0;
-  }
+  /* 米国株カードは幅の狭い3列でウィジェットを収めるため左右を少し詰める */
   .stock-block {
-    margin: 0;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 0.9rem 0.7rem 1rem;
-    transition: border-color 0.15s, box-shadow 0.15s;
-  }
-  .stock-block:hover {
-    border-color: var(--accent);
-    box-shadow: 0 1px 5px rgba(15, 90, 168, 0.15);
-  }
-  .stock-block h2 {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin: 0 0 0.5rem;
-    font-size: 1.05rem;
-  }
-  @media (min-width: 900px) {
-    /* wideコンテナ（最大1280px）の中で3列に並べる */
-    .stocks-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-  .ticker {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 0.05rem 0.4rem;
+    padding-left: 0.7rem;
+    padding-right: 0.7rem;
   }
   /* シンボル情報ウィジェット（ロゴ・株価・EPS等）:
      TradingView が設定する iframe の高さが実際の内容より低く、指標行が切れるため、
@@ -241,26 +122,5 @@ const description =
   .tv-wrapper .tradingview-widget-container__widget {
     height: 100%;
     width: 100%;
-  }
-  .stock-note {
-    margin: 0.7rem 0 0;
-    font-size: 0.92rem;
-    line-height: 1.7;
-  }
-  .note-label {
-    display: inline-block;
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--accent);
-    border: 1px solid var(--accent);
-    border-radius: 3px;
-    padding: 0 0.35rem;
-    margin-right: 0.4rem;
-    vertical-align: 0.08em;
-  }
-  .source-note {
-    margin-top: 2rem;
-    font-size: 0.82rem;
-    color: var(--muted);
   }
 </style>

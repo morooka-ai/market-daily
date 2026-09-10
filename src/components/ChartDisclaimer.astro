@@ -1,0 +1,35 @@
+---
+// チャート・株価ページの末尾に置く、データの出所と免責の注記。
+//   rate         … FX（「レート」表記・TradingView）
+//   price        … 貴金属・暗号資産（「価格」表記・TradingView）
+//   stocks-tv    … 米国株（株価もチャートも TradingView）
+//   stocks-yahoo … 日本株（株価は Yahoo!ファイナンス・チャートなし）
+interface Props {
+  variant: "rate" | "price" | "stocks-tv" | "stocks-yahoo";
+}
+const { variant } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+const TV = `<a href="https://jp.tradingview.com/" target="_blank" rel="noopener">TradingView</a>`;
+const STOCK_TAIL =
+  "。表示される株価には遅延が含まれる場合があります。本ページは情報提供のみを目的としたもので、特定の銘柄の売買を推奨するものではありません。投資の判断はご自身の責任で行ってください。";
+const LEAD = {
+  rate: `チャート提供：${TV}。表示レートには遅延が含まれる場合があります。取引の判断はご自身の責任で行ってください。`,
+  price: `チャート提供：${TV}。表示価格には遅延が含まれる場合があります。取引の判断はご自身の責任で行ってください。`,
+  "stocks-tv": `株価・チャート提供：${TV}${STOCK_TAIL}`,
+  "stocks-yahoo": `株価データ提供：Yahoo!ファイナンス${STOCK_TAIL}`,
+}[variant];
+---
+
+<p
+  class="source-note"
+  set:html={`${LEAD}詳しくは<a href="${base}disclaimer/">免責事項</a>をご覧ください。`}
+/>
+
+<style>
+  .source-note {
+    margin-top: 2rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+</style>
