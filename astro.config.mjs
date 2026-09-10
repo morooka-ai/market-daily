@@ -43,12 +43,12 @@ export default defineConfig({
   integrations: [
     sitemap({
       // サイトマップから外すもの（いずれもページ側で noindex も付けている）:
-      //   - 会員向けページ（/account/・/mail/）
+      //   - 会員向けページ（/account/）
       //   - 会員の選択肢として追加した銘柄の詳細ページ（chart-pairs.mjs 参照）
       //   - 休場日の「お知らせ」記事
       filter: (page) => {
         const { pathname } = new URL(page);
-        if (/\/(account|mail)\//.test(pathname)) return false;
+        if (/\/account\//.test(pathname)) return false;
         if (NOTICE_PATHS.has(pathname)) return false;
         const chart = pathname.match(/\/charts\/([^/]+)\//);
         return chart ? isDetailIndexable(chart[1]) : true;
