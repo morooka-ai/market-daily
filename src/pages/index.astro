@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
+import { SITE_TITLE } from "../consts.mjs";
 
 const allPosts = (await getCollection("posts")).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -15,7 +16,7 @@ const fmt = new Intl.DateTimeFormat("ja-JP", {
 });
 ---
 
-<Base>
+<Base noAds>
   <h1>最新の記事</h1>
   <div class="schedule-note">
     <p class="schedule-title">更新時間の目安（毎営業日）</p>
@@ -60,6 +61,23 @@ const fmt = new Intl.DateTimeFormat("ja-JP", {
       </p>
     )
   }
+
+  <section class="about-site">
+    <h2>マーケットデイリーについて</h2>
+    <p>
+      「{SITE_TITLE}」は、JOPEFIC合同会社が運営するマーケット情報サイトです。トレーダーが必要とする情報だけを厳選し、初心者からベテランまで使える、シンプルで使い勝手のよいサイトを目指しています。
+    </p>
+    <p>
+      記事は、取引所や公的機関が公表する市場データと報道をもとに、AI（人工知能）が下書きを作成しています。生成にあたっては、個別銘柄の売買推奨を行わないことを条件として指定しています。AIによる生成物の性質上、数値・固有名詞・日付に誤りが含まれる可能性があるため、投資判断に用いる際は必ず一次情報（取引所や発行会社などの公表資料）をご確認ください。掲載内容は情報提供のみを目的としており、特定の金融商品の売買を推奨・勧誘するものではありません（詳しくは<a
+        href={`${base}disclaimer/`}>免責事項</a
+      >をご覧ください）。
+    </p>
+    <p>
+      市況記事のほか、主要な通貨ペア・貴金属・暗号資産のリアルタイムチャートと値動きの解説、米国株・日本株の注目銘柄の株価と前日比もまとめています。<a
+        href={`${base}account/register/`}>無料の会員登録</a
+      >をすると、各ページに表示する銘柄を選んで保存できます（設定は端末をまたいで反映されます）。気になる用語や数値にはひとことの解説を添えていますので、ぜひクリックして確かめてみてください。
+    </p>
+  </section>
 </Base>
 
 <style>
@@ -117,4 +135,12 @@ const fmt = new Intl.DateTimeFormat("ja-JP", {
   .badge.evening { background: #33508a; }
   .badge.notice { background: #6b7280; }
   .archive-link { text-align: center; margin-top: 1.5rem; }
+  .about-site {
+    margin-top: 2.5rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  .about-site h2 { margin-top: 0; }
+  .about-site p { margin: 0.7rem 0; }
 </style>

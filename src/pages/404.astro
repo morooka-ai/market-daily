@@ -1,0 +1,35 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE_TITLE } from "../consts.mjs";
+
+const base = import.meta.env.BASE_URL;
+const title = "ページが見つかりません";
+const description = `お探しのページは見つかりませんでした。${SITE_TITLE}のトップページや各コーナーからお探しください。`;
+---
+
+<Base title={title} description={description} noindex noAds>
+  <h1>ページが見つかりません（404）</h1>
+  <p>
+    お探しのページは、移動または削除されたか、URLが正しくない可能性があります。
+    お手数ですが、以下のリンクからお探しください。
+  </p>
+
+  <ul class="links">
+    <li><a href={base}>トップページ（最新の記事）</a></li>
+    <li><a href={`${base}archive/`}>記事アーカイブ（過去の朝刊・夕刊）</a></li>
+    <li><a href={`${base}fx/`}>FXチャート</a></li>
+    <li><a href={`${base}metals/`}>貴金属チャート</a></li>
+    <li><a href={`${base}crypto/`}>暗号資産チャート</a></li>
+    <li><a href={`${base}jp-stocks/`}>日本株 注目銘柄</a></li>
+    <li><a href={`${base}us-stocks/`}>米国株 注目銘柄</a></li>
+    <li><a href={`${base}contact/`}>お問い合わせ</a></li>
+  </ul>
+</Base>
+
+<style>
+  .links {
+    margin: 1.2rem 0;
+    padding-left: 1.2rem;
+    line-height: 2;
+  }
+</style>
