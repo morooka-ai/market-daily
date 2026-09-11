@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-09-11T09:19:33.170+09:00",
+  "generatedAt": "2026-09-11T21:04:47.040+09:00",
   "stocks": {
     "1332": {
       "quote": {
         "symbol": "1332.T",
         "longName": "Nissui Corporation",
         "currency": "JPY",
-        "price": 1182,
+        "price": 1170,
         "previousClose": 1182,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2007500,
+        "change": -12,
+        "changePercent": -1.015228426395939,
+        "volume": 1775500,
         "date": "2026-09-11"
       }
     },
@@ -19,11 +19,11 @@
         "symbol": "1605.T",
         "longName": "Inpex Corporation",
         "currency": "JPY",
-        "price": 3877,
+        "price": 3930,
         "previousClose": 3877,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 9000200,
+        "change": 53,
+        "changePercent": 1.3670363683260254,
+        "volume": 9572900,
         "date": "2026-09-11"
       }
     },
@@ -32,11 +32,11 @@
         "symbol": "1721.T",
         "longName": "COMSYS Holdings Corporation",
         "currency": "JPY",
-        "price": 5357,
+        "price": 5372,
         "previousClose": 5357,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 922600,
+        "change": 15,
+        "changePercent": 0.2800074668657831,
+        "volume": 669200,
         "date": "2026-09-11"
       }
     },
@@ -45,11 +45,11 @@
         "symbol": "1801.T",
         "longName": "Taisei Corporation",
         "currency": "JPY",
-        "price": 12595,
+        "price": 12470,
         "previousClose": 12595,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1170600,
+        "change": -125,
+        "changePercent": -0.9924573243350536,
+        "volume": 881500,
         "date": "2026-09-11"
       }
     },
@@ -58,11 +58,11 @@
         "symbol": "1802.T",
         "longName": "Obayashi Corporation",
         "currency": "JPY",
-        "price": 3025,
+        "price": 3012,
         "previousClose": 3025,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 4375900,
+        "change": -13,
+        "changePercent": -0.4297520661157025,
+        "volume": 3346400,
         "date": "2026-09-11"
       }
     },
@@ -71,11 +71,11 @@
         "symbol": "1803.T",
         "longName": "Shimizu Corporation",
         "currency": "JPY",
-        "price": 2391.5,
+        "price": 2360,
         "previousClose": 2391.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 6696500,
+        "change": -31.5,
+        "changePercent": -1.3171649592306083,
+        "volume": 4412100,
         "date": "2026-09-11"
       }
     },
@@ -84,11 +84,11 @@
         "symbol": "1808.T",
         "longName": "HASEKO Corporation",
         "currency": "JPY",
-        "price": 2751.5,
+        "price": 2719.5,
         "previousClose": 2751.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1330000,
+        "change": -32,
+        "changePercent": -1.1630019989096856,
+        "volume": 1113900,
         "date": "2026-09-11"
       }
     },
@@ -97,11 +97,11 @@
         "symbol": "1812.T",
         "longName": "Kajima Corporation",
         "currency": "JPY",
-        "price": 4987,
+        "price": 4897,
         "previousClose": 4987,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3643300,
+        "change": -90,
+        "changePercent": -1.80469219971927,
+        "volume": 2760500,
         "date": "2026-09-11"
       }
     },
@@ -110,11 +110,11 @@
         "symbol": "1925.T",
         "longName": "Daiwa House Industry Co., Ltd.",
         "currency": "JPY",
-        "price": 4596,
+        "price": 4598,
         "previousClose": 4596,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2314500,
+        "change": 2,
+        "changePercent": 0.04351610095735422,
+        "volume": 1917900,
         "date": "2026-09-11"
       }
     },
@@ -123,11 +123,11 @@
         "symbol": "1928.T",
         "longName": "Sekisui House, Ltd.",
         "currency": "JPY",
-        "price": 3372,
+        "price": 3361,
         "previousClose": 3372,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 4605200,
+        "change": -11,
+        "changePercent": -0.3262158956109134,
+        "volume": 3209500,
         "date": "2026-09-11"
       }
     },
@@ -136,11 +136,11 @@
         "symbol": "1963.T",
         "longName": "JGC Holdings Corporation",
         "currency": "JPY",
-        "price": 2379.5,
+        "price": 2312,
         "previousClose": 2379.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2299900,
+        "change": -67.5,
+        "changePercent": -2.836730405547384,
+        "volume": 1986400,
         "date": "2026-09-11"
       }
     },
@@ -149,11 +149,11 @@
         "symbol": "2002.T",
         "longName": "Nisshin Seifun Group Inc.",
         "currency": "JPY",
-        "price": 2038,
+        "price": 2039.5,
         "previousClose": 2038,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1227900,
+        "change": 1.5,
+        "changePercent": 0.07360157016683022,
+        "volume": 1282000,
         "date": "2026-09-11"
       }
     },
@@ -162,11 +162,11 @@
         "symbol": "2269.T",
         "longName": "Meiji Holdings Co., Ltd.",
         "currency": "JPY",
-        "price": 4302,
+        "price": 4257,
         "previousClose": 4302,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1392800,
+        "change": -45,
+        "changePercent": -1.0460251046025104,
+        "volume": 1055300,
         "date": "2026-09-11"
       }
     },
@@ -175,11 +175,11 @@
         "symbol": "2282.T",
         "longName": "NH Foods Ltd.",
         "currency": "JPY",
-        "price": 6143,
+        "price": 6247,
         "previousClose": 6143,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 808400,
+        "change": 104,
+        "changePercent": 1.6929838840957188,
+        "volume": 806000,
         "date": "2026-09-11"
       }
     },
@@ -188,11 +188,11 @@
         "symbol": "2413.T",
         "longName": "M3, Inc.",
         "currency": "JPY",
-        "price": 1701,
+        "price": 1690,
         "previousClose": 1701,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 4708400,
+        "change": -11,
+        "changePercent": -0.6466784244562023,
+        "volume": 3721700,
         "date": "2026-09-11"
       }
     },
@@ -201,11 +201,11 @@
         "symbol": "2432.T",
         "longName": "DeNA Co., Ltd.",
         "currency": "JPY",
-        "price": 2509.5,
+        "price": 2496,
         "previousClose": 2509.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1016800,
+        "change": -13.5,
+        "changePercent": -0.5379557680812911,
+        "volume": 1055900,
         "date": "2026-09-11"
       }
     },
@@ -214,11 +214,11 @@
         "symbol": "2501.T",
         "longName": "Sapporo Breweries Limited",
         "currency": "JPY",
-        "price": 1844,
+        "price": 1838,
         "previousClose": 1844,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1547900,
+        "change": -6,
+        "changePercent": -0.32537960954446854,
+        "volume": 1174100,
         "date": "2026-09-11"
       }
     },
@@ -227,11 +227,11 @@
         "symbol": "2502.T",
         "longName": "Asahi Group Holdings, Ltd.",
         "currency": "JPY",
-        "price": 1594,
+        "price": 1586.5,
         "previousClose": 1594,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 8238800,
+        "change": -7.5,
+        "changePercent": -0.4705144291091593,
+        "volume": 5737700,
         "date": "2026-09-11"
       }
     },
@@ -240,11 +240,11 @@
         "symbol": "2503.T",
         "longName": "Kirin Holdings Company, Limited",
         "currency": "JPY",
-        "price": 2791,
+        "price": 2775,
         "previousClose": 2791,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3990400,
+        "change": -16,
+        "changePercent": -0.573271228950197,
+        "volume": 3097100,
         "date": "2026-09-11"
       }
     },
@@ -253,11 +253,11 @@
         "symbol": "2768.T",
         "longName": "Sojitz Corporation",
         "currency": "JPY",
-        "price": 5745,
+        "price": 5739,
         "previousClose": 5745,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1677000,
+        "change": -6,
+        "changePercent": -0.10443864229765012,
+        "volume": 1242400,
         "date": "2026-09-11"
       }
     },
@@ -266,11 +266,11 @@
         "symbol": "2801.T",
         "longName": "Kikkoman Corporation",
         "currency": "JPY",
-        "price": 1682.5,
+        "price": 1671,
         "previousClose": 1682.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 6046900,
+        "change": -11.5,
+        "changePercent": -0.6835066864784547,
+        "volume": 4806000,
         "date": "2026-09-11"
       }
     },
@@ -279,11 +279,11 @@
         "symbol": "2802.T",
         "longName": "Ajinomoto Co., Inc.",
         "currency": "JPY",
-        "price": 5035,
+        "price": 4974,
         "previousClose": 5035,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3807200,
+        "change": -61,
+        "changePercent": -1.211519364448858,
+        "volume": 2939800,
         "date": "2026-09-11"
       }
     },
@@ -292,11 +292,11 @@
         "symbol": "2871.T",
         "longName": "Nichirei Corporation",
         "currency": "JPY",
-        "price": 2152.5,
+        "price": 2171,
         "previousClose": 2152.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1516800,
+        "change": 18.5,
+        "changePercent": 0.859465737514518,
+        "volume": 1443700,
         "date": "2026-09-11"
       }
     },
@@ -305,11 +305,11 @@
         "symbol": "2914.T",
         "longName": "Japan Tobacco Inc.",
         "currency": "JPY",
-        "price": 6614,
+        "price": 6693,
         "previousClose": 6614,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 4009100,
+        "change": 79,
+        "changePercent": 1.1944360447535531,
+        "volume": 4288600,
         "date": "2026-09-11"
       }
     },
@@ -318,11 +318,11 @@
         "symbol": "3086.T",
         "longName": "J. Front Retailing Co., Ltd.",
         "currency": "JPY",
-        "price": 2604,
+        "price": 2607,
         "previousClose": 2604,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1546600,
+        "change": 3,
+        "changePercent": 0.1152073732718894,
+        "volume": 1226400,
         "date": "2026-09-11"
       }
     },
@@ -331,11 +331,11 @@
         "symbol": "3092.T",
         "longName": "ZOZO, Inc.",
         "currency": "JPY",
-        "price": 1107.5,
+        "price": 1114,
         "previousClose": 1107.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3834800,
+        "change": 6.5,
+        "changePercent": 0.5869074492099322,
+        "volume": 3198100,
         "date": "2026-09-11"
       }
     },
@@ -344,11 +344,11 @@
         "symbol": "3099.T",
         "longName": "Isetan Mitsukoshi Holdings Ltd.",
         "currency": "JPY",
-        "price": 3112,
+        "price": 3151,
         "previousClose": 3112,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2495300,
+        "change": 39,
+        "changePercent": 1.2532133676092545,
+        "volume": 2186600,
         "date": "2026-09-11"
       }
     },
@@ -357,11 +357,11 @@
         "symbol": "3289.T",
         "longName": "Tokyu Fudosan Holdings Corporation",
         "currency": "JPY",
-        "price": 1291,
+        "price": 1285.5,
         "previousClose": 1291,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 4092700,
+        "change": -5.5,
+        "changePercent": -0.42602633617350893,
+        "volume": 2691200,
         "date": "2026-09-11"
       }
     },
@@ -370,11 +370,11 @@
         "symbol": "3382.T",
         "longName": "Seven & i Holdings Co., Ltd.",
         "currency": "JPY",
-        "price": 2016,
+        "price": 2008,
         "previousClose": 2016,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 9785500,
+        "change": -8,
+        "changePercent": -0.3968253968253968,
+        "volume": 8558800,
         "date": "2026-09-11"
       }
     },
@@ -383,11 +383,11 @@
         "symbol": "3401.T",
         "longName": "Teijin Limited",
         "currency": "JPY",
-        "price": 1652.5,
+        "price": 1649.5,
         "previousClose": 1652.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 790400,
+        "change": -3,
+        "changePercent": -0.1815431164901664,
+        "volume": 765500,
         "date": "2026-09-11"
       }
     },
@@ -396,11 +396,11 @@
         "symbol": "3402.T",
         "longName": "Toray Industries, Inc.",
         "currency": "JPY",
-        "price": 1229,
+        "price": 1237,
         "previousClose": 1229,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 5656600,
+        "change": 8,
+        "changePercent": 0.6509357200976403,
+        "volume": 4695900,
         "date": "2026-09-11"
       }
     },
@@ -409,11 +409,11 @@
         "symbol": "3405.T",
         "longName": "Kuraray Co., Ltd.",
         "currency": "JPY",
-        "price": 1776,
+        "price": 1766.5,
         "previousClose": 1776,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1688200,
+        "change": -9.5,
+        "changePercent": -0.5349099099099099,
+        "volume": 1399900,
         "date": "2026-09-11"
       }
     },
@@ -422,11 +422,11 @@
         "symbol": "3407.T",
         "longName": "Asahi Kasei Corporation",
         "currency": "JPY",
-        "price": 1566.5,
+        "price": 1552,
         "previousClose": 1566.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 4954200,
+        "change": -14.5,
+        "changePercent": -0.9256303862112991,
+        "volume": 4562300,
         "date": "2026-09-11"
       }
     },
@@ -435,12 +435,12 @@
         "symbol": "3436.T",
         "longName": "Sumco Corporation",
         "currency": "JPY",
-        "price": 3058,
-        "previousClose": 3122,
-        "change": -64,
-        "changePercent": -2.0499679692504804,
-        "volume": 10656800,
-        "date": "2026-09-10"
+        "price": 2959,
+        "previousClose": 3058,
+        "change": -99,
+        "changePercent": -3.237410071942446,
+        "volume": 11593400,
+        "date": "2026-09-11"
       }
     },
     "3659": {
@@ -448,11 +448,11 @@
         "symbol": "3659.T",
         "longName": "NEXON Co., Ltd.",
         "currency": "JPY",
-        "price": 3116,
+        "price": 3070,
         "previousClose": 3116,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3337300,
+        "change": -46,
+        "changePercent": -1.4762516046213094,
+        "volume": 2745300,
         "date": "2026-09-11"
       }
     },
@@ -461,11 +461,11 @@
         "symbol": "3697.T",
         "longName": "SHIFT Inc.",
         "currency": "JPY",
-        "price": 835.6,
+        "price": 834.5,
         "previousClose": 835.5999755859375,
-        "change": 0.000024414062522737368,
-        "changePercent": 0.0000029217404542906783,
-        "volume": 4240300,
+        "change": -1.0999755859375,
+        "changePercent": -0.13163901604546813,
+        "volume": 4117000,
         "date": "2026-09-11"
       }
     },
@@ -474,11 +474,11 @@
         "symbol": "3861.T",
         "longName": "Oji Holdings Corporation",
         "currency": "JPY",
-        "price": 859.9,
+        "price": 867.3,
         "previousClose": 859.9000244140625,
-        "change": -0.000024414062522737368,
-        "changePercent": -0.000002839174535362196,
-        "volume": 3787400,
+        "change": 7.3999755859374545,
+        "changePercent": 0.8605623183904213,
+        "volume": 3104700,
         "date": "2026-09-11"
       }
     },
@@ -487,12 +487,12 @@
         "symbol": "4004.T",
         "longName": "Resonac Holdings Corporation",
         "currency": "JPY",
-        "price": 16005,
-        "previousClose": 16070,
-        "change": -65,
-        "changePercent": -0.40448039825762294,
-        "volume": 1242100,
-        "date": "2026-09-10"
+        "price": 14295,
+        "previousClose": 16005,
+        "change": -1710,
+        "changePercent": -10.684161199625116,
+        "volume": 2935300,
+        "date": "2026-09-11"
       }
     },
     "4005": {
@@ -500,11 +500,11 @@
         "symbol": "4005.T",
         "longName": "Sumitomo Chemical Company, Limited",
         "currency": "JPY",
-        "price": 567.2,
+        "price": 558.5,
         "previousClose": 567.2000122070312,
-        "change": -0.000012207031204525265,
-        "changePercent": -0.0000021521563719694755,
-        "volume": 12163400,
+        "change": -8.70001220703125,
+        "changePercent": -1.533852612798551,
+        "volume": 13072300,
         "date": "2026-09-11"
       }
     },
@@ -513,11 +513,11 @@
         "symbol": "4021.T",
         "longName": "Nissan Chemical Corporation",
         "currency": "JPY",
-        "price": 7946,
+        "price": 7878,
         "previousClose": 7946,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 897000,
+        "change": -68,
+        "changePercent": -0.8557764913163856,
+        "volume": 799400,
         "date": "2026-09-11"
       }
     },
@@ -526,11 +526,11 @@
         "symbol": "4042.T",
         "longName": "Tosoh Corporation",
         "currency": "JPY",
-        "price": 2581,
+        "price": 2566,
         "previousClose": 2581,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1129700,
+        "change": -15,
+        "changePercent": -0.581170089112747,
+        "volume": 1068500,
         "date": "2026-09-11"
       }
     },
@@ -539,11 +539,11 @@
         "symbol": "4043.T",
         "longName": "Tokuyama Corporation",
         "currency": "JPY",
-        "price": 4052,
+        "price": 4063,
         "previousClose": 4052,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 523100,
+        "change": 11,
+        "changePercent": 0.27147087857847974,
+        "volume": 536700,
         "date": "2026-09-11"
       }
     },
@@ -552,11 +552,11 @@
         "symbol": "4061.T",
         "longName": "Denka Company Limited",
         "currency": "JPY",
-        "price": 3312,
+        "price": 3286,
         "previousClose": 3312,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 975000,
+        "change": -26,
+        "changePercent": -0.785024154589372,
+        "volume": 738100,
         "date": "2026-09-11"
       }
     },
@@ -565,12 +565,12 @@
         "symbol": "4062.T",
         "longName": "Ibiden Co.,Ltd.",
         "currency": "JPY",
-        "price": 20680,
-        "previousClose": 21420,
-        "change": -740,
-        "changePercent": -3.454715219421102,
-        "volume": 8211600,
-        "date": "2026-09-10"
+        "price": 19560,
+        "previousClose": 20680,
+        "change": -1120,
+        "changePercent": -5.415860735009671,
+        "volume": 8459000,
+        "date": "2026-09-11"
       }
     },
     "4063": {
@@ -578,11 +578,11 @@
         "symbol": "4063.T",
         "longName": "Shin-Etsu Chemical Co., Ltd.",
         "currency": "JPY",
-        "price": 5762,
+        "price": 5738,
         "previousClose": 5762,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 8631300,
+        "change": -24,
+        "changePercent": -0.4165220409580007,
+        "volume": 7659000,
         "date": "2026-09-11"
       }
     },
@@ -591,11 +591,11 @@
         "symbol": "4151.T",
         "longName": "Kyowa Kirin Co., Ltd.",
         "currency": "JPY",
-        "price": 2206,
+        "price": 2191.5,
         "previousClose": 2206,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2738100,
+        "change": -14.5,
+        "changePercent": -0.657298277425204,
+        "volume": 1822800,
         "date": "2026-09-11"
       }
     },
@@ -604,11 +604,11 @@
         "symbol": "4183.T",
         "longName": "Mitsui Chemicals, Inc.",
         "currency": "JPY",
-        "price": 2143,
+        "price": 2097,
         "previousClose": 2143,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2117300,
+        "change": -46,
+        "changePercent": -2.1465235650956602,
+        "volume": 2088600,
         "date": "2026-09-11"
       }
     },
@@ -617,11 +617,11 @@
         "symbol": "4188.T",
         "longName": "Mitsubishi Chemical Group Corporation",
         "currency": "JPY",
-        "price": 1184.5,
+        "price": 1156.5,
         "previousClose": 1184.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 5913600,
+        "change": -28,
+        "changePercent": -2.3638666103841284,
+        "volume": 5644600,
         "date": "2026-09-11"
       }
     },
@@ -630,11 +630,11 @@
         "symbol": "4208.T",
         "longName": "UBE Corporation",
         "currency": "JPY",
-        "price": 3408,
+        "price": 3380,
         "previousClose": 3408,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 774700,
+        "change": -28,
+        "changePercent": -0.8215962441314555,
+        "volume": 881900,
         "date": "2026-09-11"
       }
     },
@@ -643,11 +643,11 @@
         "symbol": "4307.T",
         "longName": "Nomura Research Institute, Ltd.",
         "currency": "JPY",
-        "price": 4911,
+        "price": 4901,
         "previousClose": 4911,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2693800,
+        "change": -10,
+        "changePercent": -0.20362451639177356,
+        "volume": 2170500,
         "date": "2026-09-11"
       }
     },
@@ -656,11 +656,11 @@
         "symbol": "4324.T",
         "longName": "Dentsu Group Inc.",
         "currency": "JPY",
-        "price": 3587,
+        "price": 3577,
         "previousClose": 3587,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1395400,
+        "change": -10,
+        "changePercent": -0.2787844995818232,
+        "volume": 1122000,
         "date": "2026-09-11"
       }
     },
@@ -669,11 +669,11 @@
         "symbol": "4385.T",
         "longName": "Mercari, Inc.",
         "currency": "JPY",
-        "price": 3921,
+        "price": 3826,
         "previousClose": 3921,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1763600,
+        "change": -95,
+        "changePercent": -2.422851313440449,
+        "volume": 1860000,
         "date": "2026-09-11"
       }
     },
@@ -682,11 +682,11 @@
         "symbol": "4452.T",
         "longName": "Kao Corporation",
         "currency": "JPY",
-        "price": 3439,
+        "price": 3387,
         "previousClose": 3439,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3981100,
+        "change": -52,
+        "changePercent": -1.5120674614713578,
+        "volume": 3334100,
         "date": "2026-09-11"
       }
     },
@@ -695,11 +695,11 @@
         "symbol": "4502.T",
         "longName": "Takeda Pharmaceutical Company Limited",
         "currency": "JPY",
-        "price": 5657,
+        "price": 5666,
         "previousClose": 5657,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 6046400,
+        "change": 9,
+        "changePercent": 0.1590949266395616,
+        "volume": 4255100,
         "date": "2026-09-11"
       }
     },
@@ -708,11 +708,11 @@
         "symbol": "4503.T",
         "longName": "Astellas Pharma Inc.",
         "currency": "JPY",
-        "price": 2227,
+        "price": 2240.5,
         "previousClose": 2227,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 8435300,
+        "change": 13.5,
+        "changePercent": 0.60619667714414,
+        "volume": 6821700,
         "date": "2026-09-11"
       }
     },
@@ -721,11 +721,11 @@
         "symbol": "4506.T",
         "longName": "Sumitomo Pharma Co., Ltd.",
         "currency": "JPY",
-        "price": 1535.5,
+        "price": 1527,
         "previousClose": 1535.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 4566300,
+        "change": -8.5,
+        "changePercent": -0.5535656138065776,
+        "volume": 3411700,
         "date": "2026-09-11"
       }
     },
@@ -734,11 +734,11 @@
         "symbol": "4507.T",
         "longName": "Shionogi & Co., Ltd.",
         "currency": "JPY",
-        "price": 2831,
+        "price": 2827,
         "previousClose": 2831,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3661000,
+        "change": -4,
+        "changePercent": -0.1412928293889085,
+        "volume": 3364400,
         "date": "2026-09-11"
       }
     },
@@ -747,11 +747,11 @@
         "symbol": "4519.T",
         "longName": "Chugai Pharmaceutical Co., Ltd.",
         "currency": "JPY",
-        "price": 6418,
+        "price": 6422,
         "previousClose": 6418,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 4311100,
+        "change": 4,
+        "changePercent": 0.06232471174820816,
+        "volume": 3008400,
         "date": "2026-09-11"
       }
     },
@@ -760,11 +760,11 @@
         "symbol": "4523.T",
         "longName": "Eisai Co., Ltd.",
         "currency": "JPY",
-        "price": 4668,
+        "price": 4658,
         "previousClose": 4668,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1808500,
+        "change": -10,
+        "changePercent": -0.21422450728363326,
+        "volume": 1376000,
         "date": "2026-09-11"
       }
     },
@@ -773,11 +773,11 @@
         "symbol": "4543.T",
         "longName": "Terumo Corporation",
         "currency": "JPY",
-        "price": 2235,
+        "price": 2246,
         "previousClose": 2235,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 8599100,
+        "change": 11,
+        "changePercent": 0.4921700223713647,
+        "volume": 6580400,
         "date": "2026-09-11"
       }
     },
@@ -786,11 +786,11 @@
         "symbol": "4568.T",
         "longName": "Daiichi Sankyo Company, Limited",
         "currency": "JPY",
-        "price": 2709,
+        "price": 2772,
         "previousClose": 2709,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 6457800,
+        "change": 63,
+        "changePercent": 2.3255813953488373,
+        "volume": 6678900,
         "date": "2026-09-11"
       }
     },
@@ -799,11 +799,11 @@
         "symbol": "4578.T",
         "longName": "Otsuka Holdings Co., Ltd.",
         "currency": "JPY",
-        "price": 11465,
+        "price": 11335,
         "previousClose": 11465,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2011900,
+        "change": -130,
+        "changePercent": -1.13388573920628,
+        "volume": 1681600,
         "date": "2026-09-11"
       }
     },
@@ -812,11 +812,11 @@
         "symbol": "4661.T",
         "longName": "Oriental Land Co., Ltd.",
         "currency": "JPY",
-        "price": 3173,
+        "price": 3085,
         "previousClose": 3173,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 6962500,
+        "change": -88,
+        "changePercent": -2.7734005672864797,
+        "volume": 5616100,
         "date": "2026-09-11"
       }
     },
@@ -825,11 +825,11 @@
         "symbol": "4689.T",
         "longName": "LY Corporation",
         "currency": "JPY",
-        "price": 526.3,
+        "price": 544.4,
         "previousClose": 526.2999877929688,
-        "change": 0.000012207031204525265,
-        "changePercent": 0.0000023194055648215517,
-        "volume": 21044100,
+        "change": 18.100012207031227,
+        "changePercent": 3.4391055722675126,
+        "volume": 21272400,
         "date": "2026-09-11"
       }
     },
@@ -838,11 +838,11 @@
         "symbol": "4704.T",
         "longName": "Trend Micro Incorporated",
         "currency": "JPY",
-        "price": 5718,
+        "price": 5813,
         "previousClose": 5718,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1441500,
+        "change": 95,
+        "changePercent": 1.6614200769499825,
+        "volume": 1148700,
         "date": "2026-09-11"
       }
     },
@@ -851,11 +851,11 @@
         "symbol": "4751.T",
         "longName": "CyberAgent, Inc.",
         "currency": "JPY",
-        "price": 1235.5,
+        "price": 1231.5,
         "previousClose": 1235.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 5320300,
+        "change": -4,
+        "changePercent": -0.3237555645487657,
+        "volume": 4925400,
         "date": "2026-09-11"
       }
     },
@@ -864,11 +864,11 @@
         "symbol": "4755.T",
         "longName": "Rakuten Group, Inc.",
         "currency": "JPY",
-        "price": 723.6,
+        "price": 716.3,
         "previousClose": 723.5999755859375,
-        "change": 0.000024414062522737368,
-        "changePercent": 0.000003373972270102414,
-        "volume": 16181100,
+        "change": -7.2999755859375455,
+        "changePercent": -1.0088413256269622,
+        "volume": 12169700,
         "date": "2026-09-11"
       }
     },
@@ -877,11 +877,11 @@
         "symbol": "4901.T",
         "longName": "FUJIFILM Holdings Corporation",
         "currency": "JPY",
-        "price": 3232,
+        "price": 3225,
         "previousClose": 3232,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 5292500,
+        "change": -7,
+        "changePercent": -0.2165841584158416,
+        "volume": 4290100,
         "date": "2026-09-11"
       }
     },
@@ -890,11 +890,11 @@
         "symbol": "4902.T",
         "longName": "Konica Minolta, Inc.",
         "currency": "JPY",
-        "price": 588.2,
+        "price": 595.4,
         "previousClose": 588.2000122070312,
-        "change": -0.000012207031204525265,
-        "changePercent": -0.0000020753197808892097,
-        "volume": 4707600,
+        "change": 7.199987792968727,
+        "changePercent": 1.2240713436834334,
+        "volume": 4265800,
         "date": "2026-09-11"
       }
     },
@@ -903,11 +903,11 @@
         "symbol": "4911.T",
         "longName": "Shiseido Company, Limited",
         "currency": "JPY",
-        "price": 3330,
+        "price": 3404,
         "previousClose": 3330,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3775500,
+        "change": 74,
+        "changePercent": 2.2222222222222223,
+        "volume": 3395000,
         "date": "2026-09-11"
       }
     },
@@ -916,11 +916,11 @@
         "symbol": "5019.T",
         "longName": "Idemitsu Kosan Co.,Ltd.",
         "currency": "JPY",
-        "price": 1650.5,
+        "price": 1648,
         "previousClose": 1650.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 9030200,
+        "change": -2.5,
+        "changePercent": -0.1514692517418964,
+        "volume": 7416300,
         "date": "2026-09-11"
       }
     },
@@ -929,11 +929,11 @@
         "symbol": "5020.T",
         "longName": "ENEOS Holdings, Inc.",
         "currency": "JPY",
-        "price": 1472,
+        "price": 1441,
         "previousClose": 1472,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 15065800,
+        "change": -31,
+        "changePercent": -2.1059782608695654,
+        "volume": 13710800,
         "date": "2026-09-11"
       }
     },
@@ -942,12 +942,12 @@
         "symbol": "5101.T",
         "longName": "The Yokohama Rubber Company, Limited",
         "currency": "JPY",
-        "price": 6792,
-        "previousClose": 6835,
-        "change": -43,
-        "changePercent": -0.6291148500365764,
-        "volume": 750800,
-        "date": "2026-09-10"
+        "price": 6764,
+        "previousClose": 6792,
+        "change": -28,
+        "changePercent": -0.4122497055359246,
+        "volume": 998600,
+        "date": "2026-09-11"
       }
     },
     "5108": {
@@ -955,11 +955,11 @@
         "symbol": "5108.T",
         "longName": "Bridgestone Corporation",
         "currency": "JPY",
-        "price": 3778,
+        "price": 3777,
         "previousClose": 3778,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 6176700,
+        "change": -1,
+        "changePercent": -0.02646903123345686,
+        "volume": 5431800,
         "date": "2026-09-11"
       }
     },
@@ -968,11 +968,11 @@
         "symbol": "5201.T",
         "longName": "AGC Inc.",
         "currency": "JPY",
-        "price": 5532,
+        "price": 5537,
         "previousClose": 5532,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1244300,
+        "change": 5,
+        "changePercent": 0.09038322487346348,
+        "volume": 1379000,
         "date": "2026-09-11"
       }
     },
@@ -981,11 +981,11 @@
         "symbol": "5214.T",
         "longName": "Nippon Electric Glass Co., Ltd.",
         "currency": "JPY",
-        "price": 4806,
+        "price": 4802,
         "previousClose": 4806,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 859400,
+        "change": -4,
+        "changePercent": -0.08322929671244278,
+        "volume": 547500,
         "date": "2026-09-11"
       }
     },
@@ -994,11 +994,11 @@
         "symbol": "5233.T",
         "longName": "Taiheiyo Cement Corporation",
         "currency": "JPY",
-        "price": 4058,
+        "price": 4061,
         "previousClose": 4058,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 783000,
+        "change": 3,
+        "changePercent": 0.07392804337111877,
+        "volume": 550200,
         "date": "2026-09-11"
       }
     },
@@ -1007,11 +1007,11 @@
         "symbol": "5301.T",
         "longName": "Tokai Carbon Co., Ltd.",
         "currency": "JPY",
-        "price": 2000,
+        "price": 1987.5,
         "previousClose": 2000,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2988200,
+        "change": -12.5,
+        "changePercent": -0.625,
+        "volume": 2976200,
         "date": "2026-09-11"
       }
     },
@@ -1020,11 +1020,11 @@
         "symbol": "5332.T",
         "longName": "TOTO LTD.",
         "currency": "JPY",
-        "price": 5817,
+        "price": 5773,
         "previousClose": 5817,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1004000,
+        "change": -44,
+        "changePercent": -0.7564036444902871,
+        "volume": 1066100,
         "date": "2026-09-11"
       }
     },
@@ -1033,12 +1033,12 @@
         "symbol": "5333.T",
         "longName": "NGK Corporation",
         "currency": "JPY",
-        "price": 5064,
-        "previousClose": 5138,
-        "change": -74,
-        "changePercent": -1.44024912417283,
-        "volume": 1346800,
-        "date": "2026-09-10"
+        "price": 5001,
+        "previousClose": 5064,
+        "change": -63,
+        "changePercent": -1.2440758293838863,
+        "volume": 2156100,
+        "date": "2026-09-11"
       }
     },
     "5401": {
@@ -1046,11 +1046,11 @@
         "symbol": "5401.T",
         "longName": "Nippon Steel Corporation",
         "currency": "JPY",
-        "price": 690.6,
+        "price": 686.4,
         "previousClose": 690.5999755859375,
-        "change": 0.000024414062522737368,
-        "changePercent": 0.0000035351959724619636,
-        "volume": 39364200,
+        "change": -4.199975585937523,
+        "changePercent": -0.6081632977722111,
+        "volume": 23731600,
         "date": "2026-09-11"
       }
     },
@@ -1059,11 +1059,11 @@
         "symbol": "5406.T",
         "longName": "Kobe Steel, Ltd.",
         "currency": "JPY",
-        "price": 2029.5,
+        "price": 2021,
         "previousClose": 2029.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1541200,
+        "change": -8.5,
+        "changePercent": -0.4188223700418822,
+        "volume": 1655900,
         "date": "2026-09-11"
       }
     },
@@ -1072,11 +1072,11 @@
         "symbol": "5411.T",
         "longName": "JFE Holdings, Inc.",
         "currency": "JPY",
-        "price": 1828,
+        "price": 1820,
         "previousClose": 1828,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 5489100,
+        "change": -8,
+        "changePercent": -0.437636761487965,
+        "volume": 5269900,
         "date": "2026-09-11"
       }
     },
@@ -1085,11 +1085,11 @@
         "symbol": "5631.T",
         "longName": "The Japan Steel Works, Ltd.",
         "currency": "JPY",
-        "price": 6836,
+        "price": 6966,
         "previousClose": 6836,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1786700,
+        "change": 130,
+        "changePercent": 1.9016968987712113,
+        "volume": 1572600,
         "date": "2026-09-11"
       }
     },
@@ -1098,12 +1098,12 @@
         "symbol": "5706.T",
         "longName": "Mitsui Kinzoku Company, Limited",
         "currency": "JPY",
-        "price": 24705,
-        "previousClose": 26200,
-        "change": -1495,
-        "changePercent": -5.706106870229008,
-        "volume": 2049400,
-        "date": "2026-09-10"
+        "price": 23240,
+        "previousClose": 24705,
+        "change": -1465,
+        "changePercent": -5.9299736895365305,
+        "volume": 1866500,
+        "date": "2026-09-11"
       }
     },
     "5711": {
@@ -1111,12 +1111,12 @@
         "symbol": "5711.T",
         "longName": "Mitsubishi Materials Corporation",
         "currency": "JPY",
-        "price": 5255,
-        "previousClose": 5386,
-        "change": -131,
-        "changePercent": -2.4322317118455254,
-        "volume": 1572800,
-        "date": "2026-09-10"
+        "price": 5022,
+        "previousClose": 5255,
+        "change": -233,
+        "changePercent": -4.433872502378687,
+        "volume": 2028500,
+        "date": "2026-09-11"
       }
     },
     "5713": {
@@ -1124,12 +1124,12 @@
         "symbol": "5713.T",
         "longName": "Sumitomo Metal Mining Co., Ltd.",
         "currency": "JPY",
-        "price": 10190,
-        "previousClose": 10370,
-        "change": -180,
-        "changePercent": -1.7357762777242043,
-        "volume": 1973700,
-        "date": "2026-09-10"
+        "price": 9484,
+        "previousClose": 10190,
+        "change": -706,
+        "changePercent": -6.928361138370952,
+        "volume": 3585600,
+        "date": "2026-09-11"
       }
     },
     "5714": {
@@ -1137,12 +1137,12 @@
         "symbol": "5714.T",
         "longName": "Dowa Holdings Co., Ltd.",
         "currency": "JPY",
-        "price": 9263,
-        "previousClose": 9456,
-        "change": -193,
-        "changePercent": -2.041032148900169,
-        "volume": 465100,
-        "date": "2026-09-10"
+        "price": 8885,
+        "previousClose": 9263,
+        "change": -378,
+        "changePercent": -4.080751376443917,
+        "volume": 485300,
+        "date": "2026-09-11"
       }
     },
     "5801": {
@@ -1150,11 +1150,11 @@
         "symbol": "5801.T",
         "longName": "Furukawa Electric Co., Ltd.",
         "currency": "JPY",
-        "price": 4024,
+        "price": 3981,
         "previousClose": 4024,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 23218700,
+        "change": -43,
+        "changePercent": -1.0685884691848906,
+        "volume": 23237900,
         "date": "2026-09-11"
       }
     },
@@ -1163,11 +1163,11 @@
         "symbol": "5802.T",
         "longName": "Sumitomo Electric Industries, Ltd.",
         "currency": "JPY",
-        "price": 2111.5,
+        "price": 2077.5,
         "previousClose": 2111.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 22643700,
+        "change": -34,
+        "changePercent": -1.6102296945299548,
+        "volume": 14578800,
         "date": "2026-09-11"
       }
     },
@@ -1176,26 +1176,26 @@
         "symbol": "5803.T",
         "longName": "Fujikura Ltd.",
         "currency": "JPY",
-        "price": 5209,
-        "previousClose": 5493,
-        "change": -284,
-        "changePercent": -5.170216639359185,
-        "volume": 35034000,
-        "date": "2026-09-10"
+        "price": 4982,
+        "previousClose": 5209,
+        "change": -227,
+        "changePercent": -4.357842196198886,
+        "volume": 38396400,
+        "date": "2026-09-11"
       },
-      "current": "フジクラは、光ファイバーや電線、電子部品などを製造する大手非鉄金属メーカーです。生成AIの普及やデータセンターの急増を背景に、主力の情報通信事業において光関連製品や光ファイバーケーブルの需要が大きく拡大しています。こうした旺盛なインフラ需要を追い風に、足元の業績は大幅な増収増益のトレンドを維持しています。",
-      "updates": "同社が2026年8月7日に発表した2027年3月期第1四半期連結決算は、売上高が前年同期比50.1%増の4,020億900万円、営業利益が同155.1%増の1,048億2,800万円となりました。これに伴い、データセンター向け需要が継続して好調に推移する見込みから、2027年3月期の通期連結業績予想を上方修正し、売上高を1兆7,550億円、営業利益を4,320億円に見直すと公表しています。"
+      "current": "電線大手の一角を占めるフジクラは、生成AIの普及を背景に急拡大するデータセンター向け需要を捉え、情報通信事業を中心に高い成長を維持しています。特に光ソリューションや高密度光ケーブルなどの光関連コンポーネントが好調で、同社の収益力を大きく押し上げています。",
+      "updates": "2026年8月7日に公表した2027年3月期第1四半期（4〜6月期）連結決算は、売上高が前年同期比50.1％増の4,020億円、営業利益が同155.1％増の1,048億円と大幅な増収増益を記録しました。これに伴い、通期の連結売上高予想を1兆7,550億円、営業利益予想を4,320億円へと上方修正しています。また、同月にJPX総研が公表した「JPXプライム150指数」の構成銘柄へ初めて選定されたことを発表しました。"
     },
     "5831": {
       "quote": {
         "symbol": "5831.T",
         "longName": "Shizuoka Financial Group,Inc.",
         "currency": "JPY",
-        "price": 3535,
+        "price": 3551,
         "previousClose": 3535,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3138800,
+        "change": 16,
+        "changePercent": 0.4526166902404526,
+        "volume": 2501000,
         "date": "2026-09-11"
       }
     },
@@ -1204,11 +1204,11 @@
         "symbol": "6098.T",
         "longName": "Recruit Holdings Co., Ltd.",
         "currency": "JPY",
-        "price": 15850,
+        "price": 15500,
         "previousClose": 15850,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 6784900,
+        "change": -350,
+        "changePercent": -2.2082018927444795,
+        "volume": 4847300,
         "date": "2026-09-11"
       }
     },
@@ -1217,11 +1217,11 @@
         "symbol": "6103.T",
         "longName": "Okuma Corporation",
         "currency": "JPY",
-        "price": 4305,
+        "price": 4330,
         "previousClose": 4305,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 593500,
+        "change": 25,
+        "changePercent": 0.5807200929152149,
+        "volume": 510600,
         "date": "2026-09-11"
       }
     },
@@ -1230,11 +1230,11 @@
         "symbol": "6113.T",
         "longName": "Amada Co., Ltd.",
         "currency": "JPY",
-        "price": 2378.5,
+        "price": 2338.5,
         "previousClose": 2378.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3413100,
+        "change": -40,
+        "changePercent": -1.681732184149674,
+        "volume": 3099900,
         "date": "2026-09-11"
       }
     },
@@ -1243,11 +1243,11 @@
         "symbol": "6146.T",
         "longName": "Disco Corporation",
         "currency": "JPY",
-        "price": 53580,
+        "price": 51980,
         "previousClose": 53580,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1803500,
+        "change": -1600,
+        "changePercent": -2.9861888764464353,
+        "volume": 1430800,
         "date": "2026-09-11"
       }
     },
@@ -1256,11 +1256,11 @@
         "symbol": "6178.T",
         "longName": "Japan Post Holdings Co., Ltd.",
         "currency": "JPY",
-        "price": 2432.5,
+        "price": 2469,
         "previousClose": 2432.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 5044500,
+        "change": 36.5,
+        "changePercent": 1.500513874614594,
+        "volume": 4381700,
         "date": "2026-09-11"
       }
     },
@@ -1269,12 +1269,12 @@
         "symbol": "6273.T",
         "longName": "SMC Corporation",
         "currency": "JPY",
-        "price": 67680,
-        "previousClose": 67890,
-        "change": -210,
-        "changePercent": -0.30932390631904555,
-        "volume": 200200,
-        "date": "2026-09-10"
+        "price": 68160,
+        "previousClose": 67680,
+        "change": 480,
+        "changePercent": 0.7092198581560284,
+        "volume": 305400,
+        "date": "2026-09-11"
       }
     },
     "6301": {
@@ -1282,11 +1282,11 @@
         "symbol": "6301.T",
         "longName": "Komatsu Ltd.",
         "currency": "JPY",
-        "price": 7389,
+        "price": 7114,
         "previousClose": 7389,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3945900,
+        "change": -275,
+        "changePercent": -3.7217485451346595,
+        "volume": 4144200,
         "date": "2026-09-11"
       }
     },
@@ -1295,12 +1295,12 @@
         "symbol": "6302.T",
         "longName": "Sumitomo Heavy Industries, Ltd.",
         "currency": "JPY",
-        "price": 5611,
-        "previousClose": 5700,
-        "change": -89,
-        "changePercent": -1.5614035087719298,
-        "volume": 681600,
-        "date": "2026-09-10"
+        "price": 5526,
+        "previousClose": 5611,
+        "change": -85,
+        "changePercent": -1.5148814828016397,
+        "volume": 874800,
+        "date": "2026-09-11"
       }
     },
     "6305": {
@@ -1308,11 +1308,11 @@
         "symbol": "6305.T",
         "longName": "Hitachi Construction Machinery Co., Ltd.",
         "currency": "JPY",
-        "price": 5681,
+        "price": 5633,
         "previousClose": 5681,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1468300,
+        "change": -48,
+        "changePercent": -0.8449216687202956,
+        "volume": 1227400,
         "date": "2026-09-11"
       }
     },
@@ -1321,11 +1321,11 @@
         "symbol": "6326.T",
         "longName": "Kubota Corporation",
         "currency": "JPY",
-        "price": 2794.5,
+        "price": 2783,
         "previousClose": 2794.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 5382200,
+        "change": -11.5,
+        "changePercent": -0.411522633744856,
+        "volume": 5061300,
         "date": "2026-09-11"
       }
     },
@@ -1334,12 +1334,12 @@
         "symbol": "6361.T",
         "longName": "Ebara Corporation",
         "currency": "JPY",
-        "price": 4312,
-        "previousClose": 4392,
-        "change": -80,
-        "changePercent": -1.8214936247723135,
-        "volume": 2880100,
-        "date": "2026-09-10"
+        "price": 4247,
+        "previousClose": 4312,
+        "change": -65,
+        "changePercent": -1.5074211502782933,
+        "volume": 3537000,
+        "date": "2026-09-11"
       }
     },
     "6367": {
@@ -1347,11 +1347,11 @@
         "symbol": "6367.T",
         "longName": "Daikin Industries,Ltd.",
         "currency": "JPY",
-        "price": 20850,
+        "price": 20780,
         "previousClose": 20850,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1667900,
+        "change": -70,
+        "changePercent": -0.3357314148681055,
+        "volume": 1228000,
         "date": "2026-09-11"
       }
     },
@@ -1360,11 +1360,11 @@
         "symbol": "6471.T",
         "longName": "NSK Ltd.",
         "currency": "JPY",
-        "price": 1048.5,
+        "price": 1043.5,
         "previousClose": 1048.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3496300,
+        "change": -5,
+        "changePercent": -0.4768717215069146,
+        "volume": 3192200,
         "date": "2026-09-11"
       }
     },
@@ -1373,11 +1373,11 @@
         "symbol": "6472.T",
         "longName": "NTN Corporation",
         "currency": "JPY",
-        "price": 370.3,
+        "price": 370.1,
         "previousClose": 370.29998779296875,
-        "change": 0.000012207031261368684,
-        "changePercent": 0.0000032965248889485572,
-        "volume": 4876300,
+        "change": -0.19998779296872726,
+        "changePercent": -0.054006967205340164,
+        "volume": 3678000,
         "date": "2026-09-11"
       }
     },
@@ -1386,11 +1386,11 @@
         "symbol": "6473.T",
         "longName": "JTEKT Corporation",
         "currency": "JPY",
-        "price": 2009.5,
+        "price": 2013.5,
         "previousClose": 2009.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1862300,
+        "change": 4,
+        "changePercent": 0.19905449116695695,
+        "volume": 1428200,
         "date": "2026-09-11"
       }
     },
@@ -1399,11 +1399,11 @@
         "symbol": "6479.T",
         "longName": "MINEBEA MITSUMI Inc.",
         "currency": "JPY",
-        "price": 3377,
+        "price": 3391,
         "previousClose": 3377,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2787300,
+        "change": 14,
+        "changePercent": 0.414569144210838,
+        "volume": 3530700,
         "date": "2026-09-11"
       }
     },
@@ -1412,11 +1412,11 @@
         "symbol": "6501.T",
         "longName": "Hitachi, Ltd.",
         "currency": "JPY",
-        "price": 5182,
+        "price": 5199,
         "previousClose": 5182,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 10975000,
+        "change": 17,
+        "changePercent": 0.32805866460825933,
+        "volume": 9761900,
         "date": "2026-09-11"
       }
     },
@@ -1425,11 +1425,11 @@
         "symbol": "6503.T",
         "longName": "Mitsubishi Electric Corporation",
         "currency": "JPY",
-        "price": 5095,
+        "price": 5027,
         "previousClose": 5095,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 6763100,
+        "change": -68,
+        "changePercent": -1.3346418056918548,
+        "volume": 6163500,
         "date": "2026-09-11"
       }
     },
@@ -1438,11 +1438,11 @@
         "symbol": "6504.T",
         "longName": "Fuji Electric Co., Ltd.",
         "currency": "JPY",
-        "price": 12855,
+        "price": 12650,
         "previousClose": 12855,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 841200,
+        "change": -205,
+        "changePercent": -1.5947102294826914,
+        "volume": 649700,
         "date": "2026-09-11"
       }
     },
@@ -1451,12 +1451,12 @@
         "symbol": "6506.T",
         "longName": "YASKAWA Electric Corporation",
         "currency": "JPY",
-        "price": 4432,
-        "previousClose": 4503,
-        "change": -71,
-        "changePercent": -1.5767266266933155,
-        "volume": 3785700,
-        "date": "2026-09-10"
+        "price": 4301,
+        "previousClose": 4432,
+        "change": -131,
+        "changePercent": -2.9557761732851984,
+        "volume": 5133300,
+        "date": "2026-09-11"
       }
     },
     "6526": {
@@ -1464,11 +1464,11 @@
         "symbol": "6526.T",
         "longName": "Socionext Inc.",
         "currency": "JPY",
-        "price": 1877,
+        "price": 1834.5,
         "previousClose": 1877,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 6807800,
+        "change": -42.5,
+        "changePercent": -2.2642514651038894,
+        "volume": 6024800,
         "date": "2026-09-11"
       }
     },
@@ -1477,11 +1477,11 @@
         "symbol": "6532.T",
         "longName": "Baycurrent, Inc.",
         "currency": "JPY",
-        "price": 7376,
+        "price": 7337,
         "previousClose": 7376,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1543000,
+        "change": -39,
+        "changePercent": -0.5287418655097613,
+        "volume": 1020700,
         "date": "2026-09-11"
       }
     },
@@ -1490,11 +1490,11 @@
         "symbol": "6645.T",
         "longName": "OMRON Corporation",
         "currency": "JPY",
-        "price": 6030,
+        "price": 6003,
         "previousClose": 6030,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1450800,
+        "change": -27,
+        "changePercent": -0.44776119402985076,
+        "volume": 1518900,
         "date": "2026-09-11"
       }
     },
@@ -1503,11 +1503,11 @@
         "symbol": "6701.T",
         "longName": "NEC Corporation",
         "currency": "JPY",
-        "price": 4587,
+        "price": 4536,
         "previousClose": 4587,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 6693400,
+        "change": -51,
+        "changePercent": -1.1118378024852846,
+        "volume": 5050900,
         "date": "2026-09-11"
       }
     },
@@ -1516,11 +1516,11 @@
         "symbol": "6702.T",
         "longName": "Fujitsu Limited",
         "currency": "JPY",
-        "price": 3788,
+        "price": 3749,
         "previousClose": 3788,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 8407800,
+        "change": -39,
+        "changePercent": -1.0295670538542767,
+        "volume": 7876000,
         "date": "2026-09-11"
       }
     },
@@ -1529,12 +1529,12 @@
         "symbol": "6723.T",
         "longName": "Renesas Electronics Corporation",
         "currency": "JPY",
-        "price": 3320,
-        "previousClose": 3315,
-        "change": 5,
-        "changePercent": 0.1508295625942685,
-        "volume": 7687100,
-        "date": "2026-09-10"
+        "price": 3192,
+        "previousClose": 3320,
+        "change": -128,
+        "changePercent": -3.8554216867469884,
+        "volume": 10122800,
+        "date": "2026-09-11"
       }
     },
     "6724": {
@@ -1542,11 +1542,11 @@
         "symbol": "6724.T",
         "longName": "Seiko Epson Corporation",
         "currency": "JPY",
-        "price": 3024,
+        "price": 3050,
         "previousClose": 3024,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2202900,
+        "change": 26,
+        "changePercent": 0.8597883597883598,
+        "volume": 1842700,
         "date": "2026-09-11"
       }
     },
@@ -1555,12 +1555,12 @@
         "symbol": "6752.T",
         "longName": "Panasonic Holdings Corporation",
         "currency": "JPY",
-        "price": 4292,
-        "previousClose": 4179,
-        "change": 113,
-        "changePercent": 2.7039961713328546,
-        "volume": 10594500,
-        "date": "2026-09-10"
+        "price": 4200,
+        "previousClose": 4292,
+        "change": -92,
+        "changePercent": -2.1435228331780056,
+        "volume": 8125800,
+        "date": "2026-09-11"
       }
     },
     "6753": {
@@ -1568,11 +1568,11 @@
         "symbol": "6753.T",
         "longName": "Sharp Corporation",
         "currency": "JPY",
-        "price": 669.2,
+        "price": 678,
         "previousClose": 669.2000122070312,
-        "change": -0.000012207031204525265,
-        "changePercent": -0.0000018241229799542742,
-        "volume": 6511700,
+        "change": 8.79998779296875,
+        "changePercent": 1.3150011405328974,
+        "volume": 7902400,
         "date": "2026-09-11"
       }
     },
@@ -1581,11 +1581,11 @@
         "symbol": "6758.T",
         "longName": "Sony Group Corporation",
         "currency": "JPY",
-        "price": 3640,
+        "price": 3632,
         "previousClose": 3640,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 18174900,
+        "change": -8,
+        "changePercent": -0.21978021978021978,
+        "volume": 14472100,
         "date": "2026-09-11"
       }
     },
@@ -1594,12 +1594,12 @@
         "symbol": "6762.T",
         "longName": "TDK Corporation",
         "currency": "JPY",
-        "price": 2850.5,
-        "previousClose": 2812.5,
-        "change": 38,
-        "changePercent": 1.3511111111111112,
-        "volume": 11413700,
-        "date": "2026-09-10"
+        "price": 2808.5,
+        "previousClose": 2850.5,
+        "change": -42,
+        "changePercent": -1.4734257147868794,
+        "volume": 12186500,
+        "date": "2026-09-11"
       }
     },
     "6770": {
@@ -1607,11 +1607,11 @@
         "symbol": "6770.T",
         "longName": "Alps Alpine Co., Ltd.",
         "currency": "JPY",
-        "price": 2174,
+        "price": 2216,
         "previousClose": 2174,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2420200,
+        "change": 42,
+        "changePercent": 1.9319227230910765,
+        "volume": 1935200,
         "date": "2026-09-11"
       }
     },
@@ -1620,12 +1620,12 @@
         "symbol": "6841.T",
         "longName": "Yokogawa Electric Corporation",
         "currency": "JPY",
-        "price": 4638,
-        "previousClose": 4637,
-        "change": 1,
-        "changePercent": 0.021565667457407806,
-        "volume": 1248100,
-        "date": "2026-09-10"
+        "price": 4568,
+        "previousClose": 4638,
+        "change": -70,
+        "changePercent": -1.5092712376024149,
+        "volume": 1280100,
+        "date": "2026-09-11"
       }
     },
     "6857": {
@@ -1633,26 +1633,26 @@
         "symbol": "6857.T",
         "longName": "Advantest Corporation",
         "currency": "JPY",
-        "price": 33920,
-        "previousClose": 32840,
-        "change": 1080,
-        "changePercent": 3.2886723507917175,
-        "volume": 9970300,
-        "date": "2026-09-10"
+        "price": 31720,
+        "previousClose": 33920,
+        "change": -2200,
+        "changePercent": -6.485849056603773,
+        "volume": 11096600,
+        "date": "2026-09-11"
       },
-      "current": "半導体が設計通りに動作するかを検査する「半導体テスタ」の世界的リーディングカンパニーであり、米国テラダイン社と市場を二分しています。昨今の生成AI向け高性能半導体（SoC）や高帯域幅メモリ（HBM）の急速な需要拡大により、同社の高付加価値テスタに対する引き合いが強まっています。",
-      "updates": "2026年7月29日に発表した2026年度（2027年3月期）第1四半期決算では、売上高が前年同期比39.3%増の3,675億円、営業利益が同53.3%増の1,900億円となり、第1四半期として過去最高を記録したと公表しました。あわせて、生成AI関連の需要増などを踏まえ、通期の連結売上高予想を1兆7,140億円（従来予想から2,940億円増）に大幅上方修正しています。また2026年4月には、米国アプライド マテリアルズとの戦略的パートナーシップ締結や、半導体テスト向け協業拠点「Advantest Innovation Center」の開設を発表しています。"
+      "current": "半導体が正しく動作するかを検査する半導体テストシステム（テスタ）で世界シェアトップクラスを誇る大手メーカーです。生成AIや高性能コンピューティング向け半導体の需要拡大を背景に、主軸であるSoCテストシステムをはじめとする検査装置の需要が好調に推移しています。最先端半導体の製造プロセスの複雑化に伴い、テスト需要の構造的な増加が同社の事業成長を支えています。",
+      "updates": "2026年7月29日に発表した2026年度第1四半期（2027年3月期第1四半期）連結決算では、売上高が前年同期比39.3%増の3,675億円、営業利益が同53.3%増の1,900億円と、第1四半期として過去最高を記録したと公表しました。あわせて2026年度通期の連結業績予想を上方修正し、売上高予想を1兆7,140億円へと引き上げたことを発表しています。また、同年6月にはOpenLight社とシリコンフォトニクス向けテストソリューションの開発に向けた協業を公表しました。"
     },
     "6861": {
       "quote": {
         "symbol": "6861.T",
         "longName": "Keyence Corporation",
         "currency": "JPY",
-        "price": 76500,
+        "price": 76000,
         "previousClose": 76500,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 737700,
+        "change": -500,
+        "changePercent": -0.6535947712418301,
+        "volume": 795800,
         "date": "2026-09-11"
       }
     },
@@ -1661,11 +1661,11 @@
         "symbol": "6902.T",
         "longName": "DENSO Corporation",
         "currency": "JPY",
-        "price": 1885,
+        "price": 1921,
         "previousClose": 1885,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 9383200,
+        "change": 36,
+        "changePercent": 1.909814323607427,
+        "volume": 7600200,
         "date": "2026-09-11"
       }
     },
@@ -1674,12 +1674,12 @@
         "symbol": "6920.T",
         "longName": "Lasertec Corporation",
         "currency": "JPY",
-        "price": 36320,
-        "previousClose": 35280,
-        "change": 1040,
-        "changePercent": 2.947845804988662,
-        "volume": 4021300,
-        "date": "2026-09-10"
+        "price": 34570,
+        "previousClose": 36320,
+        "change": -1750,
+        "changePercent": -4.818281938325991,
+        "volume": 3010300,
+        "date": "2026-09-11"
       }
     },
     "6954": {
@@ -1687,11 +1687,11 @@
         "symbol": "6954.T",
         "longName": "Fanuc Corporation",
         "currency": "JPY",
-        "price": 5794,
+        "price": 5735,
         "previousClose": 5794,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 6715200,
+        "change": -59,
+        "changePercent": -1.0182947877114257,
+        "volume": 7214400,
         "date": "2026-09-11"
       }
     },
@@ -1700,12 +1700,12 @@
         "symbol": "6963.T",
         "longName": "ROHM Co., Ltd.",
         "currency": "JPY",
-        "price": 4844,
-        "previousClose": 4896,
-        "change": -52,
-        "changePercent": -1.0620915032679739,
-        "volume": 2862100,
-        "date": "2026-09-10"
+        "price": 4577,
+        "previousClose": 4844,
+        "change": -267,
+        "changePercent": -5.51197357555739,
+        "volume": 4207000,
+        "date": "2026-09-11"
       }
     },
     "6971": {
@@ -1713,11 +1713,11 @@
         "symbol": "6971.T",
         "longName": "Kyocera Corporation",
         "currency": "JPY",
-        "price": 3469,
+        "price": 3551,
         "previousClose": 3469,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 7899000,
+        "change": 82,
+        "changePercent": 2.363793600461228,
+        "volume": 7812300,
         "date": "2026-09-11"
       }
     },
@@ -1726,27 +1726,27 @@
         "symbol": "6976.T",
         "longName": "Taiyo Yuden Co., Ltd.",
         "currency": "JPY",
-        "price": 9403,
-        "previousClose": 8972,
-        "change": 431,
-        "changePercent": 4.8038341506910385,
-        "volume": 34224400,
-        "date": "2026-09-10"
+        "price": 9209,
+        "previousClose": 9403,
+        "change": -194,
+        "changePercent": -2.063171328299479,
+        "volume": 31494700,
+        "date": "2026-09-11"
       },
-      "current": "積層セラミックコンデンサ（MLCC）をはじめとする電子部品の開発・製造を行う大手メーカーです。スマートフォンや自動車に加え、急速に拡大するAIサーバー向けに不可欠な高性能・超小型の電子部品をグローバルに供給しています。高度な積層技術などの独自ノウハウを強みに、デジタル社会のインフラを支えています。",
-      "updates": "2026年8月に発表した2027年3月期第1四半期（4〜6月）の連結決算にて、売上高が前年同期比10.7％増の938億9,700万円、純利益が25億400万円と黒字転換したことを公表しました。あわせて通期の業績予想を上方修正し、売上高4,240億円、純利益290億円を見込むと発表しています。また、2026年5月には新たな中期経営計画を策定し、2030年度に向けて情報インフラ・産業機器および自動車市場での売上比率を60％に引き上げる方針を示しています。"
+      "current": "積層セラミックコンデンサ（MLCC）をはじめとする電子部品の国内大手メーカーです。AIサーバーや自動車、情報インフラ・産業機器向けなどの高付加価値な電子部品の開発に強みを持っています。主力のコンデンサ事業に加えてインダクタ事業を強化し、バランスの取れた事業体質の構築を進めています。",
+      "updates": "2026年8月5日、2027年3月期第1四半期の連結決算を発表し、売上高が前年同期比10.7%増の938億9700万円、営業利益が同53.3%増の48億1800万円になったと公表しました。あわせて、AIサーバー向けなどの需要拡大が想定超で推移していることを理由に、通期の業績予想を上方修正しました。修正後の通期計画は、売上高4240億円、営業利益450億円、純利益290億円にそれぞれ引き上げています。"
     },
     "6981": {
       "quote": {
         "symbol": "6981.T",
         "longName": "Murata Manufacturing Co., Ltd.",
         "currency": "JPY",
-        "price": 7525,
-        "previousClose": 7128,
-        "change": 397,
-        "changePercent": 5.569584736251403,
-        "volume": 22261900,
-        "date": "2026-09-10"
+        "price": 7352,
+        "previousClose": 7525,
+        "change": -173,
+        "changePercent": -2.299003322259136,
+        "volume": 23574100,
+        "date": "2026-09-11"
       }
     },
     "6988": {
@@ -1754,11 +1754,11 @@
         "symbol": "6988.T",
         "longName": "Nitto Denko Corporation",
         "currency": "JPY",
-        "price": 3196,
+        "price": 3205,
         "previousClose": 3196,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 4986900,
+        "change": 9,
+        "changePercent": 0.2816020025031289,
+        "volume": 3694300,
         "date": "2026-09-11"
       }
     },
@@ -1767,11 +1767,11 @@
         "symbol": "7004.T",
         "longName": "Kanadevia Corporation",
         "currency": "JPY",
-        "price": 1142,
+        "price": 1147,
         "previousClose": 1142,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1109700,
+        "change": 5,
+        "changePercent": 0.43782837127845886,
+        "volume": 1106300,
         "date": "2026-09-11"
       }
     },
@@ -1780,11 +1780,11 @@
         "symbol": "7011.T",
         "longName": "Mitsubishi Heavy Industries, Ltd.",
         "currency": "JPY",
-        "price": 3723,
+        "price": 3705,
         "previousClose": 3723,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 18230600,
+        "change": -18,
+        "changePercent": -0.4834810636583401,
+        "volume": 13750300,
         "date": "2026-09-11"
       }
     },
@@ -1793,11 +1793,11 @@
         "symbol": "7012.T",
         "longName": "Kawasaki Heavy Industries, Ltd.",
         "currency": "JPY",
-        "price": 2349,
+        "price": 2319,
         "previousClose": 2349,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 15960700,
+        "change": -30,
+        "changePercent": -1.277139208173691,
+        "volume": 11489600,
         "date": "2026-09-11"
       }
     },
@@ -1806,11 +1806,11 @@
         "symbol": "7013.T",
         "longName": "IHI Corporation",
         "currency": "JPY",
-        "price": 2663.5,
+        "price": 2665,
         "previousClose": 2663.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 17226300,
+        "change": 1.5,
+        "changePercent": 0.056316876290595085,
+        "volume": 12286100,
         "date": "2026-09-11"
       }
     },
@@ -1819,11 +1819,11 @@
         "symbol": "7186.T",
         "longName": "Yokohama Financial Group, Inc.",
         "currency": "JPY",
-        "price": 1892,
+        "price": 1899,
         "previousClose": 1892,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 5728100,
+        "change": 7,
+        "changePercent": 0.36997885835095135,
+        "volume": 5642600,
         "date": "2026-09-11"
       }
     },
@@ -1832,11 +1832,11 @@
         "symbol": "7201.T",
         "longName": "Nissan Motor Co., Ltd.",
         "currency": "JPY",
-        "price": 308.2,
+        "price": 311.7,
         "previousClose": 308.20001220703125,
-        "change": -0.000012207031261368684,
-        "changePercent": -0.000003960749765697184,
-        "volume": 28355800,
+        "change": 3.4999877929687386,
+        "changePercent": 1.1356222110132967,
+        "volume": 35789500,
         "date": "2026-09-11"
       }
     },
@@ -1845,11 +1845,11 @@
         "symbol": "7202.T",
         "longName": "Isuzu Motors Limited",
         "currency": "JPY",
-        "price": 2180,
+        "price": 2190,
         "previousClose": 2180,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3159500,
+        "change": 10,
+        "changePercent": 0.45871559633027525,
+        "volume": 2707900,
         "date": "2026-09-11"
       }
     },
@@ -1858,11 +1858,11 @@
         "symbol": "7203.T",
         "longName": "Toyota Motor Corporation",
         "currency": "JPY",
-        "price": 2994,
+        "price": 3031,
         "previousClose": 2994,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 28276600,
+        "change": 37,
+        "changePercent": 1.2358049432197729,
+        "volume": 27282400,
         "date": "2026-09-11"
       }
     },
@@ -1871,11 +1871,11 @@
         "symbol": "7211.T",
         "longName": "Mitsubishi Motors Corporation",
         "currency": "JPY",
-        "price": 360.3,
+        "price": 368,
         "previousClose": 360.29998779296875,
-        "change": 0.000012207031261368684,
-        "changePercent": 0.0000033880187829434348,
-        "volume": 9165500,
+        "change": 7.70001220703125,
+        "changePercent": 2.1371114260086346,
+        "volume": 8160100,
         "date": "2026-09-11"
       }
     },
@@ -1884,11 +1884,11 @@
         "symbol": "7261.T",
         "longName": "Mazda Motor Corporation",
         "currency": "JPY",
-        "price": 1121,
+        "price": 1140,
         "previousClose": 1121,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 6966200,
+        "change": 19,
+        "changePercent": 1.694915254237288,
+        "volume": 5767800,
         "date": "2026-09-11"
       }
     },
@@ -1897,11 +1897,11 @@
         "symbol": "7267.T",
         "longName": "Honda Motor Co., Ltd.",
         "currency": "JPY",
-        "price": 1634.5,
+        "price": 1664,
         "previousClose": 1634.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 15310600,
+        "change": 29.5,
+        "changePercent": 1.8048332823493423,
+        "volume": 14215600,
         "date": "2026-09-11"
       }
     },
@@ -1910,11 +1910,11 @@
         "symbol": "7269.T",
         "longName": "Suzuki Motor Corporation",
         "currency": "JPY",
-        "price": 2011.5,
+        "price": 2047,
         "previousClose": 2011.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 9033500,
+        "change": 35.5,
+        "changePercent": 1.7648521004225703,
+        "volume": 7402500,
         "date": "2026-09-11"
       }
     },
@@ -1923,11 +1923,11 @@
         "symbol": "7270.T",
         "longName": "Subaru Corporation",
         "currency": "JPY",
-        "price": 2561,
+        "price": 2619.5,
         "previousClose": 2561,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 5112600,
+        "change": 58.5,
+        "changePercent": 2.284263959390863,
+        "volume": 5009300,
         "date": "2026-09-11"
       }
     },
@@ -1936,11 +1936,11 @@
         "symbol": "7272.T",
         "longName": "Yamaha Motor Co., Ltd.",
         "currency": "JPY",
-        "price": 1761,
+        "price": 1731.5,
         "previousClose": 1761,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 7800000,
+        "change": -29.5,
+        "changePercent": -1.6751845542305508,
+        "volume": 7238200,
         "date": "2026-09-11"
       }
     },
@@ -1949,11 +1949,11 @@
         "symbol": "7453.T",
         "longName": "Ryohin Keikaku Co., Ltd.",
         "currency": "JPY",
-        "price": 3972,
+        "price": 4005,
         "previousClose": 3972,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 4615400,
+        "change": 33,
+        "changePercent": 0.8308157099697886,
+        "volume": 3970000,
         "date": "2026-09-11"
       }
     },
@@ -1962,12 +1962,12 @@
         "symbol": "7532.T",
         "longName": "Pan Pacific International Holdings Corporation",
         "currency": "JPY",
-        "price": 748,
-        "previousClose": 755.5999755859375,
-        "change": -7.5999755859375,
-        "changePercent": -1.005819988287324,
-        "volume": 14709700,
-        "date": "2026-09-10"
+        "price": 726.1,
+        "previousClose": 748,
+        "change": -21.899999999999977,
+        "changePercent": -2.927807486631013,
+        "volume": 22135200,
+        "date": "2026-09-11"
       }
     },
     "7731": {
@@ -1975,11 +1975,11 @@
         "symbol": "7731.T",
         "longName": "Nikon Corporation",
         "currency": "JPY",
-        "price": 1721.5,
+        "price": 1702.5,
         "previousClose": 1721.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2085600,
+        "change": -19,
+        "changePercent": -1.103688643624746,
+        "volume": 1957700,
         "date": "2026-09-11"
       }
     },
@@ -1988,11 +1988,11 @@
         "symbol": "7733.T",
         "longName": "Olympus Corporation",
         "currency": "JPY",
-        "price": 1923.5,
+        "price": 1970,
         "previousClose": 1923.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 6203600,
+        "change": 46.5,
+        "changePercent": 2.417468157005459,
+        "volume": 5964800,
         "date": "2026-09-11"
       }
     },
@@ -2001,12 +2001,12 @@
         "symbol": "7735.T",
         "longName": "SCREEN Holdings Co., Ltd.",
         "currency": "JPY",
-        "price": 13040,
-        "previousClose": 13020,
-        "change": 20,
-        "changePercent": 0.15360983102918588,
-        "volume": 1431600,
-        "date": "2026-09-10"
+        "price": 12255,
+        "previousClose": 13040,
+        "change": -785,
+        "changePercent": -6.019938650306749,
+        "volume": 1850700,
+        "date": "2026-09-11"
       }
     },
     "7741": {
@@ -2014,11 +2014,11 @@
         "symbol": "7741.T",
         "longName": "HOYA Corporation",
         "currency": "JPY",
-        "price": 23135,
+        "price": 22690,
         "previousClose": 23135,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1472700,
+        "change": -445,
+        "changePercent": -1.9234925437648585,
+        "volume": 1203300,
         "date": "2026-09-11"
       }
     },
@@ -2027,11 +2027,11 @@
         "symbol": "7751.T",
         "longName": "Canon Inc.",
         "currency": "JPY",
-        "price": 4338,
+        "price": 4380,
         "previousClose": 4338,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3770900,
+        "change": 42,
+        "changePercent": 0.9681881051175657,
+        "volume": 3207900,
         "date": "2026-09-11"
       }
     },
@@ -2040,11 +2040,11 @@
         "symbol": "7752.T",
         "longName": "Ricoh Company, Ltd.",
         "currency": "JPY",
-        "price": 1557.5,
+        "price": 1579,
         "previousClose": 1557.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2597600,
+        "change": 21.5,
+        "changePercent": 1.3804173354735152,
+        "volume": 2143900,
         "date": "2026-09-11"
       }
     },
@@ -2053,11 +2053,11 @@
         "symbol": "7832.T",
         "longName": "BANDAI NAMCO Holdings Inc.",
         "currency": "JPY",
-        "price": 5236,
+        "price": 5359,
         "previousClose": 5236,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 4494000,
+        "change": 123,
+        "changePercent": 2.349121466768526,
+        "volume": 3282100,
         "date": "2026-09-11"
       }
     },
@@ -2066,11 +2066,11 @@
         "symbol": "7911.T",
         "longName": "TOPPAN Holdings Inc.",
         "currency": "JPY",
-        "price": 5078,
+        "price": 4725,
         "previousClose": 5078,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1293000,
+        "change": -353,
+        "changePercent": -6.951555730602599,
+        "volume": 2261600,
         "date": "2026-09-11"
       }
     },
@@ -2079,11 +2079,11 @@
         "symbol": "7912.T",
         "longName": "Dai Nippon Printing Co., Ltd.",
         "currency": "JPY",
-        "price": 3082,
+        "price": 3029,
         "previousClose": 3082,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1707900,
+        "change": -53,
+        "changePercent": -1.7196625567813109,
+        "volume": 1675100,
         "date": "2026-09-11"
       }
     },
@@ -2092,11 +2092,11 @@
         "symbol": "7951.T",
         "longName": "Yamaha Corporation",
         "currency": "JPY",
-        "price": 1221,
+        "price": 1232,
         "previousClose": 1221,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3460900,
+        "change": 11,
+        "changePercent": 0.9009009009009009,
+        "volume": 2843400,
         "date": "2026-09-11"
       }
     },
@@ -2105,11 +2105,11 @@
         "symbol": "7974.T",
         "longName": "Nintendo Co., Ltd.",
         "currency": "JPY",
-        "price": 7989,
+        "price": 8093,
         "previousClose": 7989,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 17098000,
+        "change": 104,
+        "changePercent": 1.3017899611966455,
+        "volume": 9954600,
         "date": "2026-09-11"
       }
     },
@@ -2118,11 +2118,11 @@
         "symbol": "8001.T",
         "longName": "ITOCHU Corporation",
         "currency": "JPY",
-        "price": 2283,
+        "price": 2294,
         "previousClose": 2283,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 22934600,
+        "change": 11,
+        "changePercent": 0.4818221638195357,
+        "volume": 20054600,
         "date": "2026-09-11"
       }
     },
@@ -2131,11 +2131,11 @@
         "symbol": "8002.T",
         "longName": "Marubeni Corporation",
         "currency": "JPY",
-        "price": 5019,
+        "price": 5049,
         "previousClose": 5019,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 6560900,
+        "change": 30,
+        "changePercent": 0.5977286312014346,
+        "volume": 5634500,
         "date": "2026-09-11"
       }
     },
@@ -2144,11 +2144,11 @@
         "symbol": "8015.T",
         "longName": "Toyota Tsusho Corporation",
         "currency": "JPY",
-        "price": 7430,
+        "price": 7553,
         "previousClose": 7430,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3823700,
+        "change": 123,
+        "changePercent": 1.6554508748317633,
+        "volume": 3137100,
         "date": "2026-09-11"
       }
     },
@@ -2157,11 +2157,11 @@
         "symbol": "8031.T",
         "longName": "Mitsui & Co., Ltd.",
         "currency": "JPY",
-        "price": 5093,
+        "price": 5060,
         "previousClose": 5093,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 8734100,
+        "change": -33,
+        "changePercent": -0.6479481641468683,
+        "volume": 7792100,
         "date": "2026-09-11"
       }
     },
@@ -2170,26 +2170,26 @@
         "symbol": "8035.T",
         "longName": "Tokyo Electron Limited",
         "currency": "JPY",
-        "price": 52810,
-        "previousClose": 53700,
-        "change": -890,
-        "changePercent": -1.6573556797020483,
-        "volume": 3237900,
-        "date": "2026-09-10"
+        "price": 51460,
+        "previousClose": 52810,
+        "change": -1350,
+        "changePercent": -2.556334027646279,
+        "volume": 3852700,
+        "date": "2026-09-11"
       },
-      "current": "半導体製造装置の世界的メーカーであり、コータ・デベロッパーなどの前工程装置で高い世界シェアを誇ります。生成AI向けの高性能半導体需要の拡大や、先端ロジック・先端メモリ分野への活発な設備投資を背景に、事業は非常に好調に推移しています。独自の技術力を強みに、グローバル市場で確固たる地位を築いています。",
-      "updates": "2026年7月30日に2027年3月期第1四半期決算を発表し、売上高が前年同期比33.3％増の7,323億円、営業利益が同46.1％増の2,114億円となったことを公表しました。業績好調を受け、上期の連結売上高予想を1兆6,200億円に、純利益予想を3,490億円に上方修正したほか、上期配当予想を従来の361円から384円へ増額することを発表しています。また、同年7月16日にはエージェント型AIおよびロボティクス分野において米NVIDIA社との協業を拡大し、自社のDXソリューションに同社のプラットフォームを導入して半導体製造装置の自律化を推進することを発表しました。"
+      "current": "東京エレクトロンは、半導体製造装置で世界有数のシェアを誇る大手企業です。コータ・デベロッパーや成膜装置、エッチング装置など、前工程向けの多岐にわたる製造装置を開発・製造しています。足元ではAI向け半導体需要の拡大などを背景に、グローバル市場において高い優位性を保ち続けています。",
+      "updates": "同社が2026年7月30日に公表した2027年3月期第1四半期（4〜6月期）の連結決算は、売上高が前年同期比33.3%増の7,324億円、営業利益が同46.1%増の2,114億円となりました。AI向け半導体への設備投資拡大に伴う大幅な増収増益の達成を受け、中間期の業績予想および配当予想を上方修正したと発表しています。"
     },
     "8053": {
       "quote": {
         "symbol": "8053.T",
         "longName": "Sumitomo Corporation",
         "currency": "JPY",
-        "price": 1812,
+        "price": 1822,
         "previousClose": 1812,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 14482900,
+        "change": 10,
+        "changePercent": 0.5518763796909493,
+        "volume": 13120700,
         "date": "2026-09-11"
       }
     },
@@ -2198,11 +2198,11 @@
         "symbol": "8058.T",
         "longName": "Mitsubishi Corporation",
         "currency": "JPY",
-        "price": 4987,
+        "price": 5005,
         "previousClose": 4987,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 10854600,
+        "change": 18,
+        "changePercent": 0.360938439943854,
+        "volume": 9772100,
         "date": "2026-09-11"
       }
     },
@@ -2211,11 +2211,11 @@
         "symbol": "8233.T",
         "longName": "Takashimaya Company, Limited",
         "currency": "JPY",
-        "price": 2118.5,
+        "price": 2099.5,
         "previousClose": 2118.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2285800,
+        "change": -19,
+        "changePercent": -0.8968609865470852,
+        "volume": 2187500,
         "date": "2026-09-11"
       }
     },
@@ -2224,11 +2224,11 @@
         "symbol": "8252.T",
         "longName": "Marui Group Co., Ltd.",
         "currency": "JPY",
-        "price": 2862,
+        "price": 2852.5,
         "previousClose": 2862,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1465200,
+        "change": -9.5,
+        "changePercent": -0.33193570929419985,
+        "volume": 1401200,
         "date": "2026-09-11"
       }
     },
@@ -2237,11 +2237,11 @@
         "symbol": "8253.T",
         "longName": "Credit Saison Co., Ltd.",
         "currency": "JPY",
-        "price": 4581,
+        "price": 4595,
         "previousClose": 4581,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1172100,
+        "change": 14,
+        "changePercent": 0.30561012879284,
+        "volume": 825300,
         "date": "2026-09-11"
       }
     },
@@ -2250,11 +2250,11 @@
         "symbol": "8267.T",
         "longName": "Aeon Co., Ltd.",
         "currency": "JPY",
-        "price": 1363,
+        "price": 1332.5,
         "previousClose": 1363,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 13448400,
+        "change": -30.5,
+        "changePercent": -2.2377109317681585,
+        "volume": 14151400,
         "date": "2026-09-11"
       }
     },
@@ -2267,7 +2267,7 @@
         "previousClose": 3457,
         "change": 0,
         "changePercent": 0,
-        "volume": 1653900,
+        "volume": 1258900,
         "date": "2026-09-11"
       }
     },
@@ -2276,11 +2276,11 @@
         "symbol": "8306.T",
         "longName": "Mitsubishi UFJ Financial Group, Inc.",
         "currency": "JPY",
-        "price": 3662,
+        "price": 3661,
         "previousClose": 3662,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 52350500,
+        "change": -1,
+        "changePercent": -0.027307482250136534,
+        "volume": 51100200,
         "date": "2026-09-11"
       }
     },
@@ -2289,11 +2289,11 @@
         "symbol": "8308.T",
         "longName": "Resona Holdings, Inc.",
         "currency": "JPY",
-        "price": 2488.5,
+        "price": 2522,
         "previousClose": 2488.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 14959200,
+        "change": 33.5,
+        "changePercent": 1.3461924854329919,
+        "volume": 13754000,
         "date": "2026-09-11"
       }
     },
@@ -2302,11 +2302,11 @@
         "symbol": "8309.T",
         "longName": "Sumitomo Mitsui Trust Group, Inc.",
         "currency": "JPY",
-        "price": 1757.5,
+        "price": 1767,
         "previousClose": 1757.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 12144600,
+        "change": 9.5,
+        "changePercent": 0.5405405405405406,
+        "volume": 9864400,
         "date": "2026-09-11"
       }
     },
@@ -2315,11 +2315,11 @@
         "symbol": "8316.T",
         "longName": "Sumitomo Mitsui Financial Group, Inc.",
         "currency": "JPY",
-        "price": 6901,
+        "price": 6911,
         "previousClose": 6901,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 15553100,
+        "change": 10,
+        "changePercent": 0.14490653528474134,
+        "volume": 14515300,
         "date": "2026-09-11"
       }
     },
@@ -2328,11 +2328,11 @@
         "symbol": "8331.T",
         "longName": "The Chiba Bank, Ltd.",
         "currency": "JPY",
-        "price": 2728,
+        "price": 2729,
         "previousClose": 2728,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 5947300,
+        "change": 1,
+        "changePercent": 0.036656891495601175,
+        "volume": 6115500,
         "date": "2026-09-11"
       }
     },
@@ -2341,11 +2341,11 @@
         "symbol": "8354.T",
         "longName": "Fukuoka Financial Group, Inc.",
         "currency": "JPY",
-        "price": 7768,
+        "price": 7827,
         "previousClose": 7768,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1206900,
+        "change": 59,
+        "changePercent": 0.7595262615859938,
+        "volume": 1124900,
         "date": "2026-09-11"
       }
     },
@@ -2354,11 +2354,11 @@
         "symbol": "8411.T",
         "longName": "Mizuho Financial Group, Inc.",
         "currency": "JPY",
-        "price": 8606,
+        "price": 8654,
         "previousClose": 8606,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 11274400,
+        "change": 48,
+        "changePercent": 0.5577504066930049,
+        "volume": 10993400,
         "date": "2026-09-11"
       }
     },
@@ -2367,11 +2367,11 @@
         "symbol": "8591.T",
         "longName": "ORIX Corporation",
         "currency": "JPY",
-        "price": 6084,
+        "price": 6089,
         "previousClose": 6084,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 4214500,
+        "change": 5,
+        "changePercent": 0.0821827744904668,
+        "volume": 3498200,
         "date": "2026-09-11"
       }
     },
@@ -2380,11 +2380,11 @@
         "symbol": "8601.T",
         "longName": "Daiwa Securities Group Inc.",
         "currency": "JPY",
-        "price": 1837,
+        "price": 1842,
         "previousClose": 1837,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 5630700,
+        "change": 5,
+        "changePercent": 0.2721829069134458,
+        "volume": 4157700,
         "date": "2026-09-11"
       }
     },
@@ -2393,11 +2393,11 @@
         "symbol": "8604.T",
         "longName": "Nomura Holdings, Inc.",
         "currency": "JPY",
-        "price": 1666,
+        "price": 1664.5,
         "previousClose": 1666,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 10752300,
+        "change": -1.5,
+        "changePercent": -0.09003601440576231,
+        "volume": 9025300,
         "date": "2026-09-11"
       }
     },
@@ -2406,11 +2406,11 @@
         "symbol": "8630.T",
         "longName": "Sompo Holdings, Inc.",
         "currency": "JPY",
-        "price": 6648,
+        "price": 6774,
         "previousClose": 6648,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2979500,
+        "change": 126,
+        "changePercent": 1.895306859205776,
+        "volume": 2724600,
         "date": "2026-09-11"
       }
     },
@@ -2419,11 +2419,11 @@
         "symbol": "8697.T",
         "longName": "Japan Exchange Group, Inc.",
         "currency": "JPY",
-        "price": 2226,
+        "price": 2210.5,
         "previousClose": 2226,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 4310300,
+        "change": -15.5,
+        "changePercent": -0.6963162623539982,
+        "volume": 3331500,
         "date": "2026-09-11"
       }
     },
@@ -2432,11 +2432,11 @@
         "symbol": "8725.T",
         "longName": "MS&AD Insurance Group Holdings, Inc.",
         "currency": "JPY",
-        "price": 4964,
+        "price": 5091,
         "previousClose": 4964,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 5022800,
+        "change": 127,
+        "changePercent": 2.5584206285253828,
+        "volume": 5107500,
         "date": "2026-09-11"
       }
     },
@@ -2445,11 +2445,11 @@
         "symbol": "8750.T",
         "longName": "Daiichi Life Group, Inc.",
         "currency": "JPY",
-        "price": 1833,
+        "price": 1883,
         "previousClose": 1833,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 10438500,
+        "change": 50,
+        "changePercent": 2.7277686852154934,
+        "volume": 9848700,
         "date": "2026-09-11"
       }
     },
@@ -2458,11 +2458,11 @@
         "symbol": "8766.T",
         "longName": "Tokio Marine Holdings, Inc.",
         "currency": "JPY",
-        "price": 7794,
+        "price": 7970,
         "previousClose": 7794,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 6727400,
+        "change": 176,
+        "changePercent": 2.258147292789325,
+        "volume": 6379600,
         "date": "2026-09-11"
       }
     },
@@ -2471,11 +2471,11 @@
         "symbol": "8795.T",
         "longName": "T&D Holdings, Inc.",
         "currency": "JPY",
-        "price": 4842,
+        "price": 4929,
         "previousClose": 4842,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2483500,
+        "change": 87,
+        "changePercent": 1.7967781908302356,
+        "volume": 1582100,
         "date": "2026-09-11"
       }
     },
@@ -2484,11 +2484,11 @@
         "symbol": "8801.T",
         "longName": "Mitsui Fudosan Co., Ltd.",
         "currency": "JPY",
-        "price": 1484,
+        "price": 1491,
         "previousClose": 1484,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 12550400,
+        "change": 7,
+        "changePercent": 0.4716981132075472,
+        "volume": 12168700,
         "date": "2026-09-11"
       }
     },
@@ -2497,11 +2497,11 @@
         "symbol": "8802.T",
         "longName": "Mitsubishi Estate Co., Ltd.",
         "currency": "JPY",
-        "price": 3642,
+        "price": 3602,
         "previousClose": 3642,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 5223600,
+        "change": -40,
+        "changePercent": -1.098297638660077,
+        "volume": 3393800,
         "date": "2026-09-11"
       }
     },
@@ -2510,11 +2510,11 @@
         "symbol": "8804.T",
         "longName": "Tokyo Tatemono Co., Ltd.",
         "currency": "JPY",
-        "price": 3305,
+        "price": 3288,
         "previousClose": 3305,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1183500,
+        "change": -17,
+        "changePercent": -0.5143721633888049,
+        "volume": 1126900,
         "date": "2026-09-11"
       }
     },
@@ -2523,11 +2523,11 @@
         "symbol": "8830.T",
         "longName": "Sumitomo Realty & Development Co., Ltd.",
         "currency": "JPY",
-        "price": 3227,
+        "price": 3211,
         "previousClose": 3227,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 4694500,
+        "change": -16,
+        "changePercent": -0.4958165478772854,
+        "volume": 2967900,
         "date": "2026-09-11"
       }
     },
@@ -2536,11 +2536,11 @@
         "symbol": "9001.T",
         "longName": "Tobu Railway Co., Ltd.",
         "currency": "JPY",
-        "price": 2933,
+        "price": 2939,
         "previousClose": 2933,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 749500,
+        "change": 6,
+        "changePercent": 0.20456870098874871,
+        "volume": 597600,
         "date": "2026-09-11"
       }
     },
@@ -2549,11 +2549,11 @@
         "symbol": "9005.T",
         "longName": "Tokyu Corporation",
         "currency": "JPY",
-        "price": 1668,
+        "price": 1672,
         "previousClose": 1668,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3254700,
+        "change": 4,
+        "changePercent": 0.2398081534772182,
+        "volume": 2654800,
         "date": "2026-09-11"
       }
     },
@@ -2562,11 +2562,11 @@
         "symbol": "9007.T",
         "longName": "Odakyu Electric Railway Co., Ltd.",
         "currency": "JPY",
-        "price": 1796,
+        "price": 1805.5,
         "previousClose": 1796,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1764600,
+        "change": 9.5,
+        "changePercent": 0.5289532293986636,
+        "volume": 1742800,
         "date": "2026-09-11"
       }
     },
@@ -2575,11 +2575,11 @@
         "symbol": "9008.T",
         "longName": "Keio Corporation",
         "currency": "JPY",
-        "price": 792.8,
+        "price": 794.3,
         "previousClose": 792.7999877929688,
-        "change": 0.000012207031204525265,
-        "changePercent": 0.0000015397365530375108,
-        "volume": 2450800,
+        "change": 1.5000122070312045,
+        "changePercent": 0.18920436807863783,
+        "volume": 2555700,
         "date": "2026-09-11"
       }
     },
@@ -2588,11 +2588,11 @@
         "symbol": "9009.T",
         "longName": "Keisei Electric Railway Co., Ltd.",
         "currency": "JPY",
-        "price": 1395,
+        "price": 1382.5,
         "previousClose": 1395,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2695200,
+        "change": -12.5,
+        "changePercent": -0.8960573476702508,
+        "volume": 2371400,
         "date": "2026-09-11"
       }
     },
@@ -2601,11 +2601,11 @@
         "symbol": "9020.T",
         "longName": "East Japan Railway Company",
         "currency": "JPY",
-        "price": 3531,
+        "price": 3493,
         "previousClose": 3531,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3512400,
+        "change": -38,
+        "changePercent": -1.0761823845935996,
+        "volume": 2777300,
         "date": "2026-09-11"
       }
     },
@@ -2614,11 +2614,11 @@
         "symbol": "9021.T",
         "longName": "West Japan Railway Company",
         "currency": "JPY",
-        "price": 2996,
+        "price": 2998,
         "previousClose": 2996,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2308300,
+        "change": 2,
+        "changePercent": 0.06675567423230974,
+        "volume": 2036200,
         "date": "2026-09-11"
       }
     },
@@ -2627,11 +2627,11 @@
         "symbol": "9022.T",
         "longName": "Central Japan Railway Company",
         "currency": "JPY",
-        "price": 3834,
+        "price": 3797,
         "previousClose": 3834,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2719900,
+        "change": -37,
+        "changePercent": -0.9650495565988524,
+        "volume": 2275800,
         "date": "2026-09-11"
       }
     },
@@ -2640,11 +2640,11 @@
         "symbol": "9064.T",
         "longName": "Yamato Holdings Co., Ltd.",
         "currency": "JPY",
-        "price": 1963,
+        "price": 1981,
         "previousClose": 1963,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1587100,
+        "change": 18,
+        "changePercent": 0.9169638308711157,
+        "volume": 1444600,
         "date": "2026-09-11"
       }
     },
@@ -2653,11 +2653,11 @@
         "symbol": "9101.T",
         "longName": "Nippon Yusen Kabushiki Kaisha",
         "currency": "JPY",
-        "price": 7198,
+        "price": 7262,
         "previousClose": 7198,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2671100,
+        "change": 64,
+        "changePercent": 0.8891358710752986,
+        "volume": 2770900,
         "date": "2026-09-11"
       }
     },
@@ -2666,11 +2666,11 @@
         "symbol": "9104.T",
         "longName": "Mitsui O.S.K. Lines, Ltd.",
         "currency": "JPY",
-        "price": 6980,
+        "price": 7046,
         "previousClose": 6980,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2944400,
+        "change": 66,
+        "changePercent": 0.9455587392550143,
+        "volume": 3717100,
         "date": "2026-09-11"
       }
     },
@@ -2679,11 +2679,11 @@
         "symbol": "9107.T",
         "longName": "Kawasaki Kisen Kaisha, Ltd.",
         "currency": "JPY",
-        "price": 3300,
+        "price": 3397,
         "previousClose": 3300,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 5281000,
+        "change": 97,
+        "changePercent": 2.9393939393939394,
+        "volume": 5308100,
         "date": "2026-09-11"
       }
     },
@@ -2692,11 +2692,11 @@
         "symbol": "9147.T",
         "longName": "Nippon Express Holdings, Inc.",
         "currency": "JPY",
-        "price": 5328,
+        "price": 5402,
         "previousClose": 5328,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1403200,
+        "change": 74,
+        "changePercent": 1.3888888888888888,
+        "volume": 1196700,
         "date": "2026-09-11"
       }
     },
@@ -2705,11 +2705,11 @@
         "symbol": "9201.T",
         "longName": "Japan Airlines Co., Ltd.",
         "currency": "JPY",
-        "price": 2992,
+        "price": 2964,
         "previousClose": 2992,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3064000,
+        "change": -28,
+        "changePercent": -0.9358288770053476,
+        "volume": 2339100,
         "date": "2026-09-11"
       }
     },
@@ -2718,11 +2718,11 @@
         "symbol": "9202.T",
         "longName": "ANA Holdings Inc.",
         "currency": "JPY",
-        "price": 2963.5,
+        "price": 2935,
         "previousClose": 2963.5,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3667700,
+        "change": -28.5,
+        "changePercent": -0.9617006917496204,
+        "volume": 2553900,
         "date": "2026-09-11"
       }
     },
@@ -2731,11 +2731,11 @@
         "symbol": "9432.T",
         "longName": "NTT, Inc.",
         "currency": "JPY",
-        "price": 175.2,
+        "price": 175.7,
         "previousClose": 175.1999969482422,
-        "change": 0.0000030517578011313162,
-        "changePercent": 0.0000017418709213978299,
-        "volume": 263274500,
+        "change": 0.5000030517578011,
+        "changePercent": 0.2853898746958955,
+        "volume": 209324600,
         "date": "2026-09-11"
       }
     },
@@ -2744,11 +2744,11 @@
         "symbol": "9433.T",
         "longName": "KDDI Corporation",
         "currency": "JPY",
-        "price": 3008,
+        "price": 3031,
         "previousClose": 3008,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 13707500,
+        "change": 23,
+        "changePercent": 0.7646276595744681,
+        "volume": 11523600,
         "date": "2026-09-11"
       }
     },
@@ -2757,11 +2757,11 @@
         "symbol": "9434.T",
         "longName": "SoftBank Corp.",
         "currency": "JPY",
-        "price": 243.2,
+        "price": 246.9,
         "previousClose": 243.1999969482422,
-        "change": 0.0000030517578011313162,
-        "changePercent": 0.0000012548346379218052,
-        "volume": 119151200,
+        "change": 3.700003051757818,
+        "changePercent": 1.5213828528728366,
+        "volume": 111577300,
         "date": "2026-09-11"
       }
     },
@@ -2770,11 +2770,11 @@
         "symbol": "9501.T",
         "longName": "Tokyo Electric Power Company Holdings, Incorporated",
         "currency": "JPY",
-        "price": 546.3,
+        "price": 540.9,
         "previousClose": 546.2999877929688,
-        "change": 0.000012207031204525265,
-        "changePercent": 0.000002234492307759553,
-        "volume": 47320100,
+        "change": -5.399987792968773,
+        "changePercent": -0.9884656623889959,
+        "volume": 35803900,
         "date": "2026-09-11"
       }
     },
@@ -2783,11 +2783,11 @@
         "symbol": "9502.T",
         "longName": "Chubu Electric Power Company, Incorporated",
         "currency": "JPY",
-        "price": 3053,
+        "price": 2992,
         "previousClose": 3053,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 3144300,
+        "change": -61,
+        "changePercent": -1.9980347199475925,
+        "volume": 4099100,
         "date": "2026-09-11"
       }
     },
@@ -2796,11 +2796,11 @@
         "symbol": "9503.T",
         "longName": "The Kansai Electric Power Company, Incorporated",
         "currency": "JPY",
-        "price": 2957,
+        "price": 2964.5,
         "previousClose": 2957,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 5468000,
+        "change": 7.5,
+        "changePercent": 0.2536354413256679,
+        "volume": 4618500,
         "date": "2026-09-11"
       }
     },
@@ -2809,11 +2809,11 @@
         "symbol": "9531.T",
         "longName": "Tokyo Gas Co.,Ltd.",
         "currency": "JPY",
-        "price": 6267,
+        "price": 6275,
         "previousClose": 6267,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1434300,
+        "change": 8,
+        "changePercent": 0.1276527844263603,
+        "volume": 1031400,
         "date": "2026-09-11"
       }
     },
@@ -2822,11 +2822,11 @@
         "symbol": "9532.T",
         "longName": "Osaka Gas Co., Ltd.",
         "currency": "JPY",
-        "price": 5935,
+        "price": 6039,
         "previousClose": 5935,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 1517700,
+        "change": 104,
+        "changePercent": 1.7523167649536646,
+        "volume": 1353100,
         "date": "2026-09-11"
       }
     },
@@ -2835,11 +2835,11 @@
         "symbol": "9602.T",
         "longName": "Toho Co., Ltd.",
         "currency": "JPY",
-        "price": 1607,
+        "price": 1613,
         "previousClose": 1607,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 4011900,
+        "change": 6,
+        "changePercent": 0.37336652146857496,
+        "volume": 2620700,
         "date": "2026-09-11"
       }
     },
@@ -2848,11 +2848,11 @@
         "symbol": "9735.T",
         "longName": "SECOM CO., LTD.",
         "currency": "JPY",
-        "price": 6316,
+        "price": 6336,
         "previousClose": 6316,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2320800,
+        "change": 20,
+        "changePercent": 0.31665611146295125,
+        "volume": 1824400,
         "date": "2026-09-11"
       }
     },
@@ -2861,11 +2861,11 @@
         "symbol": "9766.T",
         "longName": "Konami Group Corporation",
         "currency": "JPY",
-        "price": 20350,
+        "price": 20730,
         "previousClose": 20350,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 787800,
+        "change": 380,
+        "changePercent": 1.8673218673218674,
+        "volume": 749000,
         "date": "2026-09-11"
       }
     },
@@ -2874,11 +2874,11 @@
         "symbol": "9843.T",
         "longName": "Nitori Holdings Co., Ltd.",
         "currency": "JPY",
-        "price": 3267,
+        "price": 3242,
         "previousClose": 3267,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 4140200,
+        "change": -25,
+        "changePercent": -0.7652280379553107,
+        "volume": 3320000,
         "date": "2026-09-11"
       }
     },
@@ -2887,11 +2887,11 @@
         "symbol": "9983.T",
         "longName": "Fast Retailing Co., Ltd.",
         "currency": "JPY",
-        "price": 66810,
+        "price": 66480,
         "previousClose": 66810,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 2126400,
+        "change": -330,
+        "changePercent": -0.4939380332285586,
+        "volume": 1474500,
         "date": "2026-09-11"
       }
     },
@@ -2900,30 +2900,30 @@
         "symbol": "9984.T",
         "longName": "SoftBank Group Corp.",
         "currency": "JPY",
-        "price": 6810,
+        "price": 6540,
         "previousClose": 6810,
-        "change": 0,
-        "changePercent": 0,
-        "volume": 83731600,
-        "date": "2026-09-10"
+        "change": -270,
+        "changePercent": -3.9647577092511015,
+        "volume": 69041500,
+        "date": "2026-09-11"
       },
-      "current": "ソフトバンクグループは、国内外のITやAI、通信、半導体関連企業への投資を軸にグローバルに展開する投資持株会社です。傘下に英半導体設計大手のアーム（Arm）を擁し、ソフトバンク・ビジョン・ファンドを通じて世界の最先端テクノロジー企業へのアプローチを行っています。近年は人工超知能（ASI）の実現を見据え、AI関連分野やAIインフラへの積極的な投資・育成に注力しています。",
-      "updates": "2026年8月6日に発表した2027年3月期第1四半期（4〜6月期）連結決算は、売上高が前年同期比10.9％増の2兆195億9,100万円となった一方、親会社の所有者に帰属する四半期利益が17.7％減の3,473億3,000万円となったことを公表しました。さらに2026年9月4日には、資金使途に国内社債の償還や買収資金の一部充当を掲げる、発行総額1兆円の個人向け社債「第70回無担保社債」の利率を年4.75％に決定したと発表しています。"
+      "current": "ソフトバンクグループは、代表の孫正義氏が率いる投資持株会社です。AI、スマートロボティクス、半導体設計大手のアーム・ホールディングス（Arm）などを投資ポートフォリオの中心に据え、グローバルに大規模な投資事業を展開しています。傘下には国内通信大手のソフトバンク株式会社や、世界各地の先端企業への投資を担うソフトバンク・ビジョン・ファンドなどを有しています。",
+      "updates": "2026年9月9日、OpenAIへの追加投資等に伴うブリッジローンの借入残高259億米ドル（約3兆9,819億円）を同年9月15日付で期限前返済すると発表しました。また同年9月4日には、総額1兆円規模の第70回無担保社債の発行条件を決定したと公表し、調達資金を国内債の償還などに充てる方針を示しています。同年8月6日の2027年3月期第1四半期決算発表では、アームの株価上昇に伴い純資産価値（NAV）が増加したことなどを公表しました。"
     },
     "285A": {
       "quote": {
         "symbol": "285A.T",
         "longName": "Kioxia Holdings Corporation",
         "currency": "JPY",
-        "price": 58090,
-        "previousClose": 57000,
-        "change": 1090,
-        "changePercent": 1.9122807017543861,
-        "volume": 28715100,
-        "date": "2026-09-10"
+        "price": 54030,
+        "previousClose": 58090,
+        "change": -4060,
+        "changePercent": -6.9891547598553965,
+        "volume": 28051100,
+        "date": "2026-09-11"
       },
-      "current": "キオクシアホールディングスは、NAND型フラッシュメモリやSSDなどの開発・製造・販売を行うグループを統括する持株会社です。2024年12月に東証プライム市場へ新規上場しました。AI需要の急速な拡大を背景に、データセンター向けなどの高付加価値なエンタープライズSSD（eSSD）に注力し、収益力の向上を進めています。",
-      "updates": "2026年8月27日に米サンディスクと共同で、政府支援を前提として2032年までに日本国内へ約5兆円を投資する計画を発表しました。これに伴い、岩手県の北上工場で第3製造棟「K3棟」の建設に向けた土地整備を開始し、2029年度中の稼働開始を目指すとしています。また、2026年3月期の通期連結決算では、売上高2兆3,376億2,800万円、営業利益8,703億6,900万円と黒字転換した実績を公表しています。"
+      "current": "キオクシアホールディングス株式会社は、主にNAND型フラッシュメモリやSSD（ソリッドステートドライブ）の開発・製造・販売を手がけるグループを率いる持株会社です。AI向けデータセンターをはじめとする半導体需要の拡大を追い風に、同社の業績は大きく拡大しています。2024年12月に東証プライム市場へ上場しました。",
+      "updates": "2026年8月27日に、サンディスクコーポレーションと日本で共同して約5兆円を投資するメモリ分野での提携強化計画を発表しました。これに合わせて同日、岩手県にて新たな製造棟「K3棟」を建設することを公表しています。さらに、2026年7月31日に発表した2027年3月期第1四半期決算において、連結最終利益が前年同期比約46倍の8,421億円となったことを公表しています。"
     },
     "543A": {
       "quote": {
@@ -2934,9 +2934,10 @@
         "previousClose": 269,
         "change": 0,
         "changePercent": 0,
-        "volume": 18900800,
+        "volume": 17981100,
         "date": "2026-09-11"
       }
     }
-  }
+  },
+  "notesGeneratedAt": "2026-09-11T21:05:52.472+09:00"
 }
