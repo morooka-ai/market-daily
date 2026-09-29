@@ -1,5 +1,6 @@
 // 記事の自動生成エントリポイント
-// 使い方: node scripts/generate.mjs morning | evening
+// 使い方: node scripts/generate.mjs morning | evening [--force]
+//   --force … 下記の「生成してよい時間帯」の判定を無視する（手動での動作確認用）
 
 import fs from "node:fs";
 import path from "node:path";
@@ -35,6 +36,21 @@ fs.mkdirSync(postsDir, { recursive: true });
 // 過去記事はトップの「アーカイブ」ページ（月別一覧）から辿れる。
 
 const editionLabel = mode === "morning" ? "朝刊" : "夕刊";
+
+// ---- 生成してよい時間帯（JST）の外なら何もしない --------------------------------
+// GitHub の schedule(cron) は数時間遅れて発火することがあり、2026-09-29 には 9/28 の夕刊ジョブが
+// 日付をまたいだ 0:01 に動いて「9/29 の夕刊はお休み」という誤ったお知らせを作った
+// （残っていると当日の夕刊が生成済み扱いでスキップされる）。
+// 遅れて動いたジョブが別の日付の記事を作らないよう、時間帯の外では何もせず終了する。
+//   夕刊 … 15:00〜23:59（東証の大引け後〜当日中）
+//   朝刊 … 6:00〜21:59（米国市場の引け後〜米国の取引開始前。取引時間中の途中データで書かない）
+const WINDOWS = { morning: [6, 22], evening: [15, 24] };
+const [fromHour, toHour] = WINDOWS[mode];
+const hour = now.getUTCHours();
+if ((hour < fromHour || hour >= toHour) && !process.argv.includes("--force")) {
+  console.log(`${editionLabel}の生成時間帯（${fromHour}:00〜${toHour}:00 JST）の外のためスキップ: 現在 ${hour}時台`);
+  process.exit(0);
+}
 
 const outPath = path.join(postsDir, `${today}-${mode}.md`);
 if (fs.existsSync(outPath)) {
