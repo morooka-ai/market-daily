@@ -4,7 +4,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import holidayJp from "@holiday-jp/holiday_jp";
-import { fetchYahooDaily, fetchUsMostActives, isStale } from "./lib/market-data.mjs";
+import { fetchYahooDaily, fetchUsTurnoverTop, formatChange, isStale } from "./lib/market-data.mjs";
+import { US_STOCKS } from "../src/us-stocks-data.mjs";
 import { writeArticle } from "./lib/article.mjs";
 
 const mode = process.argv[2];
@@ -81,51 +82,74 @@ function table(rows, headers) {
   return [line(headers), line(headers.map(() => "---")), ...rows.map(line)].join("\n");
 }
 
+/** 四本値＋前日比を1行にまとめる（プロンプトに渡す市場データ用） */
+function ohlc(q, closeLabel = "終値") {
+  return `始値 ${q.open} / 高値 ${q.high} / 安値 ${q.low} / ${closeLabel} ${q.close} / 前日比 ${formatChange(q)}`;
+}
+
+// 冒頭の「今日のポイント」。どの日にも当てはまる一般論にならないよう、
+// 具体的な数値と「次に何を確かめるか」まで書かせる（AdSense 審査の「有用性」対策、2026-09-29）。
+const POINTS_SECTION = `## 今日のポイント（箇条書き3点。1点目＝最も大きな動きとその数値、2点目＝その背景・なぜ重要か、3点目＝次に確かめるとよい指標・イベント。各1〜2文）`;
+
 async function main() {
   let title, description, body;
 
   if (mode === "morning") {
-    const apiKey = process.env.ALPHAVANTAGE_API_KEY;
-    if (!apiKey) throw new Error("環境変数 ALPHAVANTAGE_API_KEY が未設定です");
-
-    const [actives, usdjpy, gold] = await Promise.all([
-      fetchUsMostActives(apiKey),
+    const [ranking, spx, nasdaq, usdjpy, gold] = await Promise.all([
+      fetchUsTurnoverTop(US_STOCKS, 5),
+      fetchYahooDaily("^GSPC"),
+      fetchYahooDaily("^IXIC"),
       fetchYahooDaily("USDJPY=X"),
       fetchYahooDaily("GC=F"),
     ]);
 
-    if (isStale(actives.lastUpdated)) {
-      console.log(`米国市場のデータが古い: ${actives.lastUpdated}`);
+    if (isStale(spx.date)) {
+      console.log(`米国市場のデータが古い: S&P500 ${spx.date}`);
       postNotice("米国市場が休場（データ未更新）の可能性");
     }
 
-    const activesTable = table(
-      actives.mostActives.map((r, i) => [
-        String(i + 1), r.ticker, `$${r.price}`, r.changePercentage, Number(r.volume).toLocaleString(),
-      ]),
-      ["順位", "ティッカー", "株価", "騰落率", "出来高"],
+    // 売買代金ランキングは S&P 100 構成銘柄（大型株）が母集団。
+    // 以前の「出来高TOP5」は1ドル未満の超低位株ばかりで読者の役に立たなかったため置き換えた。
+    const rankingTable = table(
+      ranking.top.map((r, i) => {
+        const q = r.quote;
+        const pct = q.changePercent == null ? "—" : `${q.changePercent > 0 ? "+" : ""}${q.changePercent.toFixed(2)}%`;
+        return [
+          String(i + 1),
+          r.name.includes(r.ticker) ? r.name : `${r.name}（${r.ticker}）`,
+          `$${q.price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+          pct,
+          `約${Math.round(r.turnover / 1e8).toLocaleString("ja-JP")}億ドル`,
+        ];
+      }),
+      ["順位", "銘柄", "株価", "騰落率", "売買代金"],
     );
 
-    title = `【朝刊】${today} 米国市場まとめ｜出来高TOP5・ドル円・金`;
-    description = `${today}朝時点の米国株出来高ランキング、USD/JPY、金価格のまとめと今後の注目ニュース。`;
+    title = `【朝刊】${today} 米国市場まとめ｜売買代金TOP5・ドル円・金`;
+    description = `${today}朝時点の米国株（S&P100）売買代金ランキング、S&P500・ナスダック、USD/JPY、金価格のまとめと今後の注目ニュース。`;
     body = await writeArticle(`本日は${today}（日本時間の朝）です。昨夜の米国市場の結果をまとめた「朝刊」記事を書いてください。
 
 # 市場データ（この数値をそのまま使うこと）
 
-## 米国株 出来高TOP5（データ更新: ${actives.lastUpdated}）
-${activesTable}
+## 米国株価指数（${spx.date}）
+- S&P500：${ohlc(spx)}
+- ナスダック総合：${ohlc(nasdaq)}
 
-## USD/JPY（NYクローズ、${usdjpy.date}）
-始値 ${usdjpy.open} / 高値 ${usdjpy.high} / 安値 ${usdjpy.low} / 終値 ${usdjpy.close}
+## 米国株 売買代金TOP5（S&P100構成銘柄、${ranking.date}）
+${rankingTable}
+
+## USD/JPY（${usdjpy.date}）
+${ohlc(usdjpy, "直近")}
 
 ## 金先物（COMEX・ドル建て、${gold.date}）
-始値 ${gold.open} / 高値 ${gold.high} / 安値 ${gold.low} / 終値 ${gold.close}
+${ohlc(gold)}
 
 # 記事の構成
-1. ## 昨夜の米国市場サマリー（2〜3文）
-2. ## 米国株 出来高TOP5（表＋出来高上位になった背景を事実ベースで簡潔に。必要ならweb検索で確認）
-3. ## ドル円・金の値動き（表または箇条書き＋短い解説）
-4. ## 今後の注目ニュース（web検索で本日〜明日の経済指標・イベント予定を確認し、加えて休場・連休や次回の中銀会合など直近で市場が意識している重要イベントが数日〜来週先にある場合はそれも含めてよい。2〜4件を「一般的に意識されやすい影響」の解説付きで。各項目の見出しには対象日を明記し、【重要度：高/中/低】を付けて重要度の高い順に並べる）`);
+1. ${POINTS_SECTION}
+2. ## 昨夜の米国市場サマリー（S&P500・ナスダックの前日比に触れて2〜3文）
+3. ## 米国株 売買代金TOP5（上の表をそのまま載せ、各銘柄が売買を集めた背景を事実ベースで1〜2文ずつ。web検索で決算・ニュースを確認し、確認できなかったものは推測で書かない）
+4. ## ドル円・金の値動き（前日比に触れた短い解説）
+5. ## 今後の注目ニュース（web検索で本日〜明日の経済指標・イベント予定を確認し、加えて休場・連休や次回の中銀会合など直近で市場が意識している重要イベントが数日〜来週先にある場合はそれも含めてよい。2〜4件を「一般的に意識されやすい影響」の解説付きで。各項目の見出しには対象日を明記し、【重要度：高/中/低】を付けて重要度の高い順に並べる）`);
   } else {
     const [nikkei, usdjpy, gold] = await Promise.all([
       fetchYahooDaily("^N225"),
@@ -145,19 +169,20 @@ ${activesTable}
 # 市場データ（この数値をそのまま使うこと）
 
 ## 日経平均株価（${nikkei.date}）
-始値 ${nikkei.open} / 高値 ${nikkei.high} / 安値 ${nikkei.low} / 終値 ${nikkei.close}
+${ohlc(nikkei)}
 
 ## USD/JPY（現在値、${usdjpy.date}）
-始値 ${usdjpy.open} / 高値 ${usdjpy.high} / 安値 ${usdjpy.low} / 直近 ${usdjpy.close}
+${ohlc(usdjpy, "直近")}
 
 ## 金先物（COMEX・ドル建て、${gold.date}）
-始値 ${gold.open} / 高値 ${gold.high} / 安値 ${gold.low} / 直近 ${gold.close}
+${ohlc(gold, "直近")}
 
 # 記事の構成
-1. ## 本日の東京市場サマリー（2〜3文。必要ならweb検索で本日の市況の背景を確認）
-2. ## 日経平均の値動き（表＋解説）
-3. ## ドル円・金の動き（短い解説）
-4. ## 今後の注目ニュース（web検索で今晩の米国の経済指標・イベントや明日の国内予定を確認し、加えて休場・連休や次回の中銀会合など直近で市場が意識している重要イベントが数日〜来週先にある場合はそれも含めてよい。2〜4件を「一般的に意識されやすい影響」の解説付きで。各項目の見出しには対象日を明記し、【重要度：高/中/低】を付けて重要度の高い順に並べる）`);
+1. ${POINTS_SECTION}
+2. ## 本日の東京市場サマリー（2〜3文。web検索で本日の市況の背景を確認）
+3. ## 日経平均の値動き（表＋解説。前日比に触れる）
+4. ## ドル円・金の動き（前日比に触れた短い解説）
+5. ## 今後の注目ニュース（web検索で今晩の米国の経済指標・イベントや明日の国内予定を確認し、加えて休場・連休や次回の中銀会合など直近で市場が意識している重要イベントが数日〜来週先にある場合はそれも含めてよい。2〜4件を「一般的に意識されやすい影響」の解説付きで。各項目の見出しには対象日を明記し、【重要度：高/中/低】を付けて重要度の高い順に並べる）`);
   }
 
   const frontmatter = [

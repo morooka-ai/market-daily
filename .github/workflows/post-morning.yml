@@ -37,7 +37,13 @@ jobs:
         run: node scripts/generate.mjs morning
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
+          ARTICLE_MODEL: ${{ vars.ARTICLE_MODEL }}
+      - name: 週間まとめを生成（土曜のみ）
+        # 土曜以外はスクリプト側で何もせず終了する。朝刊本体を妨げないよう失敗しても続行する。
+        continue-on-error: true
+        run: node scripts/generate-weekly.mjs
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ARTICLE_MODEL: ${{ vars.ARTICLE_MODEL }}
       - name: 相場を取得して既定表示6銘柄を決定
         # 解説の生成より先に実行する（generate-stocks.mjs が上位6銘柄をここから読む）。

@@ -45,7 +45,9 @@ const description =
                   ? "朝刊"
                   : post.data.edition === "evening"
                     ? "夕刊"
-                    : "お知らせ"}
+                    : post.data.edition === "weekly"
+                      ? "週間まとめ"
+                      : "お知らせ"}
               </span>
               <a href={`${base}posts/${post.id}/`}>{post.data.title}</a>
               <time datetime={post.data.pubDate.toISOString()}>
@@ -86,5 +88,6 @@ const description =
   }
   .badge.morning { background: #d98123; }
   .badge.evening { background: #33508a; }
+  .badge.weekly { background: #2f7a5b; }
   .badge.notice { background: #6b7280; }
 </style>

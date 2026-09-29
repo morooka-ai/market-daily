@@ -4,14 +4,15 @@ AI（Gemini）が毎営業日、朝夕2回の市況記事を自動生成して�
 
 | 投稿 | 時刻（日本時間・通年固定） | 内容 |
 | --- | --- | --- |
-| 朝刊 | 7:30（火〜土） | 米国株 出来高TOP5、USD/JPY（NYクローズ）、金先物、今後の注目ニュース |
-| 夕刊 | 16:00（月〜金、祝日除く） | 日経平均の値動き、ドル円・金の動き、今後の注目ニュース |
+| 朝刊 | 7:30（火〜土） | 今日のポイント、S&P500・ナスダック、米国株 売買代金TOP5（S&P100構成銘柄）、USD/JPY、金先物、今後の注目ニュース |
+| 夕刊 | 16:00（月〜金、祝日除く） | 今日のポイント、日経平均の値動き、ドル円・金の動き、今後の注目ニュース |
+| 週間まとめ | 土曜の朝刊と同時 | 日経平均・米国株・ドル円・金・ビットコインの週間騰落、1週間の出来事、来週の注目ニュース、その週の朝刊・夕刊へのリンク |
 
 ## 仕組み
 
 ```
 GitHub Actions（スケジュール実行）
-  → 市場データ取得（Yahoo Finance / Alpha Vantage）
+  → 市場データ取得（Yahoo Finance）
   → Gemini API が記事を執筆（Google検索で注目ニュースを確認）
   → Markdownをリポジトリにコミット
   → Astroでビルドして Google Cloud Run に自動公開
@@ -30,7 +31,6 @@ GitHub Actions（スケジュール実行）
 - **GitHubアカウント**
 - **Googleアカウント**（Google Cloud 用）
 - **Gemini APIキー**（無料・クレジットカード不要）: https://aistudio.google.com/apikey で取得
-- **Alpha Vantage APIキー**（無料）: https://www.alphavantage.co/support/#api-key
 
 ### 1. GitHubリポジトリを作成してプッシュ
 
@@ -51,7 +51,6 @@ git push -u origin main
 | 名前 | 値 |
 | --- | --- |
 | `GEMINI_API_KEY` | Gemini のAPIキー |
-| `ALPHAVANTAGE_API_KEY` | Alpha Vantage のAPIキー |
 
 ### 3. Google Cloud（Cloud Run）を設定
 
@@ -169,7 +168,7 @@ node scripts/setup/cloud-run-domain-mapping.mjs   # カスタムドメイン設�
 - Gemini API（gemini-3.5-flash）: 無料枠は1日2記事なら十分。Google検索グラウンディングも月5,000回まで無料
   - 注意: 無料枠ではプロンプト等がGoogleのモデル改善に利用されることがあります（市況データのみのため実害なし）
   - モデルを変える場合: **Settings → Secrets and variables → Actions → Variables** で `ARTICLE_MODEL` を設定（Proモデルは無料枠対象外なので注意）
-- GitHub Actions / Yahoo Finance / Alpha Vantage: 無料枠内
+- GitHub Actions / Yahoo Finance: 無料枠内
 - Cloud Run: 無料枠（月200万リクエスト・メモリ 360,000 GiB秒）内に収まる想定。最小インスタンス0（アクセスがない時間は課金なし）
 - Artifact Registry: 無料枠は0.5GBまで。デプロイのたびにイメージが1つ増えるので、
   クリーンアップポリシー（最新10世代は保持・30日より古いものは削除）を一度設定しておきます。

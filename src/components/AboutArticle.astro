@@ -1,0 +1,30 @@
+---
+// 記事末の「この記事について」。記事がどう作られているかを読者に明示する。
+// 記事は人の確認を経ずに自動公開しているため、「監修」とは書かない（事実と異なる表記をしない）。
+const base = import.meta.env.BASE_URL;
+---
+
+<aside class="about-article">
+  <strong>この記事について</strong>
+  <p>
+    本記事は、AIが公開されている市場データ（株価指数・為替・金先物など）とWeb検索で確認したニュースをもとに自動で作成しています。
+    掲載する数値は取得したデータをそのまま使い、記事の構成・執筆ルール・品質基準は運営者が定めています。
+  </p>
+  <p class="operator">
+    運営：JOPEFIC合同会社（<a href={`${base}about/`}>運営者情報</a>）
+  </p>
+</aside>
+
+<style>
+  .about-article {
+    margin-top: 2.5rem;
+    padding: 0.9rem 1.1rem;
+    background: #f3f6fa;
+    border: 1px solid #d9e1ec;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    color: #3f4b5c;
+  }
+  .about-article p { margin: 0.4rem 0 0; }
+  .about-article + :global(aside) { margin-top: 1rem; }
+</style>

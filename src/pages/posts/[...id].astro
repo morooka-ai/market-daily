@@ -3,6 +3,7 @@ import { getCollection, render } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import Disclaimer from "../../components/Disclaimer.astro";
 import AffiliateSlot from "../../components/AffiliateSlot.astro";
+import AboutArticle from "../../components/AboutArticle.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts");
@@ -39,6 +40,7 @@ const isNotice = post.data.edition === "notice";
       </time>
     </p>
     <Content />
+    {!isNotice && <AboutArticle />}
     <AffiliateSlot name="post-bottom" />
     <Disclaimer />
   </article>
