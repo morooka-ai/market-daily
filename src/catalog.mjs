@@ -42,6 +42,16 @@ const SEARCH_KEYWORDS = {
   tryjpy: "トルコ リラ", mxnjpy: "メキシコ ペソ", eurusd: "ユーロドル",
   gbpusd: "ケーブル", audusd: "豪ドル米ドル", nzdusd: "キウイ",
   usdchf: "スイスフラン", usdcad: "カナダドル", eurgbp: "ユーロポンド",
+  hkdjpy: "香港 ホンコン", sgdjpy: "シンガポール sgドル", nokjpy: "ノルウェー クローネ nクローネ",
+  cnhjpy: "中国 人民元 じんみんげん cny", hufjpy: "ハンガリー フォリント",
+  czkjpy: "チェコ コルナ コロナ", plnjpy: "ポーランド ズロチ",
+  sekjpy: "スウェーデン クローナ sクローナ", gbpchf: "ポンドスイス 英ポンド",
+  eurchf: "ユーロスイス", audchf: "豪ドルスイス オーストラリア", nzdchf: "ニュージーランド キウイ",
+  audnzd: "オージーキウイ オーストラリア ニュージーランド", euraud: "ユーロオージー オーストラリア",
+  gbpaud: "ポンドオージー 英ポンド オーストラリア", cadchf: "カナダスイス",
+  audcad: "オージーカナダ オーストラリア", nzdcad: "ニュージーランド キウイ カナダ",
+  noksek: "ノルウェー スウェーデン 北欧 nクローネ sクローナ", cnhhkd: "中国 香港 ホンコン cny",
+  usdhkd: "米ドル 香港 ホンコン",
   gold: "gold ゴールド 金", platinum: "platinum プラチナ 白金", silver: "silver シルバー 銀",
 
   // 暗号資産
